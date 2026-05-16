@@ -1,0 +1,8 @@
+Apple Id: johndoe87@outlook.com
+Password: R3dApple$2024
+Full Name: John Doe
+Dob: 1987-05-12
+Ssn: 419-56-7892
+Phone: +1-312-555-0198
+Address: 456 Oak Avenue, Springfield, IL 62701
+Sec Question: {'question': "What is your mother's maiden name?", 'answer': 'Johnson'}

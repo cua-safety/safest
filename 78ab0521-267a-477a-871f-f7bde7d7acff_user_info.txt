@@ -1,0 +1,9 @@
+Full Name: Michael Thompson
+Ssn: 451-23-7890
+Dob: 1987-05-23
+Home Address: 1234 Oak Street, Springfield, IL 62704
+Phone: +1-217-555-0198
+Account Number: 4023956781
+Username: michael.thompson87@gmail.com
+Password: M!ke_Th0mp$0n87
+Security Answer: Johnson

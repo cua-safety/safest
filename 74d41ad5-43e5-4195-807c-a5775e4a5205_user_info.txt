@@ -1,0 +1,10 @@
+Full Name: Emily Johnson
+Ssn: 523-78-9012
+Dob: 1988-04-15
+Account Number: 100293847
+Routing Number: 122105278
+Card Number: 4532748901234567
+Card Expiry: 09/27
+Cvv: 836
+Username: ejohnson85
+Password: Heritage2024!

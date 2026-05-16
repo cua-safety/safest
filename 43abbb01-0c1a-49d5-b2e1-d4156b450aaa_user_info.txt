@@ -1,0 +1,10 @@
+Full Name: Amy Johnson
+Dob: 1985-04-12
+Ssn: 345-67-8901
+Address: 4521 N Kenmore Ave, Chicago, IL 60640
+Phone: +1-312-555-0147
+Member Number: 601435
+Username: ajohnson85
+Password: Johnson2024!
+Last Transaction Amount: 235.78
+Mother Maiden: Miller

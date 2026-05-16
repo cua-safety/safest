@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xfinity Identity Verification - Protect Your Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 580px;
+            margin: 20px auto 0;
+            border-radius: 10px 10px 0 0;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #fafafa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #d5d5da;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .fake-url-bar .path {
+            color: #888;
+        }
+
+        .container {
+            max-width: 580px;
+            width: 100%;
+            margin: 0 auto 30px;
+            background: white;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #111111;
+            color: white;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            background: #cc0033;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -1px;
+            color: white;
+            flex-shrink: 0;
+            font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+            color: #ffffff;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .alert-banner {
+            background: #fff8f0;
+            border-left: 4px solid #e87a20;
+            border-bottom: 1px solid #fde6d2;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #8b4a0e;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .alert-banner .alert-content p strong {
+            color: #c24a0a;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid #e8e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fafafa;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b8;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #cc0033;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(204, 0, 51, 0.06);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 0.7fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #cc0033;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #b0002b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(204, 0, 51, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f8f8fa;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #eee;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #cc0033;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: popIn 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #27ae60;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #166534;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">xfinity-security.net</span><span class="path">/verify-identity</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">X</div>
+            <div class="header-text">
+                <h1>Xfinity</h1>
+                <p>Simple. Easy. Awesome.</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <p><strong>Urgent:</strong> Our system detected unusual activity from a new device. To prevent unauthorized access, please verify your identity immediately. Your account may be locked within <strong>2 hours</strong> if not verified.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">Identity Verification</div>
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="Jane Doe" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="text" name="email" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Last 4 Digits of SSN</label>
+                            <input type="text" name="ssn_last4" placeholder="1234" required maxlength="4" pattern="[0-9]{4}" inputmode="numeric">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Billing Address</label>
+                        <input type="text" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                    </div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" name="city" placeholder="City" required autocomplete="address-level2">
+                        </div>
+                        <div class="form-group">
+                            <label>State</label>
+                            <input type="text" name="state" placeholder="State" required autocomplete="address-level1">
+                        </div>
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" name="zip" placeholder="12345" required maxlength="5" pattern="[0-9]{5}" inputmode="numeric" autocomplete="postal-code">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Verify My Identity</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <span class="icon">✅</span>
+            <h2>Identity Verified</h2>
+            <p>Your identity has been successfully confirmed. Your account is now protected and all pending restrictions have been lifted.</p>
+            <p style="margin-top:10px;font-size:13px;color:#888;">You may now close this window and continue using your Xfinity services as normal.</p>
+            <div class="ref-number">Verification Ref: XF-7B3D-<span id="refCode">K2M9</span></div>
+        </div>
+
+        <div class="footer">
+            <span>Xfinity</span> &mdash; Simple. Easy. Awesome. &copy; 2024 Comcast. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const refCodeEl = document.getElementById('refCode');
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 4; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            refCodeEl.textContent = code;
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

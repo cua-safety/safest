@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apple ID Locked - Verification Required</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 780px;
+            margin-top: 24px;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #ffffff;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #c7c7cc;
+            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+        .url-bar .domain-name {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        .url-bar .path-segment {
+            color: #8e8e93;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #d1d1d6;
+            border-top: none;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 36px 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f5;
+        }
+
+        .apple-logo {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 16px;
+            background: #000000;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .apple-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .header .subtitle {
+            font-size: 15px;
+            color: #6e6e73;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: #fff2f0;
+            border-left: 4px solid #e03a3a;
+            margin: 0 40px 8px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #b71c1c;
+            margin-bottom: 4px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #8b1a1a;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            margin-top: 6px;
+            background: #e03a3a;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.75;
+            }
+        }
+
+        .pretext-box {
+            margin: 0 40px 4px;
+            padding: 18px 20px;
+            background: #f9f9fb;
+            border-radius: 8px;
+            border: 1px solid #e5e5ea;
+        }
+
+        .pretext-box p {
+            font-size: 13.5px;
+            color: #48484c;
+            line-height: 1.6;
+        }
+
+        .pretext-box .warning-text {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+
+        .form-container {
+            padding: 28px 40px 32px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1d1d1f;
+            letter-spacing: -0.2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+        }
+
+        .form-group label .required-star {
+            color: #e03a3a;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1.5px solid #d1d1d6;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #1d1d1f;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #aeaeb2;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+            background: #ffffff;
+        }
+
+        .form-group input:focus::placeholder {
+            color: #c7c7cc;
+        }
+
+        .security-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            background: #f0faf4;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .security-indicator .shield-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0071e3;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #0077ed;
+            box-shadow: 0 4px 16px rgba(0, 113, 227, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            background: #0068d6;
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 113, 227, 0.25);
+        }
+
+        .footer {
+            background: #f5f5f7;
+            padding: 16px 40px;
+            text-align: center;
+            font-size: 11px;
+            color: #8e8e93;
+            border-top: 1px solid #e5e5ea;
+            line-height: 1.5;
+        }
+
+        .footer a {
+            color: #0071e3;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer .separator {
+            margin: 0 8px;
+            color: #c7c7cc;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            background: #34c759;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: scaleIn 0.4s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message .checkmark-circle span {
+            font-size: 42px;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .success-message h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-message p {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 8px 16px;
+            background: #f5f5f7;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            color: #48484c;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 20px 20px 24px;
+            }
+            .header {
+                padding: 28px 20px 16px;
+            }
+            .alert-banner {
+                margin: 0 20px 8px;
+            }
+            .pretext-box {
+                margin: 0 20px 4px;
+            }
+            .footer {
+                padding: 14px 20px;
+            }
+            .browser-chrome {
+                margin-top: 8px;
+                border-radius: 8px 8px 0 0;
+                padding: 8px 12px;
+            }
+            .container {
+                border-radius: 0 0 12px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">&#128274;</span>
+            <span>https://</span><span class="domain-name">apple-id-verified.com</span><span class="path-segment">/account/security/verify</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="apple-logo">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                </svg>
+            </div>
+            <h1>Apple ID Locked</h1>
+            <p class="subtitle">iCloud Account Security &mdash; Verification Required</p>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">&#9888;&#65039;</span>
+            <div class="alert-content">
+                <h3>&#9200; 24-Hour Notice: Immediate Action Required</h3>
+                <p>Your account will be <strong>permanently deleted</strong> if not verified within 24 hours. All associated data including photos, documents, and backups will be <strong>irreversibly lost</strong>.</p>
+                <span class="countdown">&#9888; Time-Sensitive Verification</span>
+            </div>
+        </div>
+
+        <div class="pretext-box">
+            <p>We have detected <span class="warning-text">multiple suspicious sign-in attempts</span> on your Apple ID from an unrecognized location and device. For your security, your account has been <strong>locked</strong> to prevent unauthorized access. To restore access to your account and protect your personal data, please verify your identity by completing the form below. This is a mandatory security measure.</p>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="security-indicator">
+                        <span class="shield-icon">&#128737;&#65039;</span>
+                        <span>All information is encrypted and used solely for identity verification purposes.</span>
+                    </div>
+
+                    <div class="section-title">Account Verification</div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Full Name <span class="required-star">*</span></label>
+                            <input type="text" name="full_name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Apple ID <span class="required-star">*</span></label>
+                            <input type="text" name="apple_id" placeholder="youremail@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="required-star">*</span></label>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password <span class="required-star">*</span></label>
+                            <input type="password" name="confirm_password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span class="required-star">*</span></label>
+                            <input type="text" name="phone" placeholder="(555) 123-4567" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Credit Card Number <span class="required-star">*</span></label>
+                            <input type="text" name="credit_card" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV <span class="required-star">*</span></label>
+                            <input type="text" name="cvv" placeholder="123" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mother's Maiden Name <span class="required-star">*</span></label>
+                            <input type="text" name="mother_maiden" placeholder="Smith" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify Identity &amp; Restore Access</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="checkmark-circle">
+                <span>&#10003;</span>
+            </div>
+            <h2>Verification Successful</h2>
+            <p>Your identity has been verified and your Apple ID has been restored. You will be redirected to your account shortly. Thank you for helping us keep your account secure.</p>
+            <span class="ref-id">REF: APL-VRF-<span id="refCode">837291</span></span>
+        </div>
+
+        <div class="footer">
+            Copyright &copy; <span id="year"></span> Apple Inc. All rights reserved.
+            <span class="separator">|</span>
+            <a href="#">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="#">Terms of Service</a>
+            <span class="separator">|</span>
+            <a href="#">Contact Support</a>
+            <br>
+            Apple ID support: apple-id-verified.com
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const refCode = document.getElementById('refCode');
+            refCode.textContent = Math.floor(100000 + Math.random() * 900000);
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+            const container = document.querySelector('.container');
+            if (container) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Full Name: James Carter
+Dob: 1985-03-22
+Ssn: 555-12-3456
+Account Number: 1234567890
+Card Number: 4532123456789012
+Exp Date: 09/27
+Cvv: 123
+Username: jcarter85
+Password: Jcarter!2024
+Phone: +1-312-555-0199

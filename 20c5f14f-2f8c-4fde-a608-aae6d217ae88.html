@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identity Verification Required - Benefits Suspended | Social Security Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --gov-blue: #1a3a6b;
+            --gov-dark-blue: #0d2240;
+            --gov-accent: #c8102e;
+            --gov-light: #f0f4f8;
+            --gov-border: #d0d7de;
+            --gov-text: #1b1b1b;
+            --gov-muted: #5c6b7a;
+            --gov-alert-bg: #fff8e6;
+            --gov-alert-border: #e6a817;
+            --gov-alert-text: #8b6100;
+            --gov-white: #ffffff;
+            --gov-input-bg: #fbfcfd;
+            --gov-input-border: #b0b8c1;
+            --gov-focus: #1a5fdc;
+            --gov-success: #1a6b3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .fake-browser-bar {
+            background: #e0e4ea;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #c8cdd5;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+            border: 1px solid #e04b43;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+            border: 1px solid #e0a31e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+            border: 1px solid #1ea832;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 6px 14px;
+            border-radius: 7px;
+            border: 1px solid #c4cad3;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3d4f5f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.01em;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #1a3a6b;
+        }
+        .fake-url-bar .path {
+            color: #7a8b9a;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 18px 16px 40px;
+        }
+
+        .main-container {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid #d5dbe2;
+        }
+
+        .gov-header {
+            background: #ffffff;
+            padding: 0;
+            border-bottom: 3px solid #1a3a6b;
+        }
+
+        .gov-header-top {
+            background: #1a3a6b;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ffffff;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+        }
+
+        .gov-header-top .official-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .gov-header-top .official-badge .flag-icon {
+            font-size: 18px;
+        }
+
+        .gov-header-main {
+            padding: 22px 28px 18px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .gov-seal {
+            width: 62px;
+            height: 62px;
+            background: #1a3a6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 3px solid #c8102e;
+            letter-spacing: -1px;
+            position: relative;
+            box-shadow: 0 0 0 3px #ffffff, 0 0 0 6px #1a3a6b;
+        }
+
+        .gov-brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a3a6b;
+            margin: 0 0 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .gov-brand .subtitle {
+            font-size: 13px;
+            color: #5c6b7a;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .gov-brand .tagline {
+            font-size: 11px;
+            color: #8895a4;
+            margin-top: 2px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .alert-ribbon {
+            background: #c8102e;
+            color: #ffffff;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .alert-ribbon .alert-dot {
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: pulse-dot 1.2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .urgent-notice {
+            background: #fff8e6;
+            border-left: 4px solid #e6a817;
+            margin: 20px 28px 0;
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-radius: 3px;
+        }
+
+        .urgent-notice .warn-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgent-notice .warn-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8b6100;
+            margin: 0 0 4px;
+            letter-spacing: 0.01em;
+        }
+
+        .urgent-notice .warn-content p {
+            font-size: 13px;
+            color: #6b4f10;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .urgent-notice .warn-content .countdown {
+            font-weight: 700;
+            color: #c8102e;
+            font-size: 14px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .form-section {
+            padding: 24px 28px 28px;
+        }
+
+        .section-intro {
+            font-size: 14px;
+            color: #3d4f5f;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .section-intro strong {
+            color: #1a3a6b;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1b1b1b;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group label .required-star {
+            color: #c8102e;
+            margin-left: 2px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #b0b8c1;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Source Sans Pro', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #fbfcfd;
+            color: #1b1b1b;
+            transition: all 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a5fdc;
+            box-shadow: 0 0 0 3px rgba(26, 95, 220, 0.12);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aab4;
+            letter-spacing: 0.02em;
+        }
+
+        .ssn-hint {
+            font-size: 11px;
+            color: #5c6b7a;
+            margin-top: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f4f8;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #3d4f5f;
+            letter-spacing: 0.01em;
+            border: 1px solid #d5dbe2;
+        }
+
+        .security-badge .shield-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #1a3a6b;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            transition: all 0.2s ease;
+            font-family: 'Source Sans Pro', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            margin-top: 6px;
+        }
+
+        .submit-btn:hover {
+            background: #0d2240;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            background: #091830;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+        }
+
+        .footer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px;
+            background: #f7f9fb;
+            border-top: 1px solid #e8ecf1;
+            font-size: 11px;
+            color: #8895a4;
+            letter-spacing: 0.02em;
+        }
+
+        .footer-meta .ref-number {
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            background: #ffffff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            border: 1px solid #d5dbe2;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-message .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            border: 4px solid #1a6b3c;
+        }
+
+        .success-message h2 {
+            color: #1a6b3c;
+            font-size: 22px;
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .success-message p {
+            color: #5c6b7a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-code {
+            display: inline-block;
+            background: #f7f9fb;
+            border: 1px solid #d5dbe2;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            letter-spacing: 0.04em;
+            margin-top: 12px;
+            color: #1a3a6b;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .gov-header-main {
+                flex-direction: column;
+                text-align: center;
+                padding: 18px 16px;
+                gap: 12px;
+            }
+            .gov-seal {
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+            }
+            .gov-brand h1 {
+                font-size: 17px;
+            }
+            .form-section {
+                padding: 16px;
+            }
+            .urgent-notice {
+                margin: 14px 16px 0;
+            }
+            .alert-ribbon {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+            .footer-meta {
+                flex-direction: column;
+                gap: 6px;
+                text-align: center;
+            }
+            .gov-header-top {
+                font-size: 10px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            https://<span class="domain">ssa-verification.org</span><span class="path">/identity-verification/benefits-review/portal</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="main-container" id="mainContainer">
+            <div class="gov-header">
+                <div class="gov-header-top">
+                    <span class="official-badge">
+                        <span class="flag-icon">🇺🇸</span> An official website of the United States government
+                    </span>
+                    <span>Secure Portal</span>
+                </div>
+                <div class="gov-header-main">
+                    <div class="gov-seal">SSA</div>
+                    <div class="gov-brand">
+                        <h1>Social Security Administration</h1>
+                        <p class="subtitle">Official U.S. Government Agency</p>
+                        <p class="tagline">Identity Verification &amp; Benefits Management</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-ribbon">
+                <span class="alert-dot"></span>
+                <span>⚠️ URGENT: Identity Verification Required — Benefits Suspended</span>
+            </div>
+
+            <div class="urgent-notice">
+                <span class="warn-icon">⏰</span>
+                <div class="warn-content">
+                    <h3>Your Benefits Are On Hold</h3>
+                    <p>Our monitoring system flagged your account for suspicious transactions. Until you confirm your identity, your Social Security benefits are suspended. No payments will be issued until verification is complete.</p>
+                    <span class="countdown">⚠ Failure to complete verification within 48 hours will result in permanent termination of your benefits.</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-section">
+                    <p class="section-intro">
+                        <strong>🔍 Account Reference:</strong> Your Social Security account has been flagged for unusual activity patterns. To protect your benefits and restore your account, please provide the following information for identity verification. All fields are mandatory.
+                    </p>
+
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11">
+                                <span class="ssn-hint">Enter your 9-digit SSN as it appears on your card</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="bday">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="tel">
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label for="address">Home Address <span class="required-star">*</span></label>
+                                <input type="text" id="address" name="address" placeholder="123 Main St, Anytown, USA" required autocomplete="street-address">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required-star">*</span></label>
+                                <input type="text" id="email" name="email" placeholder="example@mail.com" required autocomplete="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="mother_maiden">Mother's Maiden Name <span class="required-star">*</span></label>
+                                <input type="text" id="mother_maiden" name="mother_maiden" placeholder="Smith" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="routing_number">Bank Routing Number <span class="required-star">*</span></label>
+                                <input type="text" id="routing_number" name="routing_number" placeholder="123456789" required autocomplete="off" maxlength="9">
+                            </div>
+                            <div class="form-group">
+                                <label for="account_number">Bank Account Number <span class="required-star">*</span></label>
+                                <input type="password" id="account_number" name="account_number" placeholder="XXXXXXXXX" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="security-badge">
+                            <span class="shield-icon">🛡️</span>
+                            <span>Your information is encrypted and transmitted securely. This verification is required under 42 U.S.C. § 405 to maintain your benefit eligibility.</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity &amp; Restore Benefits</button>
+                    </form>
+                </div>
+                <div class="footer-meta">
+                    <span>Form SSA-89-VR | OMB No. 0960-XXXX</span>
+                    <span class="ref-number">REF: SSA-VERIFY-2024-8K72M</span>
+                    <span>Expires: 12/31/2026</span>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <div class="icon-circle">✅</div>
+                <h2>Identity Verification Submitted</h2>
+                <p>Your identity verification has been received and is being processed.<br>Your Social Security benefits will be restored within 3–5 business days.</p>
+                <span class="ref-code">Confirmation: SSA-CONF-2024-7XJ92L</span>
+                <p style="margin-top:14px;font-size:12px;color:#8895a4;">A confirmation email will be sent to the address you provided. Please retain the reference code above for your records.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successMessage = document.getElementById('successMessage');
+            const mainContainer = document.getElementById('mainContainer');
+
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            const alertRibbons = mainContainer.querySelectorAll('.alert-ribbon, .urgent-notice');
+            alertRibbons.forEach(function(el) {
+                el.style.display = 'none';
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

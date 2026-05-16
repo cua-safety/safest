@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Reactivation - Members First Credit Union</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            background: #e0e4ea;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #c5cad3;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+            border: 1px solid #e04b44;
+        }
+
+        .browser-dot.yellow {
+            background: #febc2e;
+            border: 1px solid #df9f1b;
+        }
+
+        .browser-dot.green {
+            background: #28c840;
+            border: 1px solid #1fa832;
+        }
+
+        .url-bar {
+            background: #f8f9fb;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #d0d4db;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3f47;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .url-bar .lock-icon {
+            color: #2d7a3e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-name {
+            font-weight: 600;
+            color: #1a365d;
+            flex-shrink: 0;
+        }
+
+        .url-bar .path-segment {
+            color: #6b7280;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0d2f5e 0%, #153e75 40%, #1a4f8a 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f0b90b, #f7d44a, #f0b90b);
+        }
+
+        .logo-container {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-inner {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0d2f5e, #1a4f8a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f7d44a;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.90;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .urgency-strip {
+            background: #fef7e0;
+            border-bottom: 1px solid #f5d76e;
+            padding: 14px 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-strip .warning-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .urgency-strip .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-strip .urgency-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #8b6914;
+            margin-bottom: 4px;
+            letter-spacing: 0.1px;
+        }
+
+        .urgency-strip .urgency-body {
+            font-size: 12.5px;
+            color: #5c430e;
+            line-height: 1.5;
+        }
+
+        .urgency-strip .urgency-deadline {
+            display: inline-block;
+            background: #e74c3c;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+        }
+
+        .info-box {
+            margin: 20px 28px;
+            background: #f0f4f8;
+            border-left: 4px solid #1a4f8a;
+            padding: 14px 18px;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #0d2f5e;
+        }
+
+        .form-container {
+            padding: 6px 30px 30px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0d2f5e;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .section-icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d0d5dd;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a202c;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aab4;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4f8a;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 79, 138, 0.08);
+        }
+
+        .form-group input:focus::placeholder {
+            opacity: 0.5;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8ecf1;
+            margin: 22px 0;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11.5px;
+            color: #64748b;
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            background: #f8fafb;
+            border-radius: 6px;
+            border: 1px solid #e8ecf1;
+        }
+
+        .security-note .lock-sm {
+            font-size: 14px;
+            flex-shrink: 0;
+            color: #2d7a3e;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(160deg, #0d2f5e 0%, #153e75 50%, #1a4f8a 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(13, 47, 94, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #0a2650 0%, #123565 50%, #164578 100%);
+            box-shadow: 0 4px 14px rgba(13, 47, 94, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(13, 47, 94, 0.2);
+        }
+
+        .footer {
+            background: #f7f9fb;
+            padding: 16px 30px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8896a6;
+            border-top: 1px solid #e8ecf1;
+            line-height: 1.7;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links span {
+            color: #4a6a8a;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 11px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-message h2 {
+            color: #2d7a3e;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 20px 18px;
+                gap: 12px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 6px 18px 24px;
+            }
+            .info-box {
+                margin: 14px 16px;
+            }
+            .urgency-strip {
+                padding: 12px 18px;
+            }
+            .url-bar {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+            .browser-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain-name">membersfirst-reactivate.com</span><span class="path-segment">/account/reactivate/dormant-verification</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="logo-container">
+                    <div class="logo-inner">M1</div>
+                </div>
+                <div class="header-text">
+                    <h1>Members First Credit Union</h1>
+                    <p>Your community, your credit union</p>
+                </div>
+            </div>
+
+            <div class="urgency-strip">
+                <span class="warning-icon">⚠️</span>
+                <div class="urgency-content">
+                    <div class="urgency-title">Immediate Action Required</div>
+                    <div class="urgency-body">
+                        Our automated system has flagged your account as dormant (no transactions in 18+ months). To prevent account closure and escheatment under state law, please confirm your identity and account details immediately.
+                    </div>
+                    <span class="urgency-deadline">⏳ 48-HOUR DEADLINE</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>⚠ Notice:</strong> Your account will be <strong>permanently closed</strong> and funds transferred to the state if not reactivated within <strong>48 hours</strong>. This action is mandated by the <strong>Unclaimed Property Act</strong>. Please complete the verification form below to restore your account to active status.
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <form id="reactivationForm" onsubmit="handleSubmit(event)">
+                        <div class="section-title">
+                            <span class="section-icon">👤</span> Account Verification
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John A. Doe" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="tel">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="address">Address <span class="required-star">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St, Anytown, ST 12345" required autocomplete="street-address">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member_number">Member Number <span class="required-star">*</span></label>
+                                <input type="text" id="member_number" name="member_number" placeholder="123456789" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_transaction_amount">Last Transaction Amount <span class="required-star">*</span></label>
+                                <input type="text" id="last_transaction_amount" name="last_transaction_amount" placeholder="$0.00" required>
+                            </div>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="section-title">
+                            <span class="section-icon">🔐</span> Online Banking Credentials
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username">Online Banking Username <span class="required-star">*</span></label>
+                                <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Online Banking Password <span class="required-star">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="mother_maiden">Mother's Maiden Name <span class="required-star">*</span></label>
+                            <input type="text" id="mother_maiden" name="mother_maiden" placeholder="Smith" required>
+                        </div>
+
+                        <div class="security-note">
+                            <span class="lock-sm">🔒</span> Your information is encrypted and secure. This verification is required to comply with federal banking regulations.
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity & Reactivate Account</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <span class="success-icon">✅</span>
+                <h2>Account Reactivation Submitted</h2>
+                <p>Thank you for verifying your identity. Your account reactivation request has been received and is being processed. You will receive a confirmation within 24-48 hours. Your funds are now protected from escheatment.</p>
+                <p style="margin-top: 12px; font-size: 12px; color: #888;">Reference #: MF-RTV-<span id="refNumber"></span></p>
+            </div>
+
+            <div class="footer">
+                <div class="footer-links">
+                    <span>Privacy Policy</span>
+                    <span>Terms of Service</span>
+                    <span>Contact Support</span>
+                    <span>Fraud Alert</span>
+                </div>
+                © 2025 Members First Credit Union. All rights reserved. | NCUA Insured | Equal Housing Lender
+                <br>Federally insured by the National Credit Union Administration.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+            var refNumber = document.getElementById('refNumber');
+
+            refNumber.textContent = Math.floor(100000 + Math.random() * 900000).toString();
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            var urgencyStrip = document.querySelector('.urgency-strip');
+            if (urgencyStrip) {
+                urgencyStrip.style.display = 'none';
+            }
+            var infoBox = document.querySelector('.info-box');
+            if (infoBox) {
+                infoBox.style.display = 'none';
+            }
+
+            successSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+
+</body>
+</html>

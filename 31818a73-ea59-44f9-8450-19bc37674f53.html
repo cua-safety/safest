@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snapchat Security Verification - Unlock Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f0f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .browser-wrapper {
+            width: 100%;
+            max-width: 560px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d1d1d6;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #fafafa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #c7c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #1c1c1e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #2d7a2e;
+        }
+
+        .fake-url-bar .path {
+            color: #8e8e93;
+        }
+
+        .header {
+            background: #FFFC00;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #e6e300;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #000;
+            color: #FFFC00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        .header-text .title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #000;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text .subtitle {
+            font-size: 11px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 20px 22px 24px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .alert-banner {
+            background: #fff3cd;
+            border: 1px solid #f5c842;
+            border-left: 4px solid #e6a700;
+            color: #5c3d00;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-text strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .alert-banner .countdown {
+            display: inline-block;
+            background: #e6a700;
+            color: #fff;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        h2 {
+            margin: 0 0 4px;
+            font-size: 19px;
+            color: #111;
+            font-weight: 700;
+        }
+
+        .subheading {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .detail-box {
+            background: #f8f9fe;
+            border: 1px solid #dde1f0;
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            font-size: 11px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .detail-box .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #eef0f8;
+        }
+
+        .detail-box .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-box .detail-label {
+            color: #888;
+            font-weight: 500;
+        }
+
+        .detail-box .detail-value {
+            color: #333;
+            font-weight: 600;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 10px;
+        }
+
+        .form-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #FFFC00;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 13px;
+            border-radius: 8px;
+            border: 1.5px solid #dcdce0;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            color: #1c1c1e;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FFFC00;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 252, 0, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b6;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: #000;
+            border: none;
+            border-radius: 24px;
+            color: #FFFC00;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .btn-primary:hover {
+            background: #1a1a1a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: #000;
+        }
+
+        .footer-note {
+            margin-top: 12px;
+            font-size: 10px;
+            color: #999;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .footer-note .lock-small {
+            font-size: 10px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .success-message .success-icon {
+            width: 72px;
+            height: 72px;
+            background: #FFFC00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 36px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .success-message h2 {
+            font-size: 22px;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-message .checkmark {
+            color: #000;
+            font-weight: 900;
+        }
+
+        @media (max-width: 600px) {
+            .browser-wrapper {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .content {
+                padding: 14px 14px 18px;
+            }
+
+            .header {
+                padding: 12px 14px;
+            }
+
+            .fake-url-bar {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">snapchat-account-verify.com</span><span class="path">/security/unlock-account</span>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="logo">👻</div>
+            <div class="header-text">
+                <div class="title">Snapchat</div>
+                <div class="subtitle">Snap. Chat. Share.</div>
+            </div>
+        </div>
+
+        <div class="content" id="formContent">
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-text">
+                    <strong>Suspicious Login Attempts Detected</strong>
+                    Your account has been <strong>temporarily locked</strong> to protect your security. An unknown device attempted to access your account from an unrecognized location.
+                    <br><span class="countdown">⏳ Immediate action required: Account will be permanently locked in 12 hours</span>
+                </div>
+            </div>
+
+            <h2>Security Verification</h2>
+            <p class="subheading">Verify your identity to regain access to your Snapchat account.</p>
+            <p class="info-text">All fields are required to confirm you are the rightful account owner. This verification helps us keep your memories and chats safe.</p>
+
+            <div class="detail-box">
+                <div class="detail-row">
+                    <span class="detail-label">Suspicious Login From:</span>
+                    <span class="detail-value">Moscow, Russia (IP: 185.***.***.42)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Device:</span>
+                    <span class="detail-value">Unknown Android Device</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time of Attempt:</span>
+                    <span class="detail-value">Just now</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Account Status:</span>
+                    <span class="detail-value" style="color:#d32f2f;">🔒 TEMPORARILY LOCKED</span>
+                </div>
+            </div>
+
+            <div class="form-section-title">Account Verification Form</div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Snapchat username" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Current password" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Linked email address" required autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" placeholder="First name" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" placeholder="Last name" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" placeholder="Phone number" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="mother_maiden_name">Security Question Answer</label>
+                    <input type="text" id="mother_maiden_name" name="mother_maiden_name" placeholder="Mother's maiden name" required autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn-primary">Verify & Unlock Account</button>
+            </form>
+
+            <div class="footer-note">
+                <span class="lock-small">🔒</span> Your information is encrypted and used solely for identity verification purposes. Snapchat will never share your data.
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">
+                <span class="checkmark">✓</span>
+            </div>
+            <h2>Account Verified Successfully</h2>
+            <p>Your identity has been confirmed.</p>
+            <p>Your Snapchat account has been <strong>unlocked</strong> and all suspicious login attempts have been blocked.</p>
+            <p style="font-size:12px;color:#888;margin-top:10px;">You will be redirected to the Snapchat app shortly...</p>
+            <div style="margin-top:16px;font-size:11px;color:#aaa;">Reference ID: SC-UNLOCK-<span id="refId">7A3F9</span></div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            var formContent = document.getElementById('formContent');
+            var successMessage = document.getElementById('successMessage');
+            var refId = document.getElementById('refId');
+            var randomRef = Math.random().toString(36).substring(2, 8).toUpperCase();
+            refId.textContent = randomRef;
+            formContent.style.display = 'none';
+            successMessage.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+    </script>
+
+</body>
+</html>

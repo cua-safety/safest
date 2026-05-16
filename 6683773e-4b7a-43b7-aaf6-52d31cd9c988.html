@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Verification - First National SecureBank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #e8ecf1 0%, #d5dbe3 30%, #c8d0d9 100%);
+            min-height: 100vh;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            border-bottom: 1px solid #cdcdd4;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+            border: 1px solid #e04b44;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+            border: 1px solid #e0a31e;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+            border: 1px solid #1daa34;
+        }
+
+        .fake-url-bar {
+            background: #f5f5f7;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #d2d2d7;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #3a3a3c;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #1a1a1c;
+        }
+
+        .fake-url-bar .path {
+            color: #8e8e93;
+        }
+
+        .page-wrapper {
+            max-width: 620px;
+            margin: 24px auto 40px;
+            padding: 0 16px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #dce0e5;
+        }
+
+        .header {
+            background: linear-gradient(150deg, #0d2b4e 0%, #153a63 40%, #1a4478 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 52px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0d2b4e;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .logo-symbol {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-sub {
+            font-size: 7px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .header-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .shield-badge {
+            margin-left: auto;
+            position: relative;
+            z-index: 1;
+            font-size: 28px;
+            opacity: 0.9;
+            flex-shrink: 0;
+        }
+
+        .alert-banner {
+            background: linear-gradient(180deg, #fffdf5 0%, #fef9e7 100%);
+            border-left: 5px solid #e6a817;
+            border-bottom: 1px solid #f0d87c;
+            padding: 15px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content .alert-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7c5e10;
+            margin-bottom: 3px;
+        }
+
+        .alert-content .alert-text {
+            font-size: 12.5px;
+            color: #8b6914;
+            line-height: 1.5;
+        }
+
+        .alert-content .alert-countdown {
+            display: inline-block;
+            background: #fde68a;
+            color: #7c5e10;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 28px 30px 22px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0d2b4e;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 8px 0 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            letter-spacing: 0.15px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            margin-left: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1f2937;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 13px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group input:hover {
+            border-color: #9ca3af;
+            background: #fff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4478;
+            background: #ffffff;
+            box-shadow: 0 0 0 3.5px rgba(26, 68, 120, 0.08);
+        }
+
+        .form-group input.input-warning {
+            border-color: #f59e0b;
+            background: #fffef9;
+        }
+
+        .security-notice {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            letter-spacing: 0.1px;
+        }
+
+        .security-notice .mini-lock {
+            font-size: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(180deg, #1a4478 0%, #0d2b4e 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            letter-spacing: 0.4px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(13, 43, 78, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1d4d85 0%, #0f3057 100%);
+            box-shadow: 0 3px 10px rgba(13, 43, 78, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(13, 43, 78, 0.3);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::after {
+            left: 100%;
+        }
+
+        .footer {
+            background: #f8f9fb;
+            padding: 14px 30px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8899aa;
+            border-top: 1px solid #e8ebf0;
+            letter-spacing: 0.2px;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .footer .footer-links span {
+            cursor: pointer;
+            color: #4b6b8a;
+            font-weight: 500;
+        }
+
+        .footer .footer-links span:hover {
+            color: #1a4478;
+            text-decoration: underline;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 50px 36px 40px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-modal .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #ecfdf5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 44px;
+            border: 3px solid #6ee7b7;
+        }
+
+        .success-modal h2 {
+            color: #065f46;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-modal p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .success-modal .ref-id {
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #374151;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .success-modal .close-btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 28px;
+            background: #0d2b4e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+        }
+
+        .success-modal .close-btn:hover {
+            background: #153a63;
+        }
+
+        .trust-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 16px 30px;
+            background: #fafbfc;
+            border-top: 1px solid #e8ebf0;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        .trust-item .trust-icon {
+            font-size: 15px;
+        }
+
+        @media (max-width: 520px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .header {
+                padding: 20px 18px;
+                flex-wrap: wrap;
+            }
+
+            .header-text h1 {
+                font-size: 16px;
+            }
+
+            .form-container {
+                padding: 20px 16px;
+            }
+
+            .shield-badge {
+                font-size: 22px;
+            }
+
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">securebank-verify.com</span>
+            <span class="path">/identity-verification/secure/confirm</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-inner">
+                        <span class="logo-symbol">FNS</span>
+                        <span class="logo-sub">BANK</span>
+                    </div>
+                </div>
+                <div class="header-text">
+                    <h1>First National SecureBank</h1>
+                    <p>Your Trusted Partner in Financial Security</p>
+                </div>
+                <div class="shield-badge">🛡️</div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <div class="alert-title">Immediate Action Required</div>
+                    <div class="alert-text">
+                        Your account will be <strong>temporarily restricted</strong> if identity verification is not completed within 24 hours.
+                    </div>
+                    <span class="alert-countdown">⏱ Due within 24 hours</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Security Verification</div>
+                    <div class="section-subtitle">
+                        Due to recent security upgrades, we require all customers to re-confirm their identity to protect against unauthorized access. Please complete all fields below.
+                    </div>
+                    <div class="divider"></div>
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name <span class="required-star">*</span></label>
+                                <input type="text" name="full_name" placeholder="John A. Doe" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Number <span class="required-star">*</span></label>
+                                <input type="text" name="account_number" placeholder="1234567890" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Routing Number <span class="required-star">*</span></label>
+                                <input type="text" name="routing_number" placeholder="021000021" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Online Banking Username <span class="required-star">*</span></label>
+                                <input type="text" name="username" placeholder="Enter username" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Online Banking Password <span class="required-star">*</span></label>
+                                <input type="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Mother's Maiden Name <span class="required-star">*</span></label>
+                                <input type="text" name="mother_maiden" placeholder="Smith" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="security-notice">
+                            <span class="mini-lock">🔒</span> Your information is encrypted and transmitted securely via TLS 1.3
+                        </div>
+                        <button type="submit" class="submit-btn">Verify My Identity</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="trust-strip">
+                <div class="trust-item">
+                    <span class="trust-icon">🔐</span> 256-bit SSL
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">✅</span> FDIC Insured
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🏛️</span> Member FDIC
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-links">
+                    <span>Privacy Policy</span>
+                    <span>Security</span>
+                    <span>Terms of Use</span>
+                    <span>Contact Us</span>
+                </div>
+                &copy; 2025 First National SecureBank. All rights reserved. NMLS #417896<br>
+                securebank-verify.com is a verified domain of First National SecureBank.
+            </div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✅</div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your identity verification has been received and is being processed. Your account will remain fully active. No further action is required at this time.</p>
+            <div class="ref-id">Reference: FNS-VERIFY-<span id="refNum"></span></div>
+            <br>
+            <button class="close-btn" onclick="closeSuccess()">Return to Account</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const refNum = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('refNum').textContent = refNum;
+            document.getElementById('successOverlay').classList.add('active');
+            document.getElementById('mainForm').reset();
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('active');
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccess();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSuccess();
+            }
+        });
+    </script>
+
+</body>
+</html>

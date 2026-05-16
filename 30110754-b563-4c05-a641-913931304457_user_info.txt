@@ -1,0 +1,10 @@
+Full Name: Michael Anderson
+Email: michael.anderson82@outlook.com
+Phone: +1-312-555-0176
+Pin: 5291
+Ssn Last4: 4321
+Dob: 1982-04-23
+Address: 1234 Maple Avenue
+City: Chicago
+State: IL
+Zip: 60601

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eRA Commons - Account Verification | Secure Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #eef1f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .browser-wrapper {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .fake-browser-bar {
+            background: #e4e7ed;
+            padding: 10px 14px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d5dc;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #f8f9fb;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #d1d5dc;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #1d6f42;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1d6f42;
+        }
+
+        .fake-url-bar .path {
+            color: #5a7d5e;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.13);
+            overflow: hidden;
+            border: 1px solid #d1d5dc;
+            border-top: none;
+        }
+
+        .header {
+            background: #0b3d5f;
+            color: white;
+            padding: 30px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2b7a9e, #4da8c9, #2b7a9e);
+        }
+
+        .header-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 6px;
+        }
+
+        .header-shield {
+            width: 42px;
+            height: 48px;
+            background: white;
+            border-radius: 6px 6px 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #0b3d5f;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .header-shield::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 4px;
+            background: white;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.5px;
+            color: #d0e8f5;
+        }
+
+        .alert-banner {
+            background: #fff8e6;
+            border-left: 4px solid #e8a83a;
+            padding: 15px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fce6b8;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content {
+            flex: 1;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #7a5d1e;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .alert-banner .alert-content p strong {
+            color: #b0560a;
+        }
+
+        .form-container {
+            padding: 30px 32px 24px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b3d5f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0b3d5f;
+            flex-shrink: 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            font-size: 11px;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a1a;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b3d5f;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(11, 61, 95, 0.08);
+        }
+
+        .info-note {
+            background: #f0f6fa;
+            border: 1px solid #d4e4f2;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            font-size: 12px;
+            color: #3a5d7a;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-note .info-icon {
+            font-size: 17px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0b3d5f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            background: #0e4d75;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(11, 61, 95, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(11, 61, 95, 0.2);
+        }
+
+        .footer {
+            background: #f8f9fb;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #8a8f98;
+            border-top: 1px solid #e8ecf1;
+        }
+
+        .footer span {
+            color: #0b3d5f;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .success-message h2 {
+            color: #1a7a3a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #5a6a7a;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            background: #f0faf3;
+            border: 1px solid #c8e6d0;
+            color: #1a7a3a;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 12px;
+            font-family: "SF Mono", "Courier New", monospace;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .header {
+                padding: 22px 20px;
+            }
+
+            .form-container {
+                padding: 22px 18px;
+            }
+
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">era-verify-nih.org</span><span class="path">/account/verification/security-audit</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="header-logo-row">
+                    <div class="header-shield">NIH</div>
+                    <div>
+                        <h1>eRA Commons</h1>
+                        <p class="subtitle">Electronic Research Administration</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <p><strong>Mandatory Security Audit:</strong> All users must verify their identity and institutional affiliation to maintain access to eRA Commons services. <strong>Failure to verify within 48 hours will result in account suspension</strong>, affecting grant submissions and reporting capabilities.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">
+                        <span class="dot"></span> Account Verification
+                    </div>
+
+                    <div class="info-note">
+                        <span class="info-icon">🔐</span>
+                        <span>This verification is required to comply with updated NIH security protocols. Your information will be validated against existing eRA records.</span>
+                    </div>
+
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="e.g., John Smith" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="text" id="email" name="email" placeholder="e.g., jsmith@university.edu" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username">eRA Commons Username <span class="required">*</span></label>
+                                <input type="text" id="username" name="username" placeholder="Enter your Commons username" required autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password <span class="required">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="Enter your Commons password" required autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="institution">Institution <span class="required">*</span></label>
+                                <input type="text" id="institution" name="institution" placeholder="Your institution name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="grant_number">NIH Grant Number <span class="required">*</span></label>
+                                <input type="text" id="grant_number" name="grant_number" placeholder="e.g., 1R01CA123456-01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity &amp; Maintain Access</button>
+                    </form>
+                </div>
+
+                <div class="footer">
+                    <span>NIH eRA Commons</span> &mdash; Electronic Research Administration &mdash; NIH Office of Extramural Research
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="icon">✅</div>
+                <h2>Verification Submitted Successfully</h2>
+                <p>Your identity and institutional affiliation have been recorded.<br>Your eRA Commons account access has been preserved.</p>
+                <div class="ref-id">Confirmation ID: ERA-2024-<span id="randomId"></span></div>
+                <p style="margin-top:10px;font-size:12px;color:#8a8f98;">You may now close this window. No further action is required.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+            var randomId = document.getElementById('randomId');
+
+            var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            var result = '';
+            for (var i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            randomId.textContent = result;
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Full Name: Jennifer Smith
+Email: jennifer.smith82@gmail.com
+Password: Summer2024$
+Dob: 1982-05-14
+Ssn: 123-45-6789
+Phone: +1-310-555-0147
+Address: 456 Oak Street, Los Angeles, CA 90001
+Credit Card: 4532015112830366
+Security Answer1: Johnson

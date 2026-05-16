@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Urgent Account Verification Required | Geek Squad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-wrapper {
+            width: 100%;
+            max-width: 750px;
+            margin: 18px auto 0;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .fake-browser-bar {
+            background: #2c2c2e;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #3a3a3c;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #1c1c1e;
+            padding: 7px 12px;
+            border-radius: 6px;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid #3a3a3c;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #28c840;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .fake-url-bar .path {
+            color: #98989d;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto 30px;
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #000000;
+            color: white;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #ff6b00;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: #ff6b00;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            font-size: 13px;
+            letter-spacing: -1px;
+            line-height: 1;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon span {
+            font-size: 11px;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+        }
+
+        .header-text .brand-name {
+            color: #ff6b00;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.8;
+            color: #cccccc;
+            letter-spacing: 0.2px;
+        }
+
+        .header-badge {
+            margin-left: auto;
+            background: #ff6b00;
+            color: #000;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .urgency-bar {
+            background: #fff3e0;
+            border-left: 5px solid #ff6b00;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #ffe0b2;
+            animation: pulse-border 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%,
+            100% {
+                border-left-color: #ff6b00;
+            }
+            50% {
+                border-left-color: #ff3d00;
+            }
+        }
+
+        .urgency-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            animation: bounce 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .urgency-text h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 3px;
+        }
+
+        .urgency-text p {
+            font-size: 12px;
+            color: #bf360c;
+            line-height: 1.4;
+        }
+
+        .urgency-timer {
+            background: #ff3d00;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-align: center;
+            animation: timer-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes timer-pulse {
+            0%,
+            100% {
+                background: #ff3d00;
+            }
+            50% {
+                background: #d32f2f;
+            }
+        }
+
+        .urgency-timer .countdown {
+            font-size: 20px;
+            display: block;
+            font-weight: 900;
+        }
+
+        .info-banner {
+            background: #f5f5f5;
+            padding: 14px 24px;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .info-banner .info-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .form-container {
+            padding: 28px 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff6b00;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .shield-icon {
+            font-size: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #ff3d00;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #d5d5d5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b00;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .security-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            padding: 10px 14px;
+            background: #f0fdf0;
+            border-radius: 6px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .security-indicator .secure-icon {
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(180deg, #ff7b1a 0%, #e65c00 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #ff8f3d 0%, #ff6b00 100%);
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+        }
+
+        .footer {
+            background: #f8f8f8;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .footer-links span {
+            cursor: pointer;
+            color: #666;
+        }
+
+        .footer-links span:hover {
+            color: #ff6b00;
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 26px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 450px;
+            margin: 0 auto 8px;
+        }
+
+        .success-message .ref-num {
+            background: #f5f5f5;
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #333;
+            margin-top: 12px;
+            border: 1px dashed #ccc;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 8px 0 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .header-badge {
+                margin-left: 0;
+            }
+
+            .urgency-bar {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .form-container {
+                padding: 20px 16px;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <div class="traffic-lights">
+                <span class="fake-circle red"></span>
+                <span class="fake-circle yellow"></span>
+                <span class="fake-circle green"></span>
+            </div>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span class="domain">geeksquad-support-verify.com</span>
+                <span class="path">/account/security/urgent-verification</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <span>GEEK<br>SQUAD</span>
+                </div>
+                <div class="header-text">
+                    <h1><span class="brand-name">Geek Squad</span></h1>
+                    <p>Best Buy Tech Support</p>
+                </div>
+            </div>
+            <div class="header-badge">🔐 Secure Portal</div>
+        </div>
+
+        <div class="urgency-bar">
+            <span class="urgency-icon">⚠️</span>
+            <div class="urgency-text">
+                <h3>SECURITY ALERT: Potential Account Compromise Detected</h3>
+                <p>Our systems have identified unusual activity on your Geek Squad account. Immediate verification is required to prevent service disruption and protect your personal data.</p>
+            </div>
+            <div class="urgency-timer">
+                <span class="countdown" id="countdown">14:58</span>
+                remaining
+            </div>
+        </div>
+
+        <div class="info-banner">
+            <span class="info-icon">🛡️</span>
+            <span>Our security systems have detected a potential compromise of your Geek Squad account. To prevent unauthorized access to your tech support benefits and personal data, you must verify your account details immediately. <strong>ACTION REQUIRED: Your account will be deactivated within 15 minutes if verification is not completed.</strong></span>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="shield-icon">🔐</span> Account Verification Form
+                </div>
+
+                <div class="security-indicator">
+                    <span class="secure-icon">🔒</span>
+                    <span>All information is encrypted and transmitted securely via SSL/TLS</span>
+                </div>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="full_name" placeholder="John Smith" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address <span class="required">*</span></label>
+                            <input type="text" name="email" placeholder="youremail@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Password <span class="required">*</span></label>
+                            <input type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Last 4 of Social Security Number <span class="required">*</span></label>
+                            <input type="text" name="ssn_last4" placeholder="Last 4 digits" maxlength="4" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number <span class="required">*</span></label>
+                            <input type="text" name="phone" placeholder="(555) 123-4567" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Home Address <span class="required">*</span></label>
+                        <input type="text" name="address" placeholder="123 Main St, City, State ZIP" required>
+                    </div>
+
+                    <hr class="divider">
+
+                    <button type="submit" class="submit-btn">Verify My Account Now</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="icon">✅</div>
+            <h2>Verification Successful</h2>
+            <p>Your Geek Squad account has been verified and secured. All your tech support benefits and personal data are now protected.</p>
+            <p>Your account will continue to operate normally with no service interruption.</p>
+            <div class="ref-num">Reference: GS-VRFY-<span id="refNum">872941</span></div>
+            <p style="margin-top:14px; font-size:12px; color:#888;">You may now close this page. A confirmation email will be sent shortly.</p>
+        </div>
+
+        <div class="footer">
+            <span>&copy; 2024 Geek Squad | Best Buy Co., Inc. All rights reserved.</span>
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>Terms of Service</span>
+                <span>Contact Support</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.getElementById('refNum').textContent = Math.floor(100000 + Math.random() * 900000);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startCountdown() {
+            let totalSeconds = 15 * 60;
+            const countdownEl = document.getElementById('countdown');
+
+            function updateCountdown() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                countdownEl.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2,
+                    '0');
+
+                if (totalSeconds <= 60) {
+                    countdownEl.parentElement.style.animation = 'none';
+                    countdownEl.parentElement.style.background = '#c62828';
+                }
+
+                if (totalSeconds <= 0) {
+                    countdownEl.textContent = '00:00';
+                    countdownEl.parentElement.style.background = '#b71c1c';
+                    return;
+                }
+
+                totalSeconds--;
+                setTimeout(updateCountdown, 1000);
+            }
+
+            updateCountdown();
+        }
+
+        startCountdown();
+    </script>
+
+</body>
+</html>

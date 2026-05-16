@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AT&T Account Security - Identity Verification</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 720px;
+            margin: 20px auto 0;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+            border: 1px solid #e0443e;
+        }
+
+        .traffic-light.yellow {
+            background: #febc2e;
+            border: 1px solid #dca015;
+        }
+
+        .traffic-light.green {
+            background: #28c840;
+            border: 1px solid #1da82e;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c7c7cc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .url-bar .lock-icon {
+            color: #34c759;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .url-bar .path {
+            color: #8e8e93;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 1px solid #d1d1d6;
+            border-top: none;
+        }
+
+        .header {
+            background: #fff;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .att-logo {
+            width: 42px;
+            height: 42px;
+            background: #0057B8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .att-logo::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .att-logo::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #0057B8;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #6e6e73;
+            font-weight: 400;
+        }
+
+        .nav-bar {
+            background: #0057B8;
+            padding: 10px 28px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-bar span {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .nav-bar span.active {
+            opacity: 1;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 6px;
+        }
+
+        .alert-section {
+            background: #fff9f0;
+            border-left: 5px solid #f5a623;
+            margin: 20px 28px;
+            padding: 16px 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-content h3 {
+            font-size: 15px;
+            color: #b45309;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        .alert-content .countdown {
+            display: inline-block;
+            background: #fef3c7;
+            color: #b45309;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-size: 13px;
+            border: 1px solid #fcd34d;
+        }
+
+        .form-container {
+            padding: 8px 28px 28px;
+        }
+
+        .section-header {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0057B8;
+            letter-spacing: -0.2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required {
+            color: #e00;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #c7c7cc;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #f9f9fb;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0057B8;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aeaeb2;
+        }
+
+        .security-notice {
+            background: #f0f4fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #3a3a3c;
+            border: 1px solid #dce6f5;
+        }
+
+        .security-notice .shield-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0057B8;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #004a9e;
+            box-shadow: 0 2px 8px rgba(0, 87, 184, 0.3);
+        }
+
+        .submit-btn:active {
+            background: #003d84;
+            transform: scale(0.98);
+        }
+
+        .footer {
+            background: #f9f9fb;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #8e8e93;
+            border-top: 1px solid #e5e5ea;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: #0057B8;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-overlay.active {
+            display: block;
+        }
+
+        .success-overlay .checkmark {
+            width: 80px;
+            height: 80px;
+            background: #34c759;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-overlay .checkmark span {
+            color: #fff;
+            font-size: 44px;
+            line-height: 1;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto 20px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f0f4fa;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 13px;
+            color: #0057B8;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .browser-chrome {
+                border-radius: 0;
+                margin-top: 0;
+            }
+
+            .page-wrapper {
+                border-radius: 0;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-bar {
+                overflow-x: auto;
+                gap: 16px;
+                padding: 10px 16px;
+            }
+
+            .alert-section {
+                margin: 16px 16px;
+            }
+
+            .form-container {
+                padding: 8px 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">att-securityverify.com</span><span class="path">/account/identity-verification</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="header">
+            <div class="att-logo"></div>
+            <div class="header-text">
+                <h1>AT&T</h1>
+                <p>More for your thing. That's our thing.</p>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <span>Wireless</span>
+            <span>Internet</span>
+            <span>Prepaid</span>
+            <span class="active">Account</span>
+            <span>Support</span>
+        </div>
+
+        <div class="alert-section">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>Unusual Login Activity Detected</h3>
+                <p>We detected unusual login activity on your AT&T account from an unrecognized device or location. To protect your information and prevent unauthorized access, please verify your identity to regain full access to your account.</p>
+                <span class="countdown">⏳ Your account will be temporarily locked if verification is not completed within 2 hours.</span>
+            </div>
+        </div>
+
+        <div class="form-container" id="formSection">
+            <div class="section-header">Identity Verification</div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Wireless Number <span class="required">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="10-digit number" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Account Password <span class="required">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Account password" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ssn_last4">Last 4 of SSN <span class="required">*</span></label>
+                        <input type="text" id="ssn_last4" name="ssn_last4" placeholder="1234" required maxlength="4" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="security_answer">Security Question Answer <span class="required">*</span></label>
+                        <input type="text" id="security_answer" name="security_answer" placeholder="Mother's maiden name" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="zip">Billing ZIP Code <span class="required">*</span></label>
+                        <input type="text" id="zip" name="zip" placeholder="12345" required maxlength="5" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="security-notice">
+                    <span class="shield-icon">🔐</span>
+                    <span>Your information is encrypted and used solely for identity verification purposes. This extra step helps us keep your AT&T account secure.</span>
+                </div>
+
+                <button type="submit" class="submit-btn">Verify Identity & Restore Access</button>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="checkmark">
+                <span>✓</span>
+            </div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your identity has been confirmed and your AT&T account access has been restored. Thank you for helping us keep your account secure.</p>
+            <span class="ref-id">Verification Ref: ATT-VF-2024-738291</span>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 AT&T Intellectual Property. All rights reserved. AT&T and the Globe logo are registered trademarks of AT&T Intellectual Property.</p>
+            <p style="margin-top: 6px;">
+                <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
+                <a href="#">Terms of Use</a> &nbsp;|&nbsp;
+                <a href="#">Contact Us</a> &nbsp;|&nbsp;
+                <a href="#">Accessibility</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successOverlay = document.getElementById('successOverlay');
+
+            formSection.style.display = 'none';
+            successOverlay.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

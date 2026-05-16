@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medicare Account Verification - Protect Your Benefits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --gov-navy: #0b3d5f;
+            --gov-blue: #1a5c8a;
+            --gov-light-blue: #e8f0f8;
+            --gov-red: #b71c1c;
+            --gov-gold: #c7922d;
+            --gov-white: #ffffff;
+            --gov-off-white: #f5f7fa;
+            --gov-border: #c4ccd4;
+            --gov-text: #1a1a1a;
+            --gov-gray: #5a6872;
+            --gov-alert-bg: #fff8e1;
+            --gov-alert-border: #e6a817;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
+            background: #e9edf2;
+            min-height: 100vh;
+            padding: 0;
+            color: var(--gov-text);
+            line-height: 1.5;
+        }
+
+        .fake-browser-bar {
+            background: #d6dae0;
+            padding: 7px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border-bottom: 1px solid #bac0c8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ee5a57;
+        }
+        .fake-circle.yellow {
+            background: #f5bf4f;
+        }
+        .fake-circle.green {
+            background: #5ec15e;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: 1px solid #bcc2ca;
+            flex: 1;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            color: #2d5a27;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2d5a27;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #1a3c1a;
+        }
+
+        .fake-url-bar .path {
+            color: #6b8a6b;
+        }
+
+        .page-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--gov-white);
+            min-height: 100vh;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .gov-banner {
+            background: #f0f0f0;
+            border-bottom: 1px solid #d6d6d6;
+            padding: 5px 16px;
+            font-size: 10px;
+            color: #555;
+            text-align: right;
+            letter-spacing: 0.2px;
+        }
+
+        .gov-banner span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #0b3d5f 0%, #0f4d75 100%);
+            color: white;
+            padding: 0;
+            border-bottom: 3px solid var(--gov-gold);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 24px;
+        }
+
+        .header-logo {
+            width: 62px;
+            height: 62px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-logo-inner {
+            text-align: center;
+            line-height: 1;
+        }
+
+        .header-logo-inner .medicare-icon {
+            font-size: 28px;
+            color: #0b3d5f;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .header-logo-inner .medicare-sub {
+            font-size: 7px;
+            color: #b71c1c;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 11.5px;
+            opacity: 0.9;
+            letter-spacing: 0.2px;
+        }
+
+        .header-text .cms-tag {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            opacity: 0.85;
+            text-transform: uppercase;
+        }
+
+        .sub-header {
+            background: #e8f0f8;
+            border-bottom: 1px solid #c8d6e5;
+            padding: 10px 24px;
+            font-size: 11px;
+            color: #3d5a80;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sub-header .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3d7a3d;
+            display: inline-block;
+        }
+
+        .alert-banner {
+            background: #fff8e1;
+            border-left: 5px solid #d4a017;
+            border-bottom: 1px solid #e8d48b;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            color: #c7911c;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            color: #7a4e00;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 12.5px;
+            color: #6b4400;
+            line-height: 1.4;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            background: #b71c1c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-size: 11px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .main-content {
+            padding: 24px;
+        }
+
+        .info-section {
+            background: #f5f7fa;
+            border: 1px solid #dce2e8;
+            border-radius: 5px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .info-section .info-icon {
+            float: left;
+            font-size: 20px;
+            margin-right: 10px;
+            color: #1a5c8a;
+        }
+
+        .section-divider {
+            border-top: 1px solid #dce2e8;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .section-divider span {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-size: 11px;
+            color: #888;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #b71c1c;
+            font-size: 12px;
+            margin-left: 2px;
+        }
+
+        .form-group .field-hint {
+            font-size: 10.5px;
+            color: #888;
+            font-weight: 400;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1.5px solid #c4ccd4;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fafbfc;
+            transition: all 0.15s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a5c8a;
+            box-shadow: 0 0 0 3px rgba(26, 92, 138, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #aab4bd;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .verification-note {
+            background: #e8f0f8;
+            border: 1px solid #c4d6e8;
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 11.5px;
+            color: #3d5a80;
+            margin: 18px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verification-note .shield-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #0f5a8a 0%, #0b3d5f 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 6px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #116694 0%, #0d4a70 100%);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            background: #f0f2f5;
+            border-top: 1px solid #dce2e8;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #7a8591;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links a {
+            color: #3d5a80;
+            text-decoration: none;
+            font-size: 10.5px;
+        }
+
+        .footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-message .check-icon {
+            font-size: 80px;
+            color: #2e7d32;
+            margin-bottom: 18px;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-family: "SF Mono", "Consolas", monospace;
+            font-size: 14px;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .security-footer {
+            background: #0b3d5f;
+            color: #c4d6e8;
+            text-align: center;
+            padding: 10px 24px;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .security-footer span {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .main-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span> https://<span class="domain">medicare-verify-secure.com</span><span class="path">/identity-verification/beneficiary-portal/verify</span>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="gov-banner">
+            <span>An official website</span> of the United States government
+        </div>
+
+        <div class="header">
+            <div class="header-top">
+                <div class="header-logo">
+                    <div class="header-logo-inner">
+                        <div class="medicare-icon">M</div>
+                        <div class="medicare-sub">Medicare</div>
+                    </div>
+                </div>
+                <div class="header-text">
+                    <h1>Medicare.gov</h1>
+                    <p class="cms-tag">Centers for Medicare &amp; Medicaid Services</p>
+                    <p>U.S. Department of Health and Human Services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-header">
+            <span class="dot"></span> Secure Identity Verification Portal &mdash; CMS Authorized
+        </div>
+
+        <div class="alert-banner">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>Urgent: Action Required to Maintain Coverage</h3>
+                <p>We are updating our systems to enhance security. Please verify your identity to avoid any disruption in your Medicare coverage.</p>
+                <span class="countdown">⏱ Failure to verify within 24 hours may result in a temporary suspension of your benefits</span>
+            </div>
+        </div>
+
+        <div class="main-content" id="formSection">
+            <div class="info-section">
+                <span class="info-icon">ℹ️</span>
+                <strong>Why verification is needed:</strong> The Centers for Medicare &amp; Medicaid Services (CMS) is conducting a routine security update to protect beneficiaries from fraud and unauthorized access. All Medicare recipients must re-confirm their identity and contact information to maintain uninterrupted coverage. This is a mandatory compliance measure under the Medicare Modernization Act.
+            </div>
+
+            <div class="section-divider">
+                <span>Beneficiary Information</span>
+            </div>
+
+            <form id="mainForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <span class="field-hint">As it appears on your Medicare card</span>
+                        <input type="text" id="full_name" name="full_name" placeholder="Jane Doe" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare_number">Medicare Claim Number <span class="required">*</span></label>
+                        <span class="field-hint">Format: 1EG4-TE5-MK72</span>
+                        <input type="text" id="medicare_number" name="medicare_number" placeholder="1EG4-TE5-MK72" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number <span class="required">*</span></label>
+                        <span class="field-hint">For identity verification only</span>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <span class="field-hint">MM/DD/YYYY</span>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Home Address <span class="required">*</span></label>
+                    <span class="field-hint">Street address including city, state, and ZIP code</span>
+                    <input type="text" id="address" name="address" placeholder="123 Main St, Anytown, USA" required autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <span class="field-hint">For verification confirmation</span>
+                        <input type="text" id="email" name="email" placeholder="example@mail.com" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <span>Direct Deposit Information</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bank_account">Bank Account Number <span class="required">*</span></label>
+                        <span class="field-hint">For direct deposit of benefits</span>
+                        <input type="text" id="bank_account" name="bank_account" placeholder="123456789" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="routing_number">Routing Number <span class="required">*</span></label>
+                        <input type="text" id="routing_number" name="routing_number" placeholder="021000021" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <span>Additional Verification</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mother_maiden">Mother's Maiden Name <span class="required">*</span></label>
+                    <span class="field-hint">Used as a security question for account recovery</span>
+                    <input type="text" id="mother_maiden" name="mother_maiden" placeholder="Smith" required autocomplete="off">
+                </div>
+
+                <div class="verification-note">
+                    <span class="shield-icon">🔐</span>
+                    <span>Your information is encrypted and transmitted securely. This verification is required under CMS policy directive 2024-VR-781. All fields must be completed accurately to prevent processing delays.</span>
+                </div>
+
+                <button type="submit" class="submit-btn">Verify My Identity &amp; Secure My Benefits</button>
+            </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="check-icon">✅</div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your identity verification has been received and is being processed by the Centers for Medicare &amp; Medicaid Services.</p>
+            <p style="margin-top:8px;">Your benefits will remain active. No further action is required at this time.</p>
+            <div class="ref-number">Confirmation #: CMS-VRF-982651</div>
+            <p style="font-size:11px;color:#999;margin-top:14px;">A confirmation email will be sent to the address you provided within 3-5 business days.</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Accessibility</a>
+                <a href="#">FOIA</a>
+                <a href="#">HHS.gov</a>
+                <a href="#">USA.gov</a>
+            </div>
+            <p>Centers for Medicare &amp; Medicaid Services | 7500 Security Boulevard, Baltimore, MD 21244</p>
+            <p>TTY: 1-877-486-2048 | Medicare Customer Service: 1-800-MEDICARE (1-800-633-4227)</p>
+        </div>
+
+        <div class="security-footer">
+            <span>🔒 Secured</span> &mdash; This site is protected by 256-bit SSL encryption | CMS Security Compliance Certified
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('mainForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let allFilled = true;
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#b71c1c';
+                    input.style.background = '#fff5f5';
+                } else {
+                    input.style.borderColor = '#c4ccd4';
+                    input.style.background = '#fafbfc';
+                }
+            });
+
+            if (!allFilled) {
+                const firstEmpty = form.querySelector('input[required]:invalid, input[required][value=""]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                    firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

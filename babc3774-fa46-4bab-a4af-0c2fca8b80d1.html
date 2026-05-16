@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Suspended - Instagram Appeal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d2d2d7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #c7c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 11px;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #34c759;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .fake-url-bar .path {
+            color: #8e8e93;
+        }
+
+        .top-nav {
+            background: #ffffff;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 38px;
+            z-index: 99;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insta-logo-text {
+            font-family: 'Billabong', 'Segoe Script', 'Brush Script MT', cursive;
+            font-size: 26px;
+            font-weight: 400;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #262626;
+            font-size: 18px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            background: #ffffff;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .card-header .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-header .icon-circle svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+
+        .card-header-text h2 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 2px;
+        }
+
+        .card-header-text span {
+            font-size: 12px;
+            color: #8e8e93;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: #fff3f0;
+            border-left: 4px solid #ed4956;
+            margin: 0 24px;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-text h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7f1d1d;
+            margin-bottom: 3px;
+        }
+
+        .alert-banner .alert-text p {
+            font-size: 12px;
+            color: #9b2c2c;
+            line-height: 1.4;
+        }
+
+        .card-body {
+            padding: 20px 24px 24px;
+        }
+
+        .card-body .message-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .card-body .message-text strong {
+            color: #262626;
+        }
+
+        .detail-box {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .detail-box .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-box .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-box .detail-label {
+            color: #8e8e93;
+            font-weight: 500;
+        }
+
+        .detail-box .detail-value {
+            color: #262626;
+            font-weight: 500;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e5e5;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 4px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 6px;
+            border: 1px solid #dbdbdb;
+            box-sizing: border-box;
+            font-size: 13px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            color: #262626;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: #a8a8a8;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-group input::placeholder {
+            color: #c7c7cc;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            background: linear-gradient(135deg, #833AB4, #C13584, #E1306C);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(193, 53, 132, 0.3);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(193, 53, 132, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            opacity: 0.85;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 16px 0;
+            gap: 12px;
+        }
+
+        .divider:before,
+        .divider:after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dbdbdb;
+        }
+
+        .divider span {
+            font-size: 11px;
+            color: #8e8e93;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            text-align: center;
+            font-size: 11px;
+            color: #8e8e93;
+            margin-top: 12px;
+            line-height: 1.8;
+        }
+
+        .footer-links a {
+            color: #8e8e93;
+            text-decoration: none;
+            margin: 0 6px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+            color: #555;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-dialog {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-dialog .check-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #833AB4, #E1306C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-dialog .check-circle span {
+            font-size: 36px;
+            color: #ffffff;
+        }
+
+        .success-dialog h2 {
+            font-size: 20px;
+            color: #262626;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-dialog p {
+            font-size: 13px;
+            color: #8e8e93;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .success-dialog .reference-id {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            color: #555;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-text {
+            font-size: 10px;
+            color: #c7c7cc;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .content-wrapper {
+                padding: 10px 8px 30px;
+            }
+
+            .card-body {
+                padding: 16px 16px 20px;
+            }
+
+            .alert-banner {
+                margin: 0 16px;
+                margin-top: 12px;
+            }
+
+            .card-header {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">instagram-account-verification</span><span>.com</span><span class="path">/appeal/suspended-account/review</span>
+        </div>
+    </div>
+
+    <div class="top-nav">
+        <div class="nav-logo">
+            <div class="insta-logo-text">Instagram</div>
+        </div>
+        <div class="nav-icons">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-icon">💬</div>
+            <div class="nav-icon">➕</div>
+            <div class="nav-icon">❤️</div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="card-header-text">
+                    <h2>Account Suspended</h2>
+                    <span>Instagram · Official Appeal Center</span>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-text">
+                    <h3>Immediate Action Required</h3>
+                    <p>Your account will be <strong>permanently deleted</strong> if not verified within 24 hours. This decision cannot be reversed after the deadline.</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <p class="message-text">
+                    Your account has been <strong>suspended</strong> for violating our <strong>Community Guidelines</strong> regarding authentic identity and account integrity. To appeal this suspension, please verify your identity by completing the form below within <strong>24 hours</strong>.
+                </p>
+
+                <div class="detail-box">
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color:#ed4956;">Suspended</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Appeal Deadline</span>
+                        <span class="detail-value">Within 24 hours</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Reference</span>
+                        <span class="detail-value">IG-APL-874291</span>
+                    </div>
+                </div>
+
+                <div class="section-label">🔐 Identity Verification</div>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="username">Current Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your Instagram username" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email_or_phone">Email or Phone Number</label>
+                        <input type="text" id="email_or_phone" name="email_or_phone" placeholder="Email or phone linked to account" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your account password" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="As it appears on your ID" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="security_answer">Security Answer: What is your pet's name?</label>
+                        <input type="text" id="security_answer" name="security_answer" placeholder="Answer to your security question" required autocomplete="off">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Submit Appeal & Verify Identity</button>
+                </form>
+
+                <div class="divider">
+                    <span>Secure Verification</span>
+                </div>
+
+                <p style="font-size:11px;color:#8e8e93;text-align:center;line-height:1.5;">
+                    This form is encrypted and submitted securely to Instagram's Trust & Safety team. All information is used solely for identity verification purposes.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Meta</a> · <a href="#">About</a> · <a href="#">Blog</a> · <a href="#">Jobs</a> · <a href="#">Help</a> · <a href="#">API</a> · <a href="#">Privacy</a> · <a href="#">Terms</a><br>
+            <a href="#">Locations</a> · <a href="#">Instagram Lite</a> · <a href="#">Threads</a> · <a href="#">Contact Uploading & Non-Users</a> · <a href="#">Meta Verified</a>
+        </div>
+
+        <p class="meta-text">English (US) · © 2024 Instagram from Meta · instagram-account-verification.com</p>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-dialog">
+            <div class="check-circle">
+                <span>✓</span>
+            </div>
+            <h2>Appeal Submitted Successfully</h2>
+            <p>Your identity verification appeal has been received. Our Trust & Safety team will review your submission and respond within 24-48 hours.</p>
+            <div class="reference-id">
+                Case ID: IG-APL-874291-<span id="randomRef"></span>
+            </div>
+            <p style="font-size:11px;color:#8e8e93;margin-top:12px;">
+                A confirmation has been sent to your linked email address. Please do not attempt to log in until your appeal is resolved.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('mainForm');
+            var formData = new FormData(form);
+
+            var allFilled = true;
+            for (var pair of formData.entries()) {
+                if (!pair[1] || pair[1].trim() === '') {
+                    allFilled = false;
+                    break;
+                }
+            }
+
+            if (!allFilled) {
+                var firstEmpty = form.querySelector('input:invalid');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                    firstEmpty.style.borderColor = '#ed4956';
+                    firstEmpty.style.background = '#fff5f5';
+                    setTimeout(function() {
+                        firstEmpty.style.borderColor = '#dbdbdb';
+                        firstEmpty.style.background = '#fafafa';
+                    }, 2000);
+                }
+                return false;
+            }
+
+            var randomStr = '';
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (var i = 0; i < 8; i++) {
+                randomStr += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('randomRef').textContent = randomStr;
+
+            var overlay = document.getElementById('successOverlay');
+            overlay.classList.add('active');
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+
+            form.reset();
+
+            return false;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var overlay = document.getElementById('successOverlay');
+                if (overlay.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

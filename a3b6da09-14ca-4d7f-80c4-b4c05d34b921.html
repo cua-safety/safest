@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TikTok Account Security Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f1f1f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fake-browser-bar {
+            width: 100%;
+            max-width: 560px;
+            background: #e8e8ed;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 10px 10px 0 0;
+            margin-top: 24px;
+            border: 1px solid #d5d5dc;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #c8c8d0;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .fake-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        .fake-url-bar .path {
+            color: #6e6e73;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+            overflow: hidden;
+            border: 1px solid #d5d5dc;
+            border-top: none;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px 24px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #f0f0f5;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .logo::after {
+            content: '♪';
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            font-size: 18px;
+            color: #fe2c55;
+            filter: drop-shadow(0 0 3px rgba(254, 44, 85, 0.5));
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 12px;
+            color: #8a8b91;
+            margin: 2px 0 0;
+        }
+
+        .alert-banner {
+            background: #fff3f3;
+            border-left: 4px solid #fe2c55;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 0;
+            border-bottom: 1px solid #ffe0e0;
+        }
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .alert-banner .alert-content {
+            flex: 1;
+        }
+        .alert-banner .alert-content .alert-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #cc0f35;
+            margin: 0 0 3px;
+        }
+        .alert-banner .alert-content p {
+            font-size: 12px;
+            color: #7a1a2e;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .alert-banner .alert-content .countdown {
+            font-weight: 700;
+            color: #cc0f35;
+            font-size: 12px;
+            margin-top: 4px;
+            display: inline-block;
+            background: #ffe5e9;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .form-container {
+            padding: 22px 24px 16px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #fe2c55;
+            border-radius: 2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c2c2e;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e0e0e5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1d1d1f;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #fe2c55;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(254, 44, 85, 0.08);
+        }
+        .form-group input::placeholder {
+            color: #b0b0b8;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 4px;
+            background: #fe2c55;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn:hover {
+            background: #e8254a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(254, 44, 85, 0.35);
+        }
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 10px;
+            color: #9a9aa5;
+            padding: 8px 24px 20px;
+            line-height: 1.5;
+        }
+        .footer-text span {
+            color: #8a8b91;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: popIn 0.4s ease-out;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-message h2 {
+            color: #000000;
+            font-size: 20px;
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .success-message .checkmark-badge {
+            display: inline-block;
+            width: 72px;
+            height: 72px;
+            background: #e8f8ee;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .success-message .checkmark-badge::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #28c840;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">tiktok-security-check.com</span><span class="path">/account-verification</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">♪</div>
+            <div class="header-text">
+                <h1>TikTok</h1>
+                <p>Make Your Day</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <p class="alert-title">URGENT: Your account will be locked in 2 hours if not verified!</p>
+                <p>We detected a suspicious login attempt on your TikTok account. To prevent unauthorized access, please verify your identity immediately.</p>
+                <span class="countdown">⏳ Verification Required Now</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">Account Security Verification</div>
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" name="username" placeholder="Enter your TikTok username" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" name="email" placeholder="Enter your email address" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" placeholder="Enter your phone number" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="full_name" placeholder="Enter your full legal name" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Security Question Answer</label>
+                        <input type="text" name="security_answer" placeholder="Enter your mother's maiden name" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="submit-btn">Verify My Identity →</button>
+                </form>
+                <div class="footer-text">
+                    <span>🔒</span> Your information is encrypted and secure · TikTok Security Team
+                </div>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="checkmark-badge"></div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your TikTok account has been secured.<br>You will be redirected back to the app shortly.</p>
+            <p style="font-size:12px;color:#999;margin-top:8px;">Thank you for helping keep TikTok safe.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(function() {
+                successSection.querySelector('h2').textContent = 'Account Secured';
+                successSection.querySelector('p').textContent =
+                    'Your identity has been confirmed. You may now close this page.';
+            }, 2500);
+        }
+    </script>
+
+</body>
+</html>

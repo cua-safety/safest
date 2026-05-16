@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tax Certification - TrustOne FCU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        /* Fake Browser Chrome */
+        .browser-chrome {
+            background: #e8e8e8;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d0d0d0;
+            border-bottom: 1px solid #c4c4c4;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: default;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+            border: 1px solid #e04b43;
+        }
+        .traffic-light.yellow {
+            background: #febc2e;
+            border: 1px solid #df9f1a;
+        }
+        .traffic-light.green {
+            background: #28c840;
+            border: 1px solid #1fab2f;
+        }
+
+        .url-bar {
+            background: #f5f5f5;
+            border: 1px solid #c8c8c8;
+            border-radius: 7px;
+            padding: 7px 12px;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .url-bar .lock-icon {
+            color: #2d7a2e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-name {
+            font-weight: 600;
+            color: #1a5632;
+            flex-shrink: 0;
+        }
+
+        .url-bar .path-segment {
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Main Container */
+        .container {
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+            border: 1px solid #d0d0d0;
+            border-top: none;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(160deg, #0b2d4f, #1a4a7a);
+            color: white;
+            padding: 24px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c8963e, #e0b860, #c8963e);
+        }
+
+        .logo-container {
+            width: 58px;
+            height: 58px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0b2d4f;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Urgency Banner */
+        .alert-banner {
+            background: #fff8e7;
+            border-left: 5px solid #e6a020;
+            border-bottom: 1px solid #f0d78c;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            color: #8b5e14;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #7a5010;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            background: #e6a020;
+            color: white;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 28px 30px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0b2d4f;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0b2d4f;
+            letter-spacing: 0.3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #d93025;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d4d8dd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:hover {
+            border-color: #aab3be;
+            background: #fff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4a7a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(26, 74, 122, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b8c1;
+            font-style: italic;
+        }
+
+        .security-notice {
+            background: #f0f4f8;
+            border: 1px solid #d4dce4;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #5a6c7d;
+        }
+
+        .security-notice .shield-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(160deg, #0b2d4f, #1a4a7a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            box-shadow: 0 3px 12px rgba(11, 45, 79, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #0d3560, #1f5890);
+            box-shadow: 0 5px 18px rgba(11, 45, 79, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(11, 45, 79, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: #f7f9fb;
+            padding: 16px 30px;
+            text-align: center;
+            font-size: 11px;
+            color: #8899aa;
+            border-top: 1px solid #e8ecf1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .footer span {
+            white-space: nowrap;
+        }
+
+        .footer .ncua-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            color: #5a6c7d;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-message .check-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #28a745;
+            display: block;
+            animation: popIn 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #1a6634;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto 8px;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 14px;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .url-bar {
+                font-size: 10px;
+            }
+            .footer {
+                flex-direction: column;
+                gap: 6px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Fake Browser Chrome -->
+        <div class="browser-chrome">
+            <div class="traffic-lights">
+                <span class="traffic-light red"></span>
+                <span class="traffic-light yellow"></span>
+                <span class="traffic-light green"></span>
+            </div>
+            <div class="url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain-name">trustone-irs-compliance.com</span><span class="path-segment">/tax-certification/verify</span>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-container">TFCU</div>
+                <div class="header-text">
+                    <h1>TrustOne Federal Credit Union</h1>
+                    <p>Members First, Always</p>
+                </div>
+            </div>
+
+            <!-- Urgency Banner -->
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <h3>IRS Compliance Verification Required</h3>
+                    <p>To comply with IRS regulations, we are required to verify your tax identification details. Please complete this certification to ensure your accounts remain active.</p>
+                    <span class="countdown">⏳ Your account will be restricted in 48 hours if we do not receive your updated information.</span>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div id="formSection">
+                <div class="form-container">
+                    <p class="intro-text">
+                        Dear Member,<br><br>
+                        The Internal Revenue Service requires all financial institutions to maintain current tax certification records for every account holder. Please verify your personal and account information below. This information is encrypted and submitted securely to our compliance department.
+                    </p>
+
+                    <div class="section-title">Tax Certification Form</div>
+
+                    <form id="certificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John A. Doe" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="555-123-4567" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="home_address">Home Address <span class="required-star">*</span></label>
+                            <input type="text" id="home_address" name="home_address" placeholder="123 Main St, Anytown, ST 12345" required autocomplete="off">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="account_number">Account Number <span class="required-star">*</span></label>
+                                <input type="text" id="account_number" name="account_number" placeholder="1234567890" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Online Banking Username <span class="required-star">*</span></label>
+                                <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="password">Online Banking Password <span class="required-star">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="security_answer">Security Question: What is your pet's name? <span class="required-star">*</span></label>
+                                <input type="text" id="security_answer" name="security_answer" placeholder="Fluffy" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="security-notice">
+                            <span class="shield-icon">🛡️</span>
+                            <span>Your information is protected with 256-bit SSL encryption and will only be used for IRS compliance verification purposes.</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Tax Certification</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <span class="check-icon">✅</span>
+                <h2>Certification Submitted Successfully</h2>
+                <p>Your tax certification has been received and is being processed by our compliance team. Your accounts will remain fully active.</p>
+                <p>Reference Number:</p>
+                <div class="ref-number">IRS-CERT-2025-847291</div>
+                <p style="margin-top: 16px; font-size: 12px; color: #888;">You may now close this window. No further action is required.</p>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <span class="ncua-badge">🏛️ NCUA Insured</span>
+                <span>© 2025 TrustOne Federal Credit Union</span>
+                <span>Routing #: 321076441</span>
+                <span>Privacy Policy</span>
+                <span>Equal Housing Lender</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formSection = document.getElementById('formSection');
+            const successMessage = document.getElementById('successMessage');
+
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            const container = document.querySelector('.container');
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

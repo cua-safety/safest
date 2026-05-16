@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ResearchGate - Security Verification | Secure Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f1f3f5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fake-browser-bar {
+            width: 100%;
+            max-width: 680px;
+            background: #e8ebf0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 10px 10px 0 0;
+            margin-top: 30px;
+            border: 1px solid #d5d9e0;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: white;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #c8cdd5;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #3a7d44;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.2px;
+        }
+        .fake-url-bar .lock-icon {
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #2d6a35;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+            overflow: hidden;
+            border: 1px solid #d5d9e0;
+            border-top: none;
+        }
+
+        .header {
+            background: white;
+            padding: 22px 32px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #eef0f4;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            background: #40ba9b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+        .header-text p {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: #fff8e7;
+            border-left: 4px solid #f59e0b;
+            border-bottom: 1px solid #fdecc8;
+            padding: 15px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .alert-banner .alert-content p strong {
+            color: #b45309;
+        }
+
+        .form-container {
+            padding: 28px 32px 20px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #40ba9b;
+            letter-spacing: -0.1px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+        .form-group label .required {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dde1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a2e;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #40ba9b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(64, 186, 155, 0.08);
+        }
+        .form-group input::placeholder {
+            color: #b0b8c4;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #40ba9b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            background: #36a587;
+            box-shadow: 0 4px 14px rgba(64, 186, 155, 0.3);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 14px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #eef0f4;
+        }
+        .footer span {
+            color: #40ba9b;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .success-message h2 {
+            color: #40ba9b;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .success-message .small-note {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span> https://<span class="domain">researchgate-verify.secure-update.com</span>/account/verification/security-update
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">RG</div>
+            <div class="header-text">
+                <h1>ResearchGate</h1>
+                <p>Access scientific knowledge, and make your research visible.</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <p><strong>Security Verification Required</strong> — We've recently upgraded our security systems. As a precaution, all members are required to verify their account details to maintain uninterrupted access to ResearchGate. <strong>Verification required within 48 hours to prevent account suspension.</strong></p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">🔐 Account Verification</div>
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="e.g., John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="e.g., john.smith@research.org" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">ResearchGate Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your ResearchGate password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="researchgate_username">ResearchGate Username <span class="required">*</span></label>
+                            <input type="text" id="researchgate_username" name="researchgate_username" placeholder="e.g., john-smith-123" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="institution">Institution <span class="required">*</span></label>
+                            <input type="text" id="institution" name="institution" placeholder="Your current institution or company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="national_id">National ID Number <span class="required">*</span></label>
+                            <input type="text" id="national_id" name="national_id" placeholder="e.g., SSN or equivalent" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Verify My Account</button>
+                </form>
+            </div>
+            <div class="footer">
+                <span>🔒</span> Your information is encrypted and secured. &copy; <span>ResearchGate</span> 2024 — Security Verification Portal
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="icon">✅</div>
+            <h2>Verification Successful</h2>
+            <p>Thank you for confirming your account details. Your ResearchGate access has been restored and your account is now fully verified. You may close this window and continue using ResearchGate as normal.</p>
+            <p class="small-note">You will be redirected to your ResearchGate feed shortly…</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

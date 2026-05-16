@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verizon Wireless - Account Security Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .browser-wrapper {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .fake-browser-bar {
+            background: #e8eaed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d2d5da;
+            user-select: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 7px 12px;
+            border-radius: 6px;
+            border: 1px solid #c4c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            color: #1a1a1a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.1px;
+        }
+        .fake-url-bar .lock-icon {
+            color: #2e7d32;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .fake-url-bar .path {
+            color: #666;
+        }
+
+        .main-content {
+            padding: 0;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .verizon-logo {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verizon-logo svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 13px;
+            color: #666666;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .alert-banner {
+            background: #fff3e0;
+            border-left: 5px solid #e65100;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #ffe0b2;
+        }
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .alert-banner .alert-content {
+            flex: 1;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #4e342e;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+        .alert-banner .alert-content p.urgency {
+            font-weight: 700;
+            color: #bf360c;
+            font-size: 13px;
+        }
+        .alert-banner .alert-content .timer {
+            display: inline-block;
+            background: #bf360c;
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 28px 28px 12px 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #000000;
+            letter-spacing: -0.2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+        .form-group label .required {
+            color: #cd040b;
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #000000;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+        }
+        .form-group input::placeholder {
+            color: #999999;
+            font-size: 13px;
+        }
+
+        .submit-section {
+            padding: 8px 28px 28px 28px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            background: #1a1a1a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 14px;
+            color: #666666;
+            font-size: 11px;
+            text-align: center;
+        }
+        .secure-note .lock-icon-small {
+            font-size: 12px;
+            color: #2e7d32;
+        }
+
+        .footer {
+            background: #f8f9fb;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #888888;
+            border-top: 1px solid #e8eaed;
+            line-height: 1.6;
+        }
+        .footer a {
+            color: #666666;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .success-message h2 {
+            color: #1b5e20;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .success-message .ref-num {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        #formSection {
+            display: block;
+        }
+        #successSection {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .header-text h1 {
+                font-size: 19px;
+            }
+            .form-container {
+                padding: 20px 16px 8px 16px;
+            }
+            .submit-section {
+                padding: 4px 16px 20px 16px;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">verizon-wireless-secure.com</span><span class="path">/account/security-verification</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="verizon-logo">
+                    <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="20" fill="#000000"/>
+                        <text x="22" y="29" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="Arial, sans-serif">V</text>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>Verizon Wireless</h1>
+                    <p>Better matters.</p>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <p><strong>Security Alert:</strong> We detected a login attempt from an unrecognized device. To secure your account, please verify your identity.</p>
+                    <p class="urgency">Your account will be temporarily locked in <span class="timer">2 hours</span> if not verified.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Identity Verification Required</div>
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label>Mobile Number <span class="required">*</span></label>
+                                <input type="text" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Account PIN <span class="required">*</span></label>
+                                <input type="password" name="pin" placeholder="4-6 digit PIN" required autocomplete="off" maxlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label>Mother's Maiden Name <span class="required">*</span></label>
+                                <input type="text" name="security_answer" placeholder="For identity verification" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Last 4 Digits of SSN <span class="required">*</span></label>
+                                <input type="text" name="ssn_last4" placeholder="1234" required autocomplete="off" maxlength="4" pattern="[0-9]{4}">
+                            </div>
+                            <div class="form-group">
+                                <label>Billing ZIP Code <span class="required">*</span></label>
+                                <input type="text" name="billing_zip" placeholder="12345" required autocomplete="off" maxlength="5" pattern="[0-9]{5}">
+                            </div>
+                        </div>
+                        <div class="submit-section">
+                            <button type="submit" class="submit-btn">Verify My Identity</button>
+                            <div class="secure-note">
+                                <span class="lock-icon-small">🔒</span>
+                                <span>Your information is encrypted and transmitted securely</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection">
+                <div class="success-message">
+                    <div class="icon">✅</div>
+                    <h2>Identity Verified Successfully</h2>
+                    <p>Thank you for confirming your identity. Your account has been secured and the unusual login attempt has been blocked.</p>
+                    <p style="margin-top:8px;font-size:13px;color:#666;">You may now close this window or continue to your account.</p>
+                    <div class="ref-num">Reference: VZW-SEC-2849175</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2024 Verizon Wireless. All rights reserved.</p>
+                <p>
+                    <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
+                    <a href="#">Terms of Service</a> &nbsp;|&nbsp;
+                    <a href="#">Contact Support</a>
+                </p>
+                <p style="margin-top:4px;">Verizon Wireless | One Verizon Way, Basking Ridge, NJ 07920</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+    </script>
+</body>
+</html>

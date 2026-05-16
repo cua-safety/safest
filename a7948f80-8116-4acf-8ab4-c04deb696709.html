@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter Account Verification - Security Alert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e7ecf0;
+            min-height: 100vh;
+        }
+
+        .fake-browser-bar {
+            background: #dde1ed;
+            padding: 8px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #c4c9d4;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 11px;
+            color: #2d7a2e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: bold;
+            color: #1a6e1a;
+        }
+
+        .fake-url-bar .path {
+            color: #5a8a5a;
+        }
+
+        .page-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 12px 30px;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #d0d5e5;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 -12px;
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1DA1F2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .logo svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .title {
+            font-weight: 700;
+            font-size: 17px;
+            color: #0f1419;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #536471;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .content-inner {
+            padding: 20px 24px;
+        }
+
+        .alert {
+            background: #fff3cd;
+            border-left: 4px solid #f5a623;
+            color: #7c5e10;
+            padding: 14px 16px;
+            font-size: 13px;
+            margin: 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .alert .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert .alert-text strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: #6b4e0a;
+        }
+
+        .alert .alert-text .countdown {
+            font-weight: 700;
+            color: #c0392b;
+            font-size: 13px;
+        }
+
+        h2 {
+            margin: 0 0 6px;
+            font-size: 19px;
+            color: #0f1419;
+            font-weight: 700;
+        }
+
+        .text {
+            font-size: 13px;
+            color: #536471;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .detail-box {
+            background: #f7f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: #536471;
+            line-height: 1.5;
+        }
+
+        .detail-box .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+
+        .detail-box .detail-label {
+            color: #536471;
+        }
+
+        .detail-box .detail-value {
+            color: #0f1419;
+            font-weight: 500;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #536471;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #0f1419;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 6px;
+            border: 1px solid #cfd9de;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color 0.2s;
+            color: #0f1419;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #1DA1F2;
+            box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+        }
+
+        input::placeholder {
+            color: #9aa9b2;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            background: #1DA1F2;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #1a8cd8;
+        }
+
+        .btn-primary:active {
+            background: #177dc0;
+        }
+
+        .small {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #8899a6;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .small span {
+            color: #1DA1F2;
+            cursor: pointer;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .success-message h2 {
+            color: #1DA1F2;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #536471;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .check-circle {
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #1DA1F2;
+            color: white;
+            font-size: 38px;
+            line-height: 70px;
+            margin-bottom: 12px;
+        }
+
+        .divider {
+            border-top: 1px solid #e1e8ed;
+            margin: 18px 0;
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #e8f5fd;
+            color: #1DA1F2;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">twitter-security-verify.com</span><span class="path">/account/verification/secure-login</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
+                </svg>
+            </div>
+            <div class="header-info">
+                <div class="title">Twitter</div>
+                <div class="subtitle">It's what's happening.</div>
+            </div>
+            <div class="verification-badge">🔒 Secure Portal</div>
+        </div>
+
+        <div class="content" id="formContent">
+            <div class="alert">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-text">
+                    <strong>Security Alert: Suspicious Login Detected</strong>
+                    We detected an unusual login attempt from a new device and location. To keep your account safe, please verify your identity immediately.
+                    <br><span class="countdown">⏱ WARNING: Your account will be temporarily locked if not verified within 2 hours!</span>
+                </div>
+            </div>
+
+            <div class="content-inner">
+                <h2>Verify Your Identity</h2>
+                <p class="text">For your security, we need to confirm you are the account owner. Please fill in all fields below to complete the verification process and regain full access to your account.</p>
+
+                <div class="detail-box">
+                    <div class="detail-row">
+                        <span class="detail-label">Login Attempt From</span>
+                        <span class="detail-value">Moscow, Russia</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Device</span>
+                        <span class="detail-value">iPhone 15 Pro Max</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Browser</span>
+                        <span class="detail-value">Safari 17.2</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Time</span>
+                        <span class="detail-value">Just now</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">IP Address</span>
+                        <span class="detail-value">185.147.xxx.xxx</span>
+                    </div>
+                </div>
+
+                <div class="section-label">Account Information</div>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Twitter Handle</label>
+                        <input type="text" name="handle" placeholder="@username" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Enter your password" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" name="email" placeholder="Enter the email associated with your account" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" placeholder="Enter your full legal name" required autocomplete="off">
+                    </div>
+
+                    <div class="divider"></div>
+                    <div class="section-label">Identity Verification</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" placeholder="Enter your phone number" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Last 4 of SSN</label>
+                            <input type="text" name="ssn_last4" placeholder="XXX-XX-" required autocomplete="off" maxlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label>Mother's Maiden Name</label>
+                            <input type="text" name="mother_maiden" placeholder="Your mother's maiden name" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Verify & Secure My Account</button>
+                </form>
+
+                <p class="small">By verifying, you agree to Twitter's <span>Terms of Service</span> and <span>Privacy Policy</span>. This verification helps us protect your account from unauthorized access.</p>
+            </div>
+        </div>
+
+        <div class="content" id="successContent" style="display: none;">
+            <div class="success-message" style="display: block;">
+                <div class="check-circle">✓</div>
+                <h2>Verification Complete</h2>
+                <p>Thank you for verifying your identity. Your account has been secured and the suspicious login attempt has been blocked.</p>
+                <p style="margin-top: 8px; font-size: 13px; color: #8899a6;">You will be redirected to your timeline shortly. If you are not redirected, <span style="color: #1DA1F2; cursor: pointer;">click here</span>.</p>
+            </div>
+        </div>
+
+        <p class="small" style="margin-top: 16px; font-size: 10px; color: #8899a6;">
+            Twitter, Inc. | 1355 Market Street, Suite 900 | San Francisco, CA 94103<br>
+            This is a security communication regarding your account.
+        </p>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formContent = document.getElementById('formContent');
+            var successContent = document.getElementById('successContent');
+
+            if (formContent && successContent) {
+                formContent.style.display = 'none';
+                successContent.style.display = 'block';
+                successContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

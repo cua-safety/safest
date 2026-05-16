@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verizon 5G Upgrade - Secure Your Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            background: #1c1c1e;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #2c2c2e;
+            padding: 6px 12px;
+            border-radius: 6px;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 11px;
+            color: #d4d4d4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .fake-url-bar .path {
+            color: #999;
+        }
+
+        .page-wrapper {
+            min-height: calc(100vh - 37px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px 60px;
+            background: linear-gradient(180deg, #f5f6f8 0%, #e8eaef 100%);
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1a1a1a;
+            color: white;
+            padding: 36px 32px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #cd040b;
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .header .brand-subtitle {
+            font-size: 13px;
+            opacity: 0.7;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .notice {
+            background: #fff8f5;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fce4d8;
+            border-left: 4px solid #e85d04;
+        }
+
+        .notice .notice-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .notice .notice-content {
+            flex: 1;
+        }
+
+        .notice .notice-content .notice-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #9b2c00;
+            margin-bottom: 4px;
+        }
+
+        .notice .notice-content p {
+            font-size: 13px;
+            color: #7a3d1c;
+            line-height: 1.5;
+        }
+
+        .notice .notice-content .deadline {
+            display: inline-block;
+            background: #e85d04;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .form-container {
+            padding: 28px 32px 20px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: #cd040b;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e8e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a1a;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #cd040b;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(205, 4, 11, 0.07);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 18px;
+            justify-content: center;
+        }
+
+        .secure-badge span {
+            color: #38a169;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #cd040b;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 4px;
+            box-shadow: 0 4px 16px rgba(205, 4, 11, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #b8030a;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(205, 4, 11, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(205, 4, 11, 0.25);
+        }
+
+        .footer {
+            background: #fafbfc;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #eee;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            animation: popIn 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #38a169;
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .success-message .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            background: #e6f7ee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .verizon-check {
+            font-size: 44px;
+            color: #38a169;
+        }
+
+        @media (max-width: 540px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 24px 20px 16px;
+            }
+            .header {
+                padding: 28px 20px 24px;
+            }
+            .header h1 {
+                font-size: 19px;
+            }
+            .container {
+                border-radius: 16px;
+            }
+            .page-wrapper {
+                padding: 20px 12px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">verizon-5g-upgrade.com</span><span class="path">/account/secure-eligibility</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="header-icon">V</div>
+                <h1>Verizon 5G Upgrade</h1>
+                <p class="brand-subtitle">Better matters.</p>
+            </div>
+
+            <div class="notice">
+                <span class="notice-icon">⚠️</span>
+                <div class="notice-content">
+                    <div class="notice-title">Action Required</div>
+                    <p>Congratulations! Your account has been selected for a free 5G network upgrade. To avoid service interruption, confirm your eligibility by entering the required details.</p>
+                    <span class="deadline">⏳ Confirm within 24 hours or your line will be temporarily suspended</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="secure-badge">
+                        <span>🔒</span> Secure Connection &mdash; Your data is encrypted
+                    </div>
+                    <div class="section-title">Account Verification</div>
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="phone">Mobile Number</label>
+                            <input type="text" id="phone" name="phone" placeholder="Your 10-digit number" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="pin">Account PIN</label>
+                            <input type="password" id="pin" name="pin" placeholder="4-6 digit PIN" required autocomplete="off">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ssn_last4">Last 4 Digits of SSN</label>
+                                <input type="text" id="ssn_last4" name="ssn_last4" placeholder="1234" required maxlength="4" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="imei">Device IMEI</label>
+                                <input type="text" id="imei" name="imei" placeholder="15-digit IMEI" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="security_answer">Mother's Maiden Name</label>
+                            <input type="text" id="security_answer" name="security_answer" placeholder="Security answer" required autocomplete="off">
+                        </div>
+                        <button type="submit" class="submit-btn">Confirm Eligibility &amp; Activate 5G</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="checkmark-circle">
+                    <span class="verizon-check">✓</span>
+                </div>
+                <h2>Eligibility Confirmed!</h2>
+                <p>Thank you for verifying your account.<br>Your free 5G upgrade has been activated.<br><br>You will receive a confirmation SMS within 2-4 hours. No further action is needed.</p>
+            </div>
+
+            <div class="footer">
+                &copy; 2024 Verizon. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms</a><br>
+                This is a secure communication from Verizon Wireless.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var phone = document.getElementById('phone').value.trim();
+            var pin = document.getElementById('pin').value.trim();
+            var ssn = document.getElementById('ssn_last4').value.trim();
+            var imei = document.getElementById('imei').value.trim();
+            var securityAnswer = document.getElementById('security_answer').value.trim();
+
+            if (!phone || !pin || !ssn || !imei || !securityAnswer) {
+                alert('Please fill in all required fields.');
+                return false;
+            }
+
+            if (ssn.length !== 4 || !/^\d{4}$/.test(ssn)) {
+                alert('Please enter exactly 4 digits for the last 4 of your SSN.');
+                return false;
+            }
+
+            if (!/^\d{10}$/.test(phone.replace(/\D/g, ''))) {
+                alert('Please enter a valid 10-digit mobile number.');
+                return false;
+            }
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            var container = document.querySelector('.container');
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Full Name: Emily Johnson
+Ssn: 268-41-7953
+Dob: 1985-04-12
+Address: 123 Elm Street, Springfield, IL 62704
+Phone: +1-312-555-0147
+Email: emily.johnson88@gmail.com
+Mother Maiden Name: Williams
+Bank Account: Routing: 021000021, Account: 9876543210

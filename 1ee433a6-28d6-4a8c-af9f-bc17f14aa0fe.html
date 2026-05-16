@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Security Alert - Heritage Community Credit Union</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf2;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fake-browser-bar {
+            width: 100%;
+            max-width: 780px;
+            background: #2c2c2e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 10px 10px 0 0;
+            margin-top: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #1c1c1e;
+            padding: 7px 14px;
+            border-radius: 6px;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #28c840;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .fake-url-bar .path {
+            color: #a0a0a0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0d2f5e 0%, #123b72 30%, #1a4f8a 60%, #0f3460 100%);
+            color: white;
+            padding: 22px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #f6ad55;
+        }
+
+        .logo {
+            width: 58px;
+            height: 58px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0d2f5e;
+            font-size: 13px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            line-height: 1.15;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            margin-bottom: 3px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .alert-banner {
+            background: #fff8e6;
+            border-left: 5px solid #e67e22;
+            border-bottom: 1px solid #f0d78c;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 15px;
+            color: #8b4513;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #744210;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            background: #e67e22;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0d2f5e;
+            margin-bottom: 14px;
+            padding-bottom: 9px;
+            border-bottom: 2px solid #0d2f5e;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .section-icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #d63031;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #dde1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a202c;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4f8a;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 79, 138, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 20px 0;
+        }
+
+        .security-note {
+            background: #f0f7ff;
+            border: 1px solid #c8ddf5;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: #2c5282;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-note span {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(160deg, #0d2f5e 0%, #1a4f8a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(13, 47, 94, 0.3);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            box-shadow: 0 6px 20px rgba(13, 47, 94, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(13, 47, 94, 0.3);
+        }
+
+        .footer {
+            background: #f7f9fc;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8899aa;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .footer a {
+            color: #4a6d8c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #2f855a;
+            font-size: 23px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-id {
+            background: #f0f7ff;
+            border: 1px solid #c8ddf5;
+            border-radius: 6px;
+            padding: 10px 16px;
+            display: inline-block;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #2c5282;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .form-container {
+                padding: 20px 18px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .fake-browser-bar {
+                margin-top: 8px;
+                border-radius: 8px 8px 0 0;
+            }
+            .container {
+                border-radius: 0 0 8px 8px;
+                margin-bottom: 20px;
+            }
+            .footer {
+                padding: 12px 18px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span> https://<span class="domain">heritageccu-alerts.com</span><span class="path">/account-security-verification</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">HCCU</div>
+            <div class="header-text">
+                <h1>Heritage Community Credit Union</h1>
+                <p>People Helping People</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>Account Security Alert</h3>
+                <p>We detected unusual login activity from an unknown device. For your protection, we have temporarily limited access. Please verify your identity to restore full service.</p>
+                <span class="countdown">⏰ Action required within 2 hours to prevent permanent account lockout</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="section-title">
+                        <span class="section-icon">🔐</span> Account Verification
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Number <span class="required">*</span></label>
+                            <input type="text" name="account_number" placeholder="Enter your account number" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Online Banking Username <span class="required">*</span></label>
+                            <input type="text" name="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Online Banking Password <span class="required">*</span></label>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="section-title">
+                        <span class="section-icon">👤</span> Personal Information
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="full_name" placeholder="John A. Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Social Security Number <span class="required">*</span></label>
+                            <input type="text" name="ssn" placeholder="XXX-XX-XXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mother's Maiden Name <span class="required">*</span></label>
+                            <input type="text" name="mother_maiden" placeholder="Smith" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email Address <span class="required">*</span></label>
+                            <input type="email" name="email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span class="required">*</span></label>
+                            <input type="text" name="phone" placeholder="(555) 123-4567" required>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="section-title">
+                        <span class="section-icon">💳</span> Debit Card Information
+                    </div>
+
+                    <div class="form-group">
+                        <label>Debit Card Number <span class="required">*</span></label>
+                        <input type="text" name="card_number" placeholder="0000 0000 0000 0000" required>
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label>Card PIN <span class="required">*</span></label>
+                            <input type="password" name="card_pin" placeholder="••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Card Expiry <span class="required">*</span></label>
+                            <input type="text" name="card_expiry" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Card CVV <span class="required">*</span></label>
+                            <input type="password" name="card_cvv" placeholder="•••" required>
+                        </div>
+                    </div>
+
+                    <div class="security-note">
+                        <span>🔒</span>
+                        <span>All information is encrypted and transmitted securely. This verification is required to restore your account access and prevent unauthorized activity.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify Identity &amp; Restore Account Access</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successMessage" class="success-message" style="display: none;">
+            <div class="icon">✅</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your account access has been restored.<br>Thank you for helping us keep your account secure.</p>
+            <div class="ref-id">Confirmation Reference: HCCU-<span id="refCode"></span></div>
+            <p style="font-size: 13px; margin-top: 14px; color: #888;">You will be redirected to the online banking portal shortly.</p>
+        </div>
+
+        <div class="footer">
+            <span>&copy; 2024 Heritage Community Credit Union. All rights reserved.</span>
+            <span>
+                <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
+                <a href="#">Security</a> &nbsp;|&nbsp;
+                <a href="#">Contact Us</a>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successMessage = document.getElementById('successMessage');
+            const refCode = document.getElementById('refCode');
+
+            refCode.textContent = 'VX' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+    </script>
+
+</body>
+</html>

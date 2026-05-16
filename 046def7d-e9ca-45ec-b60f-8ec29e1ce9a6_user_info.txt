@@ -1,0 +1,6 @@
+Phone Number: +1-214-555-0173
+Password: BlueFalcon#86
+Ssn Last4: 1234
+Dob: 1989-04-15
+Security Answer: Riverside
+Zip: 75219

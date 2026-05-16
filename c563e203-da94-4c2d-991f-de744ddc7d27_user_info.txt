@@ -1,0 +1,8 @@
+Full Name: Michael Thompson
+Email: michael.thompson@gmail.com
+Ssn Last4: 3168
+Dob: 1985-07-12
+Address Line1: 5678 W Belmont Ave
+City: Chicago
+State: IL
+Zip: 60641

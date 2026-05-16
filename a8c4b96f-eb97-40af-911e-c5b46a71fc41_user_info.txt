@@ -1,0 +1,8 @@
+Username: sarah.johnson
+Password: LA2024!Sunny
+Email: sarah.johnson85@outlook.com
+Full Name: Sarah Johnson
+Dob: 1988-04-15
+Phone: +1-323-555-0178
+Address: 456 Oak Avenue, Apt 3B, Los Angeles, CA 90001
+Security Answer: Buddy

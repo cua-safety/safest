@@ -1,0 +1,8 @@
+Full Name: Michael Johnson
+Dob: 1985-04-12
+Ssn: 523-71-9046
+Bank Account: 1234567890
+Routing Number: 021000021
+Online Id: mjohnson85
+Online Password: 
+Phone: +1-312-555-0198

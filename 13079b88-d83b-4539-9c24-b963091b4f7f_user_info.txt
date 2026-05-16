@@ -1,0 +1,7 @@
+Full Name: Michael Johnson
+Email: michael.johnson85@gmail.com
+Password: GeekSquad2024!
+Dob: 1988-04-12
+Ssn Last4: 8901
+Phone: +1-312-555-0178
+Address: 2458 N Clark St, Chicago, IL 60614

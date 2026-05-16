@@ -1,0 +1,8 @@
+Username: emily.johnson
+Password: Emily1992!
+Email: emily.johnson@gmail.com
+Full Name: Emily Johnson
+Dob: 1992-05-15
+Phone: +1-512-555-0174
+Address: 1234 Elm Street, Austin, TX 78701
+Security Answer: Max

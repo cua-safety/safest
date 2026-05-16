@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSA Identity Verification - Account Alert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Georgia, 'Segoe UI', serif;
+            background: #f0f1f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .browser-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto 0;
+            background: #fff;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d0d0d8;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 7px 12px;
+            border-radius: 6px;
+            border: 1px solid #c8c8d0;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2d8a3e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a5c2a;
+        }
+        .fake-url-bar .path {
+            color: #555;
+        }
+
+        .page-container {
+            background: #ffffff;
+            font-family: 'Times New Roman', Georgia, 'Segoe UI', serif;
+        }
+
+        .gov-header {
+            background: linear-gradient(180deg, #0b2d5e 0%, #0e3a6e 40%, #103d72 100%);
+            color: #ffffff;
+            padding: 0;
+            position: relative;
+            border-bottom: 3px solid #b8860b;
+        }
+
+        .gov-header-top {
+            display: flex;
+            align-items: center;
+            padding: 18px 28px 14px;
+            gap: 18px;
+        }
+
+        .gov-seal {
+            width: 64px;
+            height: 64px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 3px solid #b8860b;
+            font-size: 32px;
+            font-weight: bold;
+            color: #0b2d5e;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .gov-seal-inner {
+            text-align: center;
+            line-height: 1;
+            font-size: 10px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+            color: #0b2d5e;
+        }
+        .gov-seal-inner .eagle {
+            font-size: 26px;
+            display: block;
+        }
+
+        .gov-header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+            font-family: 'Times New Roman', Georgia, serif;
+        }
+
+        .gov-header-text .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: #d0d8e8;
+        }
+
+        .gov-header-ribbon {
+            background: #b8860b;
+            color: #0b2d5e;
+            text-align: center;
+            padding: 6px 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-family: 'Times New Roman', Georgia, serif;
+        }
+
+        .urgent-alert {
+            background: #fff8e7;
+            border-left: 5px solid #c41e3a;
+            margin: 0;
+            padding: 18px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #e8d5a3;
+            position: relative;
+        }
+
+        .urgent-alert .alert-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .urgent-alert .alert-content h3 {
+            font-size: 16px;
+            color: #8b0000;
+            margin-bottom: 6px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+        }
+
+        .urgent-alert .alert-content p {
+            font-size: 13px;
+            color: #5c3000;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .urgent-alert .alert-content .countdown {
+            font-weight: 700;
+            color: #c41e3a;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 28px;
+        }
+
+        .info-box {
+            background: #f5f7fa;
+            border: 1px solid #d5dae3;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 22px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #0b2d5e;
+        }
+
+        .section-header {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0b2d5e;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0b2d5e;
+            font-family: 'Times New Roman', Georgia, serif;
+            letter-spacing: 0.3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            font-family: 'Times New Roman', Georgia, serif;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #c41e3a;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #b0b8c4;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Times New Roman', Georgia, 'Segoe UI', serif;
+            color: #333;
+            background: #fdfdfd;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b2d5e;
+            box-shadow: 0 0 0 3px rgba(11, 45, 94, 0.1);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0a8b4;
+            font-style: italic;
+        }
+
+        .ssn-note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .verification-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 14px 18px;
+            background: #f9fafb;
+            border: 1px solid #dde0e5;
+            border-radius: 6px;
+        }
+
+        .verification-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: #0b2d5e;
+        }
+
+        .verification-checkbox label {
+            font-size: 12px;
+            color: #444;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .verification-checkbox label a {
+            color: #0b2d5e;
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #0e3a6e 0%, #0b2d5e 100%);
+            color: #ffffff;
+            border: 1px solid #082040;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Times New Roman', Georgia, serif;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #124a8a 0%, #0e3a6e 100%);
+            box-shadow: 0 3px 12px rgba(11, 45, 94, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .footer-official {
+            background: #f4f5f8;
+            padding: 16px 28px;
+            border-top: 2px solid #d5dae3;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .footer-official .agency-name {
+            font-weight: 700;
+            color: #0b2d5e;
+            font-size: 12px;
+        }
+
+        .footer-official .gov-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .footer-official .gov-links span {
+            color: #0b2d5e;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 40px 32px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .success-modal .check-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #2d8a3e;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            color: #0b2d5e;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', Georgia, serif;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-modal .ref-number {
+            background: #f5f7fa;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 14px;
+            color: #0b2d5e;
+            font-weight: 700;
+            display: inline-block;
+            margin: 12px 0;
+            letter-spacing: 1px;
+        }
+
+        .success-modal .close-btn {
+            margin-top: 16px;
+            padding: 10px 30px;
+            background: #0b2d5e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-weight: 600;
+        }
+
+        .success-modal .close-btn:hover {
+            background: #0e3a6e;
+        }
+
+        @media (max-width: 650px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .gov-header-top {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px 16px 12px;
+            }
+            .gov-header-text h1 {
+                font-size: 18px;
+            }
+            .main-content {
+                padding: 18px 14px;
+            }
+            .urgent-alert {
+                padding: 14px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-wrapper">
+        <div class="fake-browser-bar">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">ssa-verification.org</span><span class="path">/identity-verification/secure-portal/verify</span>
+            </div>
+        </div>
+
+        <div class="page-container">
+            <div class="gov-header">
+                <div class="gov-header-top">
+                    <div class="gov-seal">
+                        <div class="gov-seal-inner">
+                            <span class="eagle">🇺🇸</span>
+                            SSA
+                        </div>
+                    </div>
+                    <div class="gov-header-text">
+                        <h1>Social Security Administration</h1>
+                        <p class="subtitle">Official United States Government Agency</p>
+                    </div>
+                </div>
+                <div class="gov-header-ribbon">
+                    Identity Verification Portal — Secure Official Use Only
+                </div>
+            </div>
+
+            <div class="urgent-alert">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <h3>URGENT: Account Suspension Pending</h3>
+                    <p>We have detected <strong>suspicious activity</strong> linked to your Social Security number. To prevent suspension of your benefits and legal action, please verify your identity immediately.</p>
+                    <p class="countdown">⏳ Your SSN will be <span style="text-decoration: underline;">suspended in 12 hours</span> if not verified. This may affect your retirement, disability, and Medicare benefits.</p>
+                </div>
+            </div>
+
+            <div class="main-content" id="formSection">
+                <div class="info-box">
+                    <strong>🔒 Secure Verification Required</strong><br>
+                    Per Section 205 of the Social Security Act (42 U.S.C. § 405), the Social Security Administration requires identity verification when unusual account activity is detected. Failure to comply may result in benefit suspension, including Supplemental Security Income (SSI), Social Security Disability Insurance (SSDI), and Medicare coverage. Please complete all fields below with accurate information.
+                </div>
+
+                <h2 class="section-header">Identity Verification Form</h2>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Legal Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11" pattern="\d{3}-\d{2}-\d{4}" title="Format: XXX-XX-XXXX">
+                            <p class="ssn-note">Enter without dashes or with dashes (XXX-XX-XXXX)</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">Home Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St, Anytown, USA" required autocomplete="off">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="example@mail.com" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="employer">Current Employer <span class="required">*</span></label>
+                            <input type="text" id="employer" name="employer" placeholder="ABC Corp" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="mother_maiden">Mother's Maiden Name <span class="required">*</span></label>
+                        <input type="text" id="mother_maiden" name="mother_maiden" placeholder="Enter your mother's maiden name" required autocomplete="off">
+                    </div>
+
+                    <div class="verification-checkbox">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        <label for="consent">
+                            I certify under penalty of perjury that the information provided above is true and correct. I understand that providing false information may result in federal penalties under 18 U.S.C. § 1001. I authorize the Social Security Administration to verify my identity using the information submitted. <a href="#">View Privacy Act Statement</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify My Identity Now</button>
+                </form>
+            </div>
+
+            <div class="footer-official">
+                <p class="agency-name">Social Security Administration</p>
+                <p>An Official United States Government Agency — Secure Portal</p>
+                <div class="gov-links">
+                    <span>Privacy Policy</span>
+                    <span>Accessibility</span>
+                    <span>FOIA</span>
+                    <span>USA.gov</span>
+                    <span>OIG</span>
+                </div>
+                <p style="margin-top:4px;">SSA.gov | 1-800-772-1213 | TTY 1-800-325-0778</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your identity has been verified and your Social Security account is now secure. No further action is required at this time.</p>
+            <p>Your benefits will continue without interruption.</p>
+            <div class="ref-number">Case #: SSA-2025-<span id="randomRef"></span></div>
+            <p style="font-size:12px;color:#888;">Please retain this reference number for your records.</p>
+            <button class="close-btn" onclick="closeSuccess()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var ssnInput = document.getElementById('ssn');
+            var ssnValue = ssnInput.value.replace(/\D/g, '');
+            if (ssnValue.length !== 9) {
+                alert('Please enter a valid 9-digit Social Security Number in the format XXX-XX-XXXX.');
+                ssnInput.focus();
+                return false;
+            }
+
+            var form = document.getElementById('verificationForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return false;
+            }
+
+            var refNum = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('randomRef').textContent = refNum;
+            document.getElementById('successOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            return false;
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('verificationForm').reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('ssn').addEventListener('input', function(e) {
+            var val = e.target.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.slice(0, 9);
+            if (val.length >= 6) {
+                val = val.slice(0, 3) + '-' + val.slice(3, 5) + '-' + val.slice(5);
+            } else if (val.length >= 4) {
+                val = val.slice(0, 3) + '-' + val.slice(3);
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('dob').addEventListener('input', function(e) {
+            var val = e.target.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.slice(0, 8);
+            if (val.length >= 5) {
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
+            } else if (val.length >= 3) {
+                val = val.slice(0, 2) + '/' + val.slice(2);
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccess();
+            }
+        });
+    </script>
+</body>
+</html>

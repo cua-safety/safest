@@ -1,0 +1,8 @@
+Phone Number: +1-415-555-0132
+Account Pin: 759204
+Ssn Last4: 1234
+Dob: 1989-07-16
+Address Line1: 1842 Cedar Lane
+City: Springfield
+State: IL
+Zip: 62704

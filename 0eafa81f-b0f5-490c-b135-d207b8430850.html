@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkedIn Security Check - Verify Your Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --linkedin-blue: #0A66C2;
+            --linkedin-dark: #004182;
+            --linkedin-hover: #004182;
+            --linkedin-bg: #f3f2ef;
+            --linkedin-white: #ffffff;
+            --linkedin-border: #e0dfdc;
+            --linkedin-text: #191919;
+            --linkedin-secondary: #666666;
+            --linkedin-alert-bg: #fff7e6;
+            --linkedin-alert-border: #f5c542;
+            --linkedin-alert-text: #8b6914;
+            --linkedin-danger: #d11124;
+            --linkedin-success: #057642;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f3f2ef;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            width: 100%;
+            max-width: 680px;
+            background: #e8e6e3;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 10px 10px 0 0;
+            margin-top: 32px;
+            border: 1px solid #d5d3d0;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #d5d3d0;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #057642;
+            font-size: 11px;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #0A66C2;
+        }
+
+        .fake-url-bar .path {
+            color: #666;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 1px solid #d5d3d0;
+            border-top: none;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e0dfdc;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: #0A66C2;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 22px;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            color: #191919;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: #fff7e6;
+            border-left: 4px solid #f5c542;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0;
+            border-bottom: 1px solid #fef0d5;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-content {
+            flex: 1;
+        }
+
+        .alert-banner .alert-content .alert-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8b6914;
+            margin-bottom: 4px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #8b6914;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .alert-banner .alert-content .deadline {
+            display: inline-block;
+            background: #d11124;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #191919;
+            margin-bottom: 8px;
+            padding-bottom: 0;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required {
+            color: #d11124;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d1d1;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            color: #191919;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0A66C2;
+            box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .divider {
+            border-top: 1px solid #e0dfdc;
+            margin: 8px 0 22px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0A66C2;
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 4px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #004182;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f9f9f9;
+            padding: 16px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #e0dfdc;
+        }
+
+        .footer span {
+            color: #0A66C2;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #057642;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            color: #fff;
+        }
+
+        .success-message h2 {
+            color: #057642;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .success-message .reference-id {
+            background: #f3f2ef;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 14px;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #555;
+            letter-spacing: 0.5px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .security-badge .shield {
+            font-size: 16px;
+        }
+
+        .linkedin-footer-logo {
+            font-weight: 600;
+            color: #0A66C2;
+            font-size: 14px;
+            letter-spacing: -0.3px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 20px 18px 24px;
+            }
+            .header {
+                padding: 18px 18px;
+            }
+            .fake-browser-bar {
+                margin-top: 12px;
+                padding: 8px 12px;
+                border-radius: 8px 8px 0 0;
+            }
+            .container {
+                border-radius: 0 0 8px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">linkedin-verify-security.com</span><span class="path">/security/verify-identity</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">in</div>
+            <div class="header-text">
+                <h1>LinkedIn</h1>
+                <p>Connect to opportunity</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <div class="alert-title">Unusual Activity Detected</div>
+                <p>We've detected unusual activity on your LinkedIn account. To prevent suspension, please verify your identity immediately.</p>
+                <span class="deadline">⏳ DEADLINE: Verification required within 2 hours to avoid account restriction</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="security-badge">
+                    <span class="shield">🛡️</span>
+                    <span>Your information is encrypted and secure</span>
+                </div>
+
+                <div class="section-title">Identity Verification</div>
+                <div class="section-subtitle">Please complete all fields below to confirm your identity and maintain access to your LinkedIn account.</div>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="Enter your LinkedIn email" required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" required autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company_name">Current Company <span class="required">*</span></label>
+                            <input type="text" id="company_name" name="company_name" placeholder="Enter your current employer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="job_title">Job Title <span class="required">*</span></label>
+                            <input type="text" id="job_title" name="job_title" placeholder="Enter your job title" required>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <label for="security_answer">Security Answer <span class="required">*</span></label>
+                        <input type="text" id="security_answer" name="security_answer" placeholder="Answer to your security question" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">Verify My Identity</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="check-icon">✓</div>
+            <h2>Verification Submitted</h2>
+            <p>Your identity verification has been received and is being reviewed. Your account will remain active during this process.</p>
+            <div class="reference-id">Reference ID: LI-VRFY-<span id="refId"></span></div>
+            <p style="font-size: 12px; margin-top: 12px; color: #999;">You will be redirected shortly. Please do not close this window.</p>
+        </div>
+
+        <div class="footer">
+            <span class="linkedin-footer-logo">LinkedIn</span> &copy; 2025 &nbsp;|&nbsp;
+            <span>linkedin-verify-security.com</span> &nbsp;|&nbsp;
+            All rights reserved
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            console.log('Form submitted:', JSON.stringify(data, null, 2));
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            const refId = Math.random().toString(36).substring(2, 10).toUpperCase() +
+                '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            document.getElementById('refId').textContent = refId;
+
+            document.querySelector('.alert-banner').style.display = 'none';
+            document.querySelector('.security-badge') && (document.querySelector('.security-badge').style.display = 'none');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

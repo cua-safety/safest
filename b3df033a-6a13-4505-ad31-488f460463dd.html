@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UPS - Customs Fee Notice</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --ups-brown: #351C15;
+            --ups-brown-light: #4B3020;
+            --ups-gold: #FFC220;
+            --ups-gold-dark: #E5A800;
+            --bg: #f4f2ef;
+            --surface: #ffffff;
+            --border: #d4cec6;
+            --text: #1a1a1a;
+            --text-secondary: #5c554d;
+            --danger-bg: #fef9f0;
+            --danger-border: #F0A030;
+            --danger-text: #8B5E14;
+            --input-bg: #fafaf8;
+            --input-border: #c8c2b8;
+            --input-focus: #351C15;
+            --success: #2a7d2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background: #e8e4de;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .browser-frame {
+            width: 100%;
+            max-width: 660px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+
+        .fake-browser-bar {
+            background: #e2e0dc;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #cec9c0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .window-buttons {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .window-btn.red {
+            background: #ED6A5E;
+        }
+        .window-btn.yellow {
+            background: #F5BF4F;
+        }
+        .window-btn.green {
+            background: #61C554;
+        }
+
+        .fake-url-bar {
+            background: #f9f9f7;
+            padding: 7px 13px;
+            border-radius: 6px;
+            border: 1px solid #d4cec4;
+            flex: 1;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 12.5px;
+            color: #3a3a3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: 0.01em;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2a7d2a;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .fake-url-bar .path-segment {
+            color: #777;
+        }
+
+        .main-container {
+            background: #fff;
+        }
+
+        .top-strip {
+            background: var(--ups-brown);
+            color: #fff;
+            padding: 8px 24px;
+            font-size: 11.5px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .top-strip .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--ups-gold);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(1.6);
+            }
+        }
+
+        .header {
+            background: #fff;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1px solid #e8e4de;
+        }
+
+        .ups-shield {
+            width: 54px;
+            height: 54px;
+            background: var(--ups-brown);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 3px 12px rgba(53, 28, 21, 0.2);
+        }
+
+        .ups-shield .shield-inner {
+            width: 32px;
+            height: 32px;
+            background: var(--ups-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--ups-brown);
+            letter-spacing: -0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--ups-brown);
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #6e655a;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: var(--danger-bg);
+            border-left: 5px solid var(--danger-border);
+            border-bottom: 1px solid #f0d9a8;
+            padding: 18px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-icon-wrap {
+            background: #F0A030;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .alert-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #7B4E0E;
+            margin-bottom: 5px;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #8B5E14;
+            line-height: 1.55;
+        }
+
+        .alert-content .countdown {
+            display: inline-block;
+            background: #F0A030;
+            color: #fff;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .package-info {
+            padding: 20px 28px;
+            background: #fdfcfa;
+            border-bottom: 1px solid #e8e4de;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .package-badge {
+            background: #fff;
+            border: 1px solid #d4cec4;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .package-badge .pkg-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .package-badge .pkg-details {
+            font-size: 12px;
+            color: #5c554d;
+            line-height: 1.5;
+        }
+
+        .package-badge .pkg-details strong {
+            color: var(--ups-brown);
+            font-size: 13px;
+            display: block;
+        }
+
+        .fee-highlight {
+            background: #fff;
+            border: 2px dashed #F0A030;
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: center;
+            flex-shrink: 0;
+            min-width: 130px;
+        }
+
+        .fee-highlight .fee-label {
+            font-size: 11px;
+            color: #8B5E14;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .fee-highlight .fee-amount {
+            font-size: 26px;
+            font-weight: 800;
+            color: #7B4E0E;
+            letter-spacing: -0.5px;
+        }
+
+        .fee-highlight .fee-note {
+            font-size: 10px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .form-container {
+            padding: 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ups-brown);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--ups-gold);
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .num {
+            background: var(--ups-brown);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row.three {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #3d362f;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #d94040;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid var(--input-border);
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--ups-brown);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(53, 28, 21, 0.06);
+        }
+
+        .form-group input::placeholder {
+            color: #b5aea4;
+            font-size: 13px;
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 80px;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #6e655a;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #f9f8f5;
+            border-radius: 6px;
+        }
+
+        .secure-badge .lock-symbol {
+            color: #2a7d2a;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 17px;
+            background: var(--ups-gold);
+            color: var(--ups-brown);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 3px 12px rgba(53, 28, 21, 0.12);
+        }
+
+        .submit-btn:hover {
+            background: var(--ups-gold-dark);
+            box-shadow: 0 5px 18px rgba(53, 28, 21, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(53, 28, 21, 0.1);
+        }
+
+        .footer {
+            background: #f7f5f2;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #9a9186;
+            border-top: 1px solid #e8e4de;
+            line-height: 1.6;
+        }
+
+        .footer span {
+            color: #5c554d;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-overlay .check-circle {
+            width: 80px;
+            height: 80px;
+            background: #e6f4e6;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #2a7d2a;
+            animation: scaleIn 0.4s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #2a7d2a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #5c554d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-overlay .ref-number {
+            display: inline-block;
+            background: #f9f8f5;
+            border: 1px solid #d4cec4;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            color: var(--ups-brown);
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .card-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .package-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .fee-highlight {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-frame">
+        <div class="fake-browser-bar">
+            <div class="window-buttons">
+                <span class="window-btn red"></span>
+                <span class="window-btn yellow"></span>
+                <span class="window-btn green"></span>
+            </div>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain-name">ups-customs-fee.com</span><span class="path-segment">/customs/payment-portal</span>
+            </div>
+        </div>
+
+        <div class="main-container" id="mainContent">
+            <div class="top-strip">
+                <span class="dot"></span> OFFICIAL UPS CUSTOMS NOTIFICATION <span class="dot"></span>
+            </div>
+
+            <div class="header">
+                <div class="ups-shield">
+                    <div class="shield-inner">UPS</div>
+                </div>
+                <div class="header-text">
+                    <h1>United Parcel Service</h1>
+                    <p>International Customs &amp; Duties Payment Portal</p>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <div class="alert-icon-wrap">!</div>
+                <div class="alert-content">
+                    <h3>⚠️ Customs Hold — Action Required</h3>
+                    <p>Your international package has been held by customs authorities due to <strong>unpaid duties and taxes</strong>. Payment is required immediately to release the package for final delivery. Failure to pay will result in the package being <strong>returned to sender</strong>.</p>
+                    <span class="countdown">⏳ Payment Due Within 48 Hours</span>
+                </div>
+            </div>
+
+            <div class="package-info">
+                <div class="package-badge">
+                    <span class="pkg-icon">📦</span>
+                    <div class="pkg-details">
+                        <strong>Tracking #1Z999AA10123456784</strong>
+                        International Shipment — Held at Customs
+                        <br>Origin: Frankfurt, DE → Destination: United States
+                    </div>
+                </div>
+                <div class="fee-highlight">
+                    <div class="fee-label">Duties &amp; Taxes Due</div>
+                    <div class="fee-amount">$42.87</div>
+                    <div class="fee-note">USD — Includes processing fee</div>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <form id="customsForm" onsubmit="handleSubmit(event)">
+                        <div class="section-title">
+                            <span class="num">1</span> Recipient Information
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John Smith" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="john.smith@email.com" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address">Shipping Address <span class="required">*</span></label>
+                                <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required">*</span></label>
+                                <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="tel">
+                            </div>
+                        </div>
+
+                        <div class="section-title" style="margin-top: 8px;">
+                            <span class="num">2</span> Payment Information
+                        </div>
+
+                        <div class="form-group">
+                            <label for="credit_card">Credit Card Number <span class="required">*</span></label>
+                            <input type="text" id="credit_card" name="credit_card" placeholder="1234 5678 9012 3456" required autocomplete="cc-number" maxlength="19">
+                        </div>
+
+                        <div class="card-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="exp_date">Expiration Date <span class="required">*</span></label>
+                                <input type="text" id="exp_date" name="exp_date" placeholder="MM/YY" required autocomplete="cc-exp" maxlength="5">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="cvv">CVV <span class="required">*</span></label>
+                                <input type="password" id="cvv" name="cvv" placeholder="123" required autocomplete="cc-csc" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="secure-badge">
+                            <span class="lock-symbol">🔒</span> Your payment information is encrypted and secured with 256-bit SSL encryption.
+                        </div>
+
+                        <button type="submit" class="submit-btn">Pay $42.87 &amp; Release Package</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-overlay" id="successOverlay">
+                <div class="check-circle">✓</div>
+                <h2>Payment Confirmed</h2>
+                <p>Your customs duties payment of <strong>$42.87</strong> has been processed successfully.<br>Your package has been released and will resume transit shortly.</p>
+                <div class="ref-number">Confirmation #UPS-CUST-28491</div>
+                <p style="font-size: 12px; color: #999; margin-top: 12px;">A confirmation email will be sent to the address provided. Please allow 1–3 business days for delivery.</p>
+            </div>
+
+            <div class="footer">
+                <span>UPS Customs Processing Center</span> — 55 Glenlake Parkway NE, Atlanta, GA 30328<br>
+                &copy; 2024 United Parcel Service of America, Inc. All rights reserved. | <span>ups-customs-fee.com</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+            document.querySelector('.alert-banner').style.display = 'none';
+            document.querySelector('.package-info').style.display = 'none';
+            document.querySelector('.section-title') && (document.querySelector('.section-title').style.display = 'none');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

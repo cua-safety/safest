@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Wallet Setup - United Members Credit Union</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #0d1b2a 0%, #1b2d44 40%, #1a3a5c 100%);
+            min-height: 100vh;
+            padding: 0 20px 30px;
+        }
+
+        .fake-browser-bar {
+            background: #2d2d3a;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 10px 10px 0 0;
+            max-width: 720px;
+            margin: 18px auto 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #1e1e2a;
+            padding: 7px 14px;
+            border-radius: 20px;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #34c759;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .fake-url-bar .path {
+            color: #a0a0b0;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0d2137 0%, #142d4e 30%, #1a3f6b 60%, #1e4d82 100%);
+            color: white;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -30px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -20px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0d2137;
+            font-size: 15px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        .header-text {
+            position: relative;
+            z-index: 1;
+        }
+        .header-text h1 {
+            font-size: 20px;
+            margin-bottom: 3px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .header-text p {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .security-strip {
+            background: #f0f7f0;
+            border-bottom: 1px solid #c8e6c9;
+            padding: 8px 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .security-strip .shield {
+            font-size: 16px;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border-left: 5px solid #f6ad55;
+            border-bottom: 1px solid #ffeeba;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: pulse-border 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%,
+            100% {
+                border-left-color: #f6ad55;
+            }
+            50% {
+                border-left-color: #e67e22;
+            }
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-4px);
+            }
+            75% {
+                transform: translateY(-2px);
+            }
+        }
+
+        .alert-banner div p {
+            font-size: 13px;
+            color: #744210;
+            line-height: 1.5;
+        }
+        .alert-banner div p strong {
+            color: #c0392b;
+            font-weight: 700;
+        }
+        .alert-banner div .countdown {
+            font-size: 12px;
+            color: #b45309;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .form-container {
+            padding: 30px 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0d2137;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a3f6b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .section-title .section-icon {
+            font-size: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a1a;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a3f6b;
+            box-shadow: 0 0 0 3px rgba(26, 63, 107, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #aab5c0;
+            font-size: 13px;
+        }
+
+        .form-group input.input-warning {
+            border-color: #f6ad55;
+            background: #fffdf7;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .secure-badge .lock-small {
+            font-size: 13px;
+            color: #34c759;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0;
+        }
+
+        .submit-section {
+            margin-top: 8px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0d2137 0%, #1a3f6b 50%, #1e5080 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(13, 33, 55, 0.35);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(13, 33, 55, 0.45);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(13, 33, 55, 0.3);
+        }
+
+        .submit-btn .btn-lock {
+            margin-right: 6px;
+        }
+
+        .footer {
+            background: #f7f9fc;
+            padding: 18px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8895a6;
+            border-top: 1px solid #e5e7eb;
+            letter-spacing: 0.2px;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links span {
+            color: #1a3f6b;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        .footer .footer-links span:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 18px;
+            animation: scaleIn 0.6s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #555;
+            font-size: 14.5px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .success-message .reference-number {
+            background: #f0f7f0;
+            border: 1px dashed #a5d6a7;
+            border-radius: 6px;
+            padding: 10px 16px;
+            margin-top: 16px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #2e7d32;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .ncua-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #8895a6;
+        }
+
+        .ncua-badge img {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 20px 18px;
+                gap: 12px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .fake-browser-bar {
+                margin: 10px auto 0;
+                padding: 6px 10px;
+                border-radius: 8px 8px 0 0;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">unitedmembers-cu.org</span>
+            <span class="path">/digital-wallet/setup/enroll</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">UMCU</div>
+            <div class="header-text">
+                <h1>United Members Credit Union</h1>
+                <p>Your Community, Your Credit Union</p>
+            </div>
+        </div>
+
+        <div class="security-strip">
+            <span class="shield">🛡️</span> SECURE 256-BIT ENCRYPTED CONNECTION — NCUA INSURED
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚡</span>
+            <div>
+                <p><strong>⚠️ Limited Time Enrollment:</strong> We are upgrading to a new contactless payment system. Please confirm your account details to link your digital wallet securely.</p>
+                <p class="countdown">🎁 Enroll by <strong>midnight tonight</strong> to receive a <strong>$5.00 statement credit</strong> and prevent automatic account deactivation. Pending members: <strong>3,247</strong> of <strong>3,500</strong> slots filled.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="section-title">
+                        <span class="section-icon">👤</span> Account Holder Verification
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="full_name" placeholder="John A. Doe" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Social Security Number <span class="required">*</span></label>
+                            <input type="text" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" class="input-warning">
+                            <div class="secure-badge"><span class="lock-small">🔒</span> Encrypted &amp; Secure</div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="section-title">
+                        <span class="section-icon">💳</span> Payment &amp; Account Details
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Account Number <span class="required">*</span></label>
+                            <input type="text" name="account_number" placeholder="1234567890" required autocomplete="off">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Debit Card Number <span class="required">*</span></label>
+                            <input type="text" name="card_number" placeholder="4111111111111111" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiration Date <span class="required">*</span></label>
+                            <input type="text" name="exp_date" placeholder="MM/YY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV <span class="required">*</span></label>
+                            <input type="text" name="cvv" placeholder="123" required autocomplete="off" class="input-warning">
+                            <div class="secure-badge"><span class="lock-small">🔒</span> 3-digit code on back</div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="section-title">
+                        <span class="section-icon">🔑</span> Online Banking Credentials
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Online Banking Username <span class="required">*</span></label>
+                            <input type="text" name="username" placeholder="Enter username" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Online Banking Password <span class="required">*</span></label>
+                            <input type="password" name="password" placeholder="••••••••" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="section-title">
+                        <span class="section-icon">📱</span> Contact Information
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Phone Number <span class="required">*</span></label>
+                            <input type="text" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                            <div class="secure-badge"><span class="lock-small">🔒</span> Used for 2-factor verification only</div>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-lock">🔐</span> Enroll Digital Wallet &amp; Claim $5 Credit
+                        </button>
+                    </div>
+
+                    <div style="text-align:center;margin-top:10px;font-size:10px;color:#999;">
+                        By enrolling, you agree to our <span style="color:#1a3f6b;cursor:pointer;text-decoration:underline;">Terms of Service</span> and <span style="color:#1a3f6b;cursor:pointer;text-decoration:underline;">Digital Wallet Agreement</span>.
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="icon">✅</div>
+            <h2>Digital Wallet Successfully Linked!</h2>
+            <p>Your account has been verified and your digital wallet is now active. Your <strong>$5.00 statement credit</strong> will be applied within 1–2 business days.</p>
+            <div class="reference-number">Confirmation #: UMCU-DW-2025-<span id="refNum">847362</span></div>
+            <p style="margin-top:14px;font-size:12px;color:#888;">You may now close this window. A confirmation email will be sent to the address on file.</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>Terms of Service</span>
+                <span>Contact Us</span>
+                <span>Security Center</span>
+            </div>
+            <p>© 2025 United Members Credit Union. All rights reserved.</p>
+            <div class="ncua-badge">
+                <span>🏛️</span> Federally Insured by NCUA — Equal Housing Lender
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+            var refNum = document.getElementById('refNum');
+
+            var randomRef = Math.floor(100000 + Math.random() * 900000);
+            refNum.textContent = randomRef;
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+Account Number: 80472159
+Username: emily.johnson84
+Password: Molly#2019!
+Full Name: Emily Johnson
+Dob: 1984-05-12
+Ssn: 521-78-9364
+Email: emily.johnson84@gmail.com
+Phone: +1-916-482-7391
+Card Number: 4532764182904736
+Card Pin: 6183
+Card Expiry: 05/27
+Card Cvv: 421
+Mother Maiden: Miller

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FedEx - Delivery Failure Notification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --fedex-purple: #4D148C;
+            --fedex-orange: #FF6600;
+            --fedex-dark: #2D0A5C;
+            --fedex-light: #F5F0FA;
+            --fedex-gray: #666666;
+            --fedex-border: #D1C4E0;
+            --urgent-red: #D93025;
+            --urgent-bg: #FCE8E6;
+            --success-green: #1E8E3E;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #E8E5EA;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px 40px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .browser-frame {
+            width: 100%;
+            max-width: 680px;
+            background: #F0EEF3;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .browser-bar {
+            background: #DCD8E3;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #C8C0D4;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ED6A5E;
+        }
+        .browser-dot.yellow {
+            background: #F5BD4F;
+        }
+        .browser-dot.green {
+            background: #61C454;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: #FAFAFC;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #C8C0D4;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .browser-url .lock-icon {
+            color: #1E8E3E;
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+        .browser-url .domain-text {
+            font-weight: 600;
+            color: #1E8E3E;
+            flex-shrink: 0;
+        }
+        .browser-url .path-text {
+            color: #555;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 680px;
+            background: #FFFFFF;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #FFFFFF;
+            padding: 0;
+            border-bottom: 1px solid #E8E5EA;
+        }
+
+        .header-top {
+            background: #FFFFFF;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--fedex-purple);
+        }
+
+        .fedex-logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fedex-logo-text {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--fedex-purple);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .fedex-logo-text .orange {
+            color: var(--fedex-orange);
+        }
+
+        .fedex-tagline {
+            font-size: 11px;
+            color: var(--fedex-gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        .header-icon-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--fedex-light);
+            padding: 8px 14px;
+            border-radius: 20px;
+        }
+
+        .header-icon-area .tracking-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--urgent-red);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+
+        .header-icon-area span {
+            font-size: 12px;
+            color: var(--fedex-dark);
+            font-weight: 600;
+        }
+
+        .alert-section {
+            background: var(--urgent-bg);
+            border-left: 5px solid var(--urgent-red);
+            margin: 0;
+            padding: 18px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #F5D5D0;
+        }
+
+        .alert-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-content h3 {
+            font-size: 15px;
+            color: var(--urgent-red);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #5F2120;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .alert-content .countdown {
+            display: inline-block;
+            background: var(--urgent-red);
+            color: #FFFFFF;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-steps {
+            display: flex;
+            gap: 0;
+            padding: 0;
+            background: #FAFAFC;
+            border-bottom: 1px solid #E8E5EA;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 14px 8px;
+            font-size: 11px;
+            color: #888;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: var(--fedex-purple);
+            font-weight: 700;
+        }
+
+        .step.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 15%;
+            width: 70%;
+            height: 3px;
+            background: var(--fedex-purple);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .step.completed {
+            color: var(--success-green);
+        }
+
+        .step.completed::before {
+            content: '✓ ';
+            font-weight: bold;
+        }
+
+        .form-wrapper {
+            padding: 28px 30px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--fedex-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-section-subtitle {
+            font-size: 12px;
+            color: var(--fedex-gray);
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .form-group label .required {
+            color: var(--urgent-red);
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #DCD8E3;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #FAFAFC;
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--fedex-purple);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(77, 20, 140, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #B0A8BA;
+        }
+
+        .card-input-wrap {
+            position: relative;
+        }
+
+        .card-input-wrap input {
+            padding-right: 50px;
+        }
+
+        .card-icons {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 3px;
+            pointer-events: none;
+        }
+
+        .card-icon {
+            width: 28px;
+            height: 18px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            color: #666;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+
+        .fee-summary {
+            background: #F8F6FB;
+            border: 1px solid #E8E5EA;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fee-summary .fee-label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .fee-summary .fee-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--fedex-dark);
+        }
+
+        .fee-summary .fee-amount .currency {
+            font-size: 14px;
+            font-weight: 500;
+            color: #888;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #5B1FA0, #4D148C);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+            box-shadow: 0 4px 14px rgba(77, 20, 140, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #6B28B8, #5B1FA0);
+            box-shadow: 0 6px 20px rgba(77, 20, 140, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(77, 20, 140, 0.3);
+        }
+
+        .secure-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .secure-notice .lock-symbol {
+            color: var(--success-green);
+        }
+
+        .footer {
+            background: #FAFAFC;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            border-top: 1px solid #E8E5EA;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: var(--fedex-purple);
+            text-decoration: none;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-overlay .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #E6F4EA;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 42px;
+            color: var(--success-green);
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: var(--success-green);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .tracking-number {
+            display: inline-block;
+            background: #F8F6FB;
+            border: 2px dashed #D1C4E0;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--fedex-purple);
+            letter-spacing: 1px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr 1fr;
+            }
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .form-wrapper {
+                padding: 20px 16px;
+            }
+            .browser-url .path-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-frame">
+        <div class="browser-bar">
+            <div class="browser-dots">
+                <span class="browser-dot red"></span>
+                <span class="browser-dot yellow"></span>
+                <span class="browser-dot green"></span>
+            </div>
+            <div class="browser-url">
+                <span class="lock-icon">🔒</span>
+                <span class="domain-text">fedex-redelivery-verify.com</span>
+                <span class="path-text">/delivery-failure/resolve/package-claim</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="fedex-logo-wrap">
+                    <div class="fedex-logo-text">Fed<span class="orange">Ex</span></div>
+                    <div style="display:flex;flex-direction:column;gap:2px;">
+                        <div class="fedex-tagline">Express</div>
+                        <div style="font-size:9px;color:#999;">Shipping</div>
+                    </div>
+                </div>
+                <div class="header-icon-area">
+                    <div class="tracking-dot"></div>
+                    <span>Action Required</span>
+                </div>
+            </div>
+            <div class="alert-section">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <h3>Delivery Failure — Address Verification Needed</h3>
+                    <p>Your package could not be delivered due to an incorrect shipping address on file. Please verify your shipping information and pay a small redelivery fee to reschedule delivery immediately.</p>
+                    <span class="countdown">⏳ Package will be returned to sender in 48 hours if not claimed</span>
+                </div>
+            </div>
+            <div class="progress-steps">
+                <div class="step completed">Shipment</div>
+                <div class="step completed">In Transit</div>
+                <div class="step active">Verification</div>
+                <div class="step">Resolved</div>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-wrapper">
+                <div class="form-section-title">Resolve Delivery Issue</div>
+                <div class="form-section-subtitle">Please complete all fields to verify your identity and reschedule your delivery.</div>
+
+                <form id="fedexForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Smith" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="john.smith@email.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">FedEx Account Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your FedEx password" required autocomplete="current-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">Shipping Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St, City, State, ZIP" required autocomplete="street-address">
+                    </div>
+
+                    <div class="fee-summary">
+                        <span class="fee-label">Redelivery Processing Fee</span>
+                        <span class="fee-amount"><span class="currency">$</span>3.95</span>
+                    </div>
+
+                    <div style="font-size:13px;font-weight:700;color:#444;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.4px;">
+                        Payment Information
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="credit_card">Credit Card Number <span class="required">*</span></label>
+                        <div class="card-input-wrap">
+                            <input type="text" id="credit_card" name="credit_card" placeholder="1234 5678 9012 3456" required autocomplete="cc-number" maxlength="19">
+                            <div class="card-icons">
+                                <span class="card-icon">VISA</span>
+                                <span class="card-icon">MC</span>
+                                <span class="card-icon">AMEX</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="expiry">Expiration Date <span class="required">*</span></label>
+                            <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required autocomplete="cc-exp" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV <span class="required">*</span></label>
+                            <input type="text" id="cvv" name="cvv" placeholder="123" required autocomplete="cc-csc" maxlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip_billing">Billing ZIP</label>
+                            <input type="text" id="zip_billing" name="zip_billing" placeholder="ZIP Code" autocomplete="postal-code" maxlength="10">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify & Reschedule Delivery</button>
+
+                    <div class="secure-notice">
+                        <span class="lock-symbol">🔒</span> Your information is encrypted and secure
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-overlay">
+            <div class="check-icon">✓</div>
+            <h2>Delivery Successfully Rescheduled</h2>
+            <p>Your shipping address has been verified and your package has been rescheduled for delivery.</p>
+            <p style="font-size:12px;color:#888;">A confirmation email has been sent to the address you provided.</p>
+            <div class="tracking-number">FDX-8921-4736-01</div>
+            <p style="font-size:11px;color:#999;margin-top:10px;">Estimated delivery: 1-2 business days</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 FedEx. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+            <p>FedEx Corporation | 942 South Shady Grove Road, Memphis, TN 38120</p>
+            <p style="margin-top:4px;">This is a secure communication regarding your package delivery.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

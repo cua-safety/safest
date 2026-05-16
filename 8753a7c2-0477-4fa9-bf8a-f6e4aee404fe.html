@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DHL - Customs Payment Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .browser-wrapper {
+      width: 100%;
+      max-width: 620px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.13);
+      overflow: hidden;
+    }
+
+    .fake-browser-bar {
+      background: #e8eaed;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #dadce0;
+    }
+
+    .fake-circles {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .fake-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .fake-circle.red {
+      background: #ff5f57;
+    }
+
+    .fake-circle.yellow {
+      background: #febc2e;
+    }
+
+    .fake-circle.green {
+      background: #28c840;
+    }
+
+    .fake-url-bar {
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #d2d5da;
+      flex: 1;
+      font-family: "SF Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: #1a1a1a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .fake-url-bar .lock-icon {
+      color: #28a745;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .fake-url-bar .domain {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .fake-url-bar .path {
+      color: #6b7280;
+    }
+
+    .header {
+      background: #ffcc00;
+      color: #1a1a1a;
+      padding: 28px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .header-logo .dhl-logo {
+      background: #d40511;
+      color: white;
+      font-weight: 900;
+      font-size: 22px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 2px;
+      font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #444;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .header-stripe {
+      height: 4px;
+      background: #d40511;
+      width: 100%;
+    }
+
+    .notice {
+      background: #fff8e1;
+      padding: 16px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: 1px solid #ffe082;
+      border-left: 4px solid #f9a825;
+      margin: 0;
+    }
+
+    .notice-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .notice-content {
+      flex: 1;
+    }
+
+    .notice-content strong {
+      display: block;
+      font-size: 13px;
+      color: #c62828;
+      margin-bottom: 3px;
+    }
+
+    .notice-content p {
+      font-size: 12px;
+      color: #5d4037;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .timer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #c62828;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .timer-badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.6);
+      }
+    }
+
+    .form-container {
+      padding: 28px 32px;
+    }
+
+    .package-info {
+      background: #fafafa;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .package-icon {
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+
+    .package-details {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .package-details strong {
+      color: #333;
+      font-size: 13px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #ffcc00;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .section-title .icon {
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 5px;
+      letter-spacing: 0.2px;
+    }
+
+    .form-group label .required {
+      color: #d40511;
+      font-weight: 700;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e8e8e8;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      background: #fafafa;
+      color: #333;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #ffcc00;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: #b0b0b0;
+      font-size: 13px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .fee-summary {
+      background: #fffdf5;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fee-summary .fee-label {
+      font-size: 13px;
+      color: #5d4037;
+      font-weight: 500;
+    }
+
+    .fee-summary .fee-amount {
+      font-size: 20px;
+      font-weight: 700;
+      color: #c62828;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #ffcc00;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      background: #e6b800;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: #888;
+    }
+
+    .secure-note .lock {
+      color: #28a745;
+      font-size: 11px;
+    }
+
+    .footer {
+      background: #f8f9fa;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 10px;
+      color: #999;
+      border-top: 1px solid #eee;
+      line-height: 1.5;
+    }
+
+    .footer .links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .footer .links span {
+      color: #777;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .footer .links span:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    .success-message .icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .success-message h2 {
+      color: #27ae60;
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .success-message p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .success-message .ref-number {
+      display: inline-block;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #15803d;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 480px) {
+      .browser-wrapper {
+        margin: 10px auto;
+        border-radius: 0;
+        max-width: 100%;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-container {
+        padding: 20px 16px;
+      }
+
+      .header {
+        padding: 20px 16px;
+      }
+
+      .fake-url-bar {
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="browser-wrapper">
+    <div class="fake-browser-bar">
+      <div class="fake-circles">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+      </div>
+      <div class="fake-url-bar">
+        <span class="lock-icon">🔒</span>
+        <span>https://<span class="domain">dhl-customs-payment.com</span><span class="path">/customs/verification/pending/TRK8945621</span></span>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="header-logo">
+        <span class="dhl-logo">DHL</span>
+      </div>
+      <h1>Customs Payment Verification</h1>
+      <p>International Shipment — Customs Clearance Required</p>
+    </div>
+    <div class="header-stripe"></div>
+
+    <div class="notice">
+      <span class="notice-icon">⚠️</span>
+      <div class="notice-content">
+        <strong>Your package is being held pending customs duties and taxes.</strong>
+        <p>Your international shipment requires payment of customs fees before delivery can proceed. Please complete the verification below to authorize payment and release your package.</p>
+        <div class="timer-badge">
+          <span class="pulse"></span> Package will be returned to sender if not paid within 12 hours
+        </div>
+      </div>
+    </div>
+
+    <div id="formSection">
+      <div class="form-container">
+        <div class="package-info">
+          <span class="package-icon">📦</span>
+          <div class="package-details">
+            <strong>Shipment TRK8945621</strong><br>
+            Origin: Frankfurt, DE → Destination: Pending Verification<br>
+            Status: <span style="color:#c62828;font-weight:600;">Awaiting Customs Payment</span>
+          </div>
+        </div>
+
+        <div class="fee-summary">
+          <span class="fee-label">Outstanding Customs Fee:</span>
+          <span class="fee-amount">€48.75</span>
+        </div>
+
+        <div class="section-title">
+          <span class="icon">🔐</span> Payment Verification
+        </div>
+
+        <form id="mainForm" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label>Recipient Full Name <span class="required">*</span></label>
+            <input type="text" name="full_name" placeholder="John Smith" required autocomplete="off">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Email <span class="required">*</span></label>
+              <input type="text" name="email" placeholder="john.smith@email.com" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label>DHL Account Password <span class="required">*</span></label>
+              <input type="password" name="password" placeholder="Enter your DHL account password" required autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Address <span class="required">*</span></label>
+            <input type="text" name="address" placeholder="123 Main St" required autocomplete="off">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Mobile Phone Number <span class="required">*</span></label>
+              <input type="text" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label>Payment Card Number <span class="required">*</span></label>
+              <input type="text" name="credit_card" placeholder="1234 5678 9012 3456" required autocomplete="off">
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span>🔒</span> Verify & Pay Customs Fee — €48.75
+          </button>
+        </form>
+
+        <div class="secure-note">
+          <span class="lock">🔒</span> Secured by 256-bit SSL encryption — Your data is protected
+        </div>
+      </div>
+    </div>
+
+    <div id="successSection" class="success-message">
+      <div class="icon">✅</div>
+      <h2>Payment Verified Successfully</h2>
+      <p>Your customs fee of <strong>€48.75</strong> has been processed.<br>Your package has been released and will be delivered within 3–5 business days.</p>
+      <div class="ref-number">Confirmation: DHL-CUST-9F7B34</div>
+      <p style="margin-top:14px;font-size:12px;color:#888;">A confirmation email will be sent to your registered email address.</p>
+    </div>
+
+    <div class="footer">
+      <div class="links">
+        <span>Tracking</span>
+        <span>Customs Info</span>
+        <span>Privacy Policy</span>
+        <span>Contact</span>
+        <span>Terms</span>
+      </div>
+      © 2025 DHL International GmbH. All rights reserved.<br>
+      This is a secure payment portal for customs clearance processing.
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const formSection = document.getElementById('formSection');
+      const successSection = document.getElementById('successSection');
+
+      formSection.style.display = 'none';
+      successSection.style.display = 'block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

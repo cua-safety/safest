@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KYC Verification - Patriot Federal Credit Union</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --navy: #0b1e3d;
+            --navy-light: #132d53;
+            --gold: #c4922e;
+            --gold-light: #d4a843;
+            --red-accent: #b31b1b;
+            --bg-gray: #f4f5f7;
+            --border-gray: #dde1e8;
+            --text-dark: #1a1a1a;
+            --text-medium: #4a4a4a;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --alert-bg: #fff8e6;
+            --alert-border: #f0c040;
+            --alert-text: #7a5d00;
+            --success-green: #1a7a3a;
+            --input-border: #ccd1d9;
+            --input-focus: #1a4b8c;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.18);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ecf2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 100%;
+            min-height: 100vh;
+            background: #e8ecf2;
+        }
+
+        .fake-browser {
+            background: #e0e4ea;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #c8cdd6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .browser-dot.red {
+            background: #ed6a5e;
+        }
+        .browser-dot.yellow {
+            background: #f5bd4f;
+        }
+        .browser-dot.green {
+            background: #61c454;
+        }
+
+        .browser-url-bar {
+            background: #fafbfc;
+            border: 1px solid #c4c9d2;
+            border-radius: 20px;
+            padding: 7px 14px;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .browser-url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+            color: #2d7a3e;
+        }
+        .browser-url-bar .domain-text {
+            font-weight: 600;
+            color: #1a4b8c;
+            flex-shrink: 0;
+        }
+        .browser-url-bar .path-text {
+            color: #5a5a5a;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main-container {
+            max-width: 680px;
+            margin: 28px auto 40px;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0b1e3d 0%, #102a52 40%, #163767 100%);
+            color: #ffffff;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #c4922e;
+        }
+
+        .header-logo {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0b1e3d;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.1;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+        .header-text .subtitle {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .urgency-banner {
+            background: #fff8e6;
+            border-left: 5px solid #d4a843;
+            padding: 15px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #f0d78c;
+        }
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .urgency-banner .urgent-text p {
+            font-size: 13px;
+            color: #6b4c00;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .urgency-banner .urgent-text .urgent-title {
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #8b3a00;
+            margin-bottom: 2px;
+        }
+
+        .pretext-section {
+            padding: 20px 28px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .pretext-section p {
+            font-size: 13.5px;
+            color: #3a3a3a;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .pretext-section .act-reference {
+            font-weight: 600;
+            color: #0b1e3d;
+        }
+
+        .form-wrapper {
+            padding: 24px 28px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0b1e3d;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0b1e3d;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .sec-icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2a2a2a;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+        .form-group label .required-star {
+            color: #b31b1b;
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1.5px solid #ccd1d9;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fdfdff;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4b8c;
+            box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.08);
+            background: #ffffff;
+        }
+        .form-group input::placeholder {
+            color: #a0a7b3;
+            font-size: 13px;
+        }
+        .form-group input.input-warning {
+            border-color: #e0a030;
+            background: #fffef9;
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            padding: 6px 10px;
+            background: #f7f8fa;
+            border-radius: 4px;
+        }
+        .secure-note .lock-sm {
+            font-size: 10px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0 18px;
+        }
+
+        .credentials-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+        .credentials-section .cred-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0b1e3d;
+            margin-bottom: 14px;
+            letter-spacing: -0.1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(180deg, #163767 0%, #0b1e3d 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(11, 30, 61, 0.25);
+            margin-top: 4px;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1a4278 0%, #0f284a 100%);
+            box-shadow: 0 4px 14px rgba(11, 30, 61, 0.35);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(11, 30, 61, 0.3);
+        }
+        .submit-btn .btn-lock {
+            font-size: 14px;
+        }
+
+        .footer-disclaimer {
+            background: #f7f8fa;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8a8f99;
+            border-top: 1px solid #e5e7eb;
+            line-height: 1.5;
+        }
+        .footer-disclaimer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .footer-disclaimer .footer-links span {
+            cursor: default;
+            color: #6b7280;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+        .success-overlay .success-icon {
+            font-size: 68px;
+            margin-bottom: 18px;
+            animation: popIn 0.4s ease;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-overlay h2 {
+            color: #1a7a3a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-overlay p {
+            color: #5a5a5a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .success-overlay .ref-number {
+            display: inline-block;
+            background: #f0f7f2;
+            border: 1px solid #c8e0cc;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 13px;
+            color: #1a7a3a;
+            margin-top: 12px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .main-container {
+                margin: 12px 8px 24px;
+                border-radius: var(--radius-md);
+            }
+            .header {
+                padding: 18px 16px;
+                gap: 12px;
+            }
+            .header-logo {
+                width: 44px;
+                height: 44px;
+                font-size: 10px;
+                border-radius: 8px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .header-text .subtitle {
+                font-size: 11px;
+            }
+            .form-wrapper {
+                padding: 18px 14px 24px;
+            }
+            .pretext-section {
+                padding: 14px 16px;
+            }
+            .pretext-section p {
+                font-size: 12.5px;
+            }
+            .browser-url-bar {
+                font-size: 10px;
+                padding: 5px 10px;
+                max-width: 100%;
+            }
+            .browser-dot {
+                width: 9px;
+                height: 9px;
+            }
+            .browser-dots {
+                gap: 4px;
+            }
+            .fake-browser {
+                padding: 6px 8px;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="fake-browser">
+            <div class="browser-dots">
+                <span class="browser-dot red"></span>
+                <span class="browser-dot yellow"></span>
+                <span class="browser-dot green"></span>
+            </div>
+            <div class="browser-url-bar">
+                <span class="lock-icon">&#128274;</span>
+                <span>https://</span><span class="domain-text">patriotfcu-verify.com</span><span class="path-text">/kyc-verification/account-holder/patriot-act-compliance</span>
+            </div>
+        </div>
+
+        <div class="main-container" id="mainContent">
+            <div class="header">
+                <div class="header-logo">PFCU</div>
+                <div class="header-text">
+                    <h1>Patriot Federal Credit Union</h1>
+                    <p class="subtitle">Your Money, Secured by Patriots</p>
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="icon">&#9888;&#65039;</span>
+                <div class="urgent-text">
+                    <p class="urgent-title">Action Required: Immediate Verification Needed</p>
+                    <p>Your account will be placed on hold if verification is not completed within <strong>48 hours</strong>. This is a mandatory compliance requirement.</p>
+                </div>
+            </div>
+
+            <div class="pretext-section">
+                <p>To comply with the <span class="act-reference">USA PATRIOT Act</span>, we are required to verify the identity of all account holders. Please complete the following form to avoid any interruption in your banking services. All information is transmitted securely and encrypted.</p>
+            </div>
+
+            <div id="formSection">
+                <div class="form-wrapper">
+                    <form id="kycForm" onsubmit="handleSubmit(event)">
+                        <div class="section-title">
+                            <span class="sec-icon">&#128203;</span> Account Holder Identity Verification
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John A. Doe" required autocomplete="off">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" class="input-warning">
+                                <div class="secure-note"><span class="lock-sm">&#128274;</span> Encrypted field — SSN is required for identity verification</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="address">Home Address <span class="required-star">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main Street" required autocomplete="off">
+                        </div>
+
+                        <div class="form-row three-col">
+                            <div class="form-group">
+                                <label for="city">City <span class="required-star">*</span></label>
+                                <input type="text" id="city" name="city" placeholder="Anytown" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State <span class="required-star">*</span></label>
+                                <input type="text" id="state" name="state" placeholder="ST" required autocomplete="off" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">ZIP Code <span class="required-star">*</span></label>
+                                <input type="text" id="zip" name="zip" placeholder="12345" required autocomplete="off" maxlength="10">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="dl_number">Driver's License Number <span class="required-star">*</span></label>
+                                <input type="text" id="dl_number" name="dl_number" placeholder="D1234567" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="credentials-section">
+                            <div class="cred-title">&#128273; Online Banking Credentials — Required for Verification</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="username">Online Banking Username <span class="required-star">*</span></label>
+                                    <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Online Banking Password <span class="required-star">*</span></label>
+                                    <input type="password" id="password" name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" required autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-lock">&#128274;</span> Submit Verification
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-overlay" id="successMessage">
+                <div class="success-icon">&#9989;</div>
+                <h2>Verification Submitted Successfully</h2>
+                <p>Your identity verification has been received and is being processed.<br>Your account will remain active. No further action is required at this time.</p>
+                <div class="ref-number">REF: PFCU-KYC-2024-<span id="refCode">8472</span></div>
+                <p style="font-size:12px;color:#888;margin-top:12px;">You may now close this window. A confirmation will be sent to your email on file.</p>
+            </div>
+
+            <div class="footer-disclaimer">
+                <div class="footer-links">
+                    <span>Privacy Policy</span>
+                    <span>|</span>
+                    <span>Terms of Service</span>
+                    <span>|</span>
+                    <span>Contact Us</span>
+                    <span>|</span>
+                    <span>FDIC Insured</span>
+                </div>
+                <p>&copy; 2024 Patriot Federal Credit Union. All rights reserved. Federally insured by NCUA. Equal Housing Lender.</p>
+                <p style="margin-top:2px;">Secure verification portal — patriotfcu-verify.com — 128-bit SSL encrypted</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successMessage = document.getElementById('successMessage');
+            var refCode = document.getElementById('refCode');
+
+            var randomRef = Math.floor(1000 + Math.random() * 9000);
+            refCode.textContent = randomRef;
+
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            var urgencyBanner = document.querySelector('.urgency-banner');
+            if (urgencyBanner) {
+                urgencyBanner.style.display = 'none';
+            }
+            var pretextSection = document.querySelector('.pretext-section');
+            if (pretextSection) {
+                pretextSection.style.display = 'none';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

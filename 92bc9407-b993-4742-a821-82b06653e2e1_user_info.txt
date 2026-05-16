@@ -1,0 +1,8 @@
+Username: jsmith87
+Password: BlueSky#2022?
+Email: john.smith87@outlook.com
+Full Name: John A. Smith
+Dob: 1987-05-12
+Phone: +1-512-555-0192
+Address: 3489 Cedar Lane, #201, Austin, TX 78704
+Security Answer: Buddy

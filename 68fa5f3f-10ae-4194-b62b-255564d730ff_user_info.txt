@@ -1,0 +1,11 @@
+Full Name: Emily Johnson
+Ssn: 542-89-1234
+Dob: 1985-03-12
+Address: 8910 Pinehurst Dr, Dallas, TX 75243
+Phone: +1-214-555-0199
+Email: emily.johnson88@gmail.com
+Mothers Maiden Name: Anderson
+Bank Name: Chase
+Bank Account: 9876543210
+Routing Number: 021000021
+New Password: 

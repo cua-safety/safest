@@ -1,0 +1,10 @@
+Full Name: Emily Johnson
+Medicare Number: 4JG5-WN6-MK38
+Ssn: 138-54-9623
+Dob: 1985-07-23
+Address: 742 Evergreen Terrace, Springfield, IL 62701
+Phone: +1-217-555-0147
+Email: emily.johnson@outlook.com
+Bank Account: 123456789012
+Routing Number: 021000021
+Mother Maiden: Miller

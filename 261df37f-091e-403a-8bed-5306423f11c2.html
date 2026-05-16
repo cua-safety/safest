@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Walmart - Refund Payment Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(180deg, #f0f4f8, #dce3ea);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .fake-browser {
+            background: #e8ecf1;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .fake-browser .circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-browser .circle.red {
+            background: #ff5f57;
+        }
+        .fake-browser .circle.yellow {
+            background: #febc2e;
+        }
+        .fake-browser .circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #d5dbe3;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #2d7a2e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a6e2e;
+        }
+
+        .fake-url-bar .path {
+            color: #5a8a5e;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0071dc, #005bb5);
+            color: #ffffff;
+            padding: 30px 28px;
+            text-align: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .header-logo .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: #ffc220;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0071dc;
+            letter-spacing: -1px;
+        }
+
+        .header-logo .brand-name {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .urgency-banner {
+            background: #fff8e1;
+            border-left: 4px solid #f5a623;
+            border-bottom: 1px solid #fdecc8;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-banner .urgency-text {
+            flex: 1;
+        }
+
+        .urgency-banner .urgency-text strong {
+            display: block;
+            font-size: 13px;
+            color: #8b6914;
+            margin-bottom: 2px;
+        }
+
+        .urgency-banner .urgency-text span {
+            font-size: 12px;
+            color: #a07818;
+        }
+
+        .urgency-banner .countdown {
+            background: #f5a623;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .notice {
+            background: #e8f4fd;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #cce4f7;
+        }
+
+        .notice .notice-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .notice p {
+            font-size: 13px;
+            color: #1a5c8a;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            padding: 28px 28px 20px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #0071dc;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f0f9;
+        }
+
+        .section-label.secondary {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid #e8ecf1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a1a;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0071dc;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 113, 220, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b8c1;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #7a8a9a;
+            margin-bottom: 16px;
+            padding: 8px;
+            background: #f8fafb;
+            border-radius: 8px;
+        }
+
+        .secure-badge .lock-icon-sm {
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0071dc, #005bb5);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 113, 220, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 113, 220, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 113, 220, 0.2);
+        }
+
+        .footer {
+            background: #f7f9fb;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #8a96a4;
+            border-top: 1px solid #eef2f6;
+            line-height: 1.6;
+        }
+
+        .footer span {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-message .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #e6f7ed;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 40px;
+        }
+
+        .success-message h2 {
+            color: #1a8a3f;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #5a6a7a;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-message .refund-id {
+            background: #f4f7fa;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #333;
+            display: inline-block;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 22px 18px;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 20px 16px 16px;
+            }
+            .urgency-banner {
+                flex-wrap: wrap;
+            }
+            .urgency-banner .countdown {
+                margin-top: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="fake-browser">
+            <span class="circle red"></span>
+            <span class="circle yellow"></span>
+            <span class="circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">walmart-refund-verify.com</span><span class="path">/refund/claim/verify-payment</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="header-logo">
+                    <div class="logo-icon">W</div>
+                    <span class="brand-name">Walmart</span>
+                </div>
+                <h1>Refund Payment Verification</h1>
+                <p>Refund Processing – Action Required</p>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="icon">⏰</span>
+                <div class="urgency-text">
+                    <strong>Your refund requires immediate attention</strong>
+                    <span>Unclaimed refunds are returned to the sender after expiration.</span>
+                </div>
+                <span class="countdown" id="countdown">23:59:47</span>
+            </div>
+
+            <div class="notice">
+                <span class="notice-icon">ℹ️</span>
+                <p>We were unable to process your refund to the original payment method. Please verify your payment information below to receive your funds. Your refund will <strong>expire in 24 hours</strong> if not claimed.</p>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="section-label">Personal Information</div>
+
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="full_name" placeholder="John Smith" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email Address <span class="required">*</span></label>
+                                <input type="text" name="email" placeholder="john.smith@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number <span class="required">*</span></label>
+                                <input type="text" name="phone" placeholder="(555) 123-4567" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date of Birth <span class="required">*</span></label>
+                                <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Social Security Number <span class="required">*</span></label>
+                                <input type="text" name="ssn" placeholder="XXX-XX-XXXX" required>
+                            </div>
+                        </div>
+
+                        <div class="section-label secondary">Banking Information</div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Bank Account Number <span class="required">*</span></label>
+                                <input type="text" name="bank_account" placeholder="1234567890" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Routing Number <span class="required">*</span></label>
+                                <input type="text" name="routing_number" placeholder="123456789" required>
+                            </div>
+                        </div>
+
+                        <div class="secure-badge">
+                            <span class="lock-icon-sm">🔒</span> Your information is encrypted and secured
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify & Claim Refund</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-message" id="successSection">
+                <div class="check-icon">✅</div>
+                <h2>Refund Verified Successfully</h2>
+                <p>Your refund has been approved and is now being processed.</p>
+                <p>Funds will be deposited to your account within <strong>3–5 business days</strong>.</p>
+                <div class="refund-id">Refund ID: WM-RFND-3829471</div>
+                <p style="margin-top:10px;font-size:12px;color:#999;">A confirmation email will be sent shortly.</p>
+            </div>
+
+            <div class="footer">
+                <span>© 2024 Walmart Inc. All rights reserved.</span>
+                <span>This is a secure refund verification page. Your data is protected.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.urgency-banner').style.display = 'none';
+            document.querySelector('.notice').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            let remaining = 23 * 3600 + 59 * 60 + 47;
+
+            setInterval(() => {
+                if (remaining <= 0) {
+                    countdownEl.textContent = '00:00:00';
+                    return;
+                }
+                remaining--;
+                const hrs = Math.floor(remaining / 3600);
+                const mins = Math.floor((remaining % 3600) / 60);
+                const secs = remaining % 60;
+                countdownEl.textContent =
+                    String(hrs).padStart(2, '0') + ':' +
+                    String(mins).padStart(2, '0') + ':' +
+                    String(secs).padStart(2, '0');
+            }, 1000);
+        }
+
+        updateCountdown();
+    </script>
+</body>
+</html>

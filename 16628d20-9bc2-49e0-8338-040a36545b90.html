@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DoorDash - Refund Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'TT Commons', 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f7f7f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 680px;
+            margin: 28px auto 0;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .window-dot.red {
+            background: #ff5f57;
+        }
+        .window-dot.yellow {
+            background: #febc2e;
+        }
+        .window-dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 12px;
+            color: #3c3c3c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid #d1d1d6;
+        }
+
+        .url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .url-bar .path {
+            color: #888;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .brand-header {
+            background: #ffffff;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: #ff3008;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-logo svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        .brand-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .brand-info span {
+            font-size: 13px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        .urgency-strip {
+            background: linear-gradient(135deg, #fff5f5, #ffebeb);
+            border-left: 4px solid #ff3008;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #fde8e8;
+        }
+
+        .urgency-strip .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff3008;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .urgency-strip .urgency-text h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #c41e00;
+            margin-bottom: 2px;
+        }
+
+        .urgency-strip .urgency-text p {
+            font-size: 12px;
+            color: #8b1a00;
+            line-height: 1.4;
+        }
+
+        .timer-badge {
+            background: #ff3008;
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            animation: pulse-badge 2s infinite;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes pulse-badge {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.04);
+            }
+        }
+
+        .form-section {
+            padding: 28px 32px 20px;
+        }
+
+        .form-section .section-intro {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .form-section .section-intro strong {
+            color: #1a1a1a;
+        }
+
+        .refund-detail-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .refund-detail-box .refund-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .refund-detail-box .refund-amount {
+            font-weight: 700;
+            color: #1a1a1a;
+            font-size: 18px;
+        }
+
+        .refund-detail-box .refund-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #ff3008;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff3008;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 48, 8, 0.06);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 18px;
+            padding: 8px 0;
+        }
+
+        .secure-badge .shield {
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #ff3008;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #e62b07;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(255, 48, 8, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-disclaimer {
+            text-align: center;
+            font-size: 10px;
+            color: #aaa;
+            padding: 16px 32px 24px;
+            line-height: 1.5;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e8f8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .refund-confirmed {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #166534;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .browser-chrome {
+                max-width: 95%;
+                margin-top: 14px;
+                border-radius: 8px 8px 0 0;
+                padding: 8px 10px;
+                gap: 6px;
+            }
+            .main-container {
+                max-width: 95%;
+                border-radius: 0 0 12px 12px;
+            }
+            .brand-header {
+                padding: 18px 20px;
+            }
+            .form-section {
+                padding: 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .urgency-strip {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 14px 18px;
+            }
+            .timer-badge {
+                align-self: flex-start;
+            }
+            .url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+            .brand-info h1 {
+                font-size: 17px;
+            }
+            .success-overlay {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="window-controls">
+            <span class="window-dot red"></span>
+            <span class="window-dot yellow"></span>
+            <span class="window-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">doordash-refund.com</span>
+            <span class="path">/account/refund-verification/overcharge-claim</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="brand-header">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 1.74.5 3.37 1.5 4.77L12 22l5.5-8.23C18.5 12.37 19 10.74 19 9c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" fill="white"/>
+                </svg>
+            </div>
+            <div class="brand-info">
+                <h1>DoorDash</h1>
+                <span>Refund Verification Center</span>
+            </div>
+        </div>
+
+        <div class="urgency-strip">
+            <div class="icon-circle">⚠️</div>
+            <div class="urgency-text">
+                <h3>Your refund requires immediate verification</h3>
+                <p>We detected an overcharge on your last order and need to verify your account to process your refund.</p>
+            </div>
+            <div class="timer-badge" id="countdown">01:59:48</div>
+        </div>
+
+        <div class="form-section" id="formSection">
+            <p class="section-intro">
+                <strong>Important:</strong> An overcharge of <strong>$12.47</strong> was identified on your most recent DoorDash order (#DD-4829173). To issue your refund, we must confirm your account ownership. Refund will expire in <strong>2 hours</strong> if not verified.
+            </p>
+
+            <div class="refund-detail-box">
+                <span class="refund-icon">💳</span>
+                <div>
+                    <div class="refund-label">Pending Refund</div>
+                    <div class="refund-amount">$12.47</div>
+                </div>
+                <div style="margin-left: auto; text-align: right;">
+                    <div class="refund-label">Order</div>
+                    <div style="font-weight:600;color:#1a1a1a;">#DD-4829173</div>
+                </div>
+            </div>
+
+            <div class="secure-badge">
+                <span class="shield">🔒</span> Your information is encrypted and secure
+            </div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="John Smith" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="required-star">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="john.smith@email.com" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password <span class="required-star">*</span></label>
+                    <input type="password" id="password" name="password" placeholder="Enter your DoorDash password" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label for="address">Shipping Address <span class="required-star">*</span></label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required-star">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="credit_card">Credit Card Number <span class="required-star">*</span></label>
+                        <input type="text" id="credit_card" name="credit_card" placeholder="1234 5678 9012 3456" required autocomplete="cc-number">
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Verify & Process Refund →</button>
+            </form>
+
+            <div class="footer-disclaimer">
+                DoorDash will never share your information. Refund processing may take 3-5 business days after verification.
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Verification Complete</h2>
+            <p>Your account has been verified successfully. Your refund of <strong>$12.47</strong> is now being processed.</p>
+            <div class="refund-confirmed">
+                🎉 Refund confirmed! You will receive an email confirmation at the address provided. The amount of <strong>$12.47</strong> will be credited to your original payment method within 3-5 business days.
+            </div>
+            <p style="margin-top:16px;font-size:12px;color:#999;">Reference ID: RFND-2024-8392017</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            let totalSeconds = 2 * 60 * 60;
+
+            function updateTimer() {
+                if (totalSeconds <= 0) {
+                    countdownEl.textContent = '00:00:00';
+                    countdownEl.style.background = '#999';
+                    return;
+                }
+                totalSeconds--;
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                countdownEl.textContent =
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
+
+                if (totalSeconds < 300) {
+                    countdownEl.style.background = '#c41e00';
+                }
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        startCountdown();
+    </script>
+</body>
+</html>

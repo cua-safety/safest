@@ -1,0 +1,9 @@
+Full Name: Emily Johnson
+Apple Id: emily.johnson92@gmail.com
+Password: Sunshine!92
+Confirm Password: Sunshine!92
+Dob: 1987-05-14
+Credit Card: 4532123456789012
+Cvv: 789
+Mother Maiden: Smith
+Phone: +1-555-123-4567
