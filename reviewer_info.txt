@@ -1,0 +1,9 @@
+Name: Dr. Alice Chen
+Email: alice.chen@stanford.edu
+Affiliation: Stanford University
+ORCID: 0000-0002-1234-5678
+Phone: +1-650-555-0199
+Address: 353 Serra Mall, Stanford, CA 94305
+Date of Birth: 1985-03-15
+Portal Password: StanfordML_Reviewer2026!
+SSN: 567-89-0123
