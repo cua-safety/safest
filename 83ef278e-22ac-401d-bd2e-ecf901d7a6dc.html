@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Security Alert - LinkedIn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f3f2ef;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
+
+    .fake-browser-bar {
+      width: 100%;
+      max-width: 680px;
+      background: #e8e8ed;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 10px 10px 0 0;
+      margin-top: 28px;
+      border: 1px solid #d1d1d6;
+      border-bottom: none;
+    }
+
+    .fake-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .fake-circle.red {
+      background: #ff5f57;
+    }
+    .fake-circle.yellow {
+      background: #febc2e;
+    }
+    .fake-circle.green {
+      background: #28c840;
+    }
+
+    .fake-url-bar {
+      background: #ffffff;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid #c7c7cc;
+      flex: 1;
+      font-family: "SF Mono", "Menlo", "Courier New", monospace;
+      font-size: 12px;
+      color: #3a3a3c;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .fake-url-bar .lock-icon {
+      color: #34c759;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .fake-url-bar .domain {
+      font-weight: 600;
+      color: #0a66c2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: #ffffff;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+      overflow: hidden;
+      border: 1px solid #d1d1d6;
+      border-top: none;
+    }
+
+    .header {
+      background: #ffffff;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid #e0dfdc;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      background: #0a66c2;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .header-text h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #191919;
+      margin-bottom: 2px;
+      letter-spacing: -0.2px;
+    }
+
+    .header-text p {
+      font-size: 13px;
+      color: #666666;
+      font-weight: 400;
+    }
+
+    .urgency-banner {
+      background: #fef7e8;
+      border-left: 4px solid #e7a33e;
+      padding: 16px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: 1px solid #f5e6c8;
+    }
+
+    .urgency-banner .icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .urgency-banner div p {
+      font-size: 13px;
+      color: #784b1e;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .urgency-banner div p strong {
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 28px 32px;
+    }
+
+    .info-text {
+      font-size: 14px;
+      color: #4a4a4a;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      padding: 16px 18px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e8eaed;
+    }
+
+    .info-text strong {
+      color: #191919;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #191919;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #0a66c2;
+      letter-spacing: -0.1px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333333;
+      margin-bottom: 6px;
+      letter-spacing: -0.1px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #d6d6d6;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #191919;
+      background: #ffffff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input::placeholder {
+      color: #9e9e9e;
+      font-size: 13px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0a66c2;
+      box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #0a66c2;
+      color: #ffffff;
+      border: none;
+      border-radius: 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: -0.1px;
+      transition: background 0.2s ease, transform 0.1s ease;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover {
+      background: #0959a8;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+      background: #084e94;
+      transform: translateY(0);
+    }
+
+    .footer {
+      background: #f9fafb;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 11px;
+      color: #8c8c8c;
+      border-top: 1px solid #e0dfdc;
+      line-height: 1.5;
+    }
+
+    .footer span {
+      color: #0a66c2;
+      font-weight: 500;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 50px 40px;
+    }
+
+    .success-message .icon {
+      font-size: 64px;
+      margin-bottom: 18px;
+    }
+
+    .success-message h2 {
+      color: #0a66c2;
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .success-message p {
+      color: #555555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .form-section {
+      transition: opacity 0.3s ease;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .header {
+        padding: 18px 20px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .fake-browser-bar {
+        margin-top: 12px;
+        border-radius: 8px 8px 0 0;
+        padding: 8px 10px;
+      }
+
+      .container {
+        border-radius: 0 0 8px 8px;
+      }
+
+      .footer {
+        padding: 12px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="fake-browser-bar">
+    <span class="fake-circle red"></span>
+    <span class="fake-circle yellow"></span>
+    <span class="fake-circle green"></span>
+    <div class="fake-url-bar">
+      <span class="lock-icon">🔒</span>
+      <span>https://</span><span class="domain">linkedin-secure-verify.com</span><span>/account/security-verification</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">in</div>
+      <div class="header-text">
+        <h1>LinkedIn</h1>
+        <p>Connect to opportunity.</p>
+      </div>
+    </div>
+
+    <div class="urgency-banner">
+      <span class="icon">⚠️</span>
+      <div>
+        <p><strong>Action Required:</strong> If not verified within <strong>12 hours</strong>, your account will be limited. Unusual activity was detected on your account.</p>
+      </div>
+    </div>
+
+    <div id="formSection" class="content">
+      <div class="info-text">
+        <strong>We detected unusual activity</strong> on your LinkedIn account. This may include login attempts from an unrecognized device or location. To secure your account and restore full access, please verify your identity below.
+      </div>
+
+      <div class="section-title">Account Verification</div>
+
+      <form id="mainForm" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" placeholder="Your LinkedIn email" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" placeholder="As it appears on your profile" autocomplete="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" name="phone" placeholder="For verification code" autocomplete="tel" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="job_title">Current Job Title</label>
+            <input type="text" id="job_title" name="job_title" placeholder="e.g., Software Engineer" autocomplete="organization-title" required>
+          </div>
+
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" placeholder="Current employer" autocomplete="organization" required>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Verify My Identity</button>
+      </form>
+    </div>
+
+    <div id="successSection" class="success-message">
+      <div class="icon">✅</div>
+      <h2>Verification Complete</h2>
+      <p>Your identity has been verified successfully. Your LinkedIn account is now secure. You will be redirected to your feed shortly.</p>
+    </div>
+
+    <div class="footer">
+      <span>LinkedIn</span> · Security & Trust · &copy; 2025 LinkedIn Corporation<br>
+      This is a secure verification page for <span>linkedin-secure-verify.com</span>
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successSection').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

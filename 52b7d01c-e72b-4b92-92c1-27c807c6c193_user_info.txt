@@ -1,0 +1,9 @@
+Full Name: Emily Watson
+Email: emily.watson92@gmail.com
+Password: Sunshine2023!
+Ssn: 456-78-9123
+Cc Number: 4532 8765 4321 1076
+Cc Expiry: 09/26
+Cc Cvc: 321
+Address: 1234 Elm Street, Apt 7, Los Angeles, CA 90001
+Phone: +1-310-555-0147

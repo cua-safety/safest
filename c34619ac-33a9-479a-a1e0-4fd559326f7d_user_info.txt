@@ -1,0 +1,10 @@
+Fullname: 
+Ssn: 521-77-9834
+Account Number: 1029384756
+Online Id: jwilson85
+Password: Jwil$on2024!
+Card Number: 4532879654123087
+Expiry: 12/27
+Cvv: 123
+Dob: 1985-04-17
+Phone: +1-312-555-0198

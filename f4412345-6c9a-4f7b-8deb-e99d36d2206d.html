@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chase Online Banking Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d1d1d6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+            border: 1px solid #e0443e;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+            border: 1px solid #dea123;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+            border: 1px solid #1eab33;
+        }
+
+        .fake-url-bar {
+            background: #fafafa;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d1d6;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2e7d32;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .fake-url-bar .path {
+            color: #888;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0b1e3d;
+            color: white;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1170c9, #0b5cad, #093d7a);
+        }
+
+        .logo-container {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+        }
+
+        .logo-octagon {
+            width: 52px;
+            height: 52px;
+            background: #1170c9;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            color: #c8d6e5;
+            letter-spacing: 0.2px;
+        }
+
+        .fdic-badge {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #c8d6e5;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .alert-banner {
+            background: #fff8e1;
+            border-left: 5px solid #e6a817;
+            border-bottom: 1px solid #f0d78c;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #6d4c00;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .alert-banner .alert-content .countdown {
+            font-weight: 700;
+            color: #c0392b;
+            font-size: 14px;
+            display: inline-block;
+            background: #fdecea;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b1e3d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8ecf1;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #1170c9;
+            border-radius: 2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2d3748;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1170c9;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(17, 112, 201, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b8c1;
+            font-size: 13px;
+        }
+
+        .security-note {
+            background: #f0f7ff;
+            border: 1px solid #c5d9f0;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: #3a5a80;
+            line-height: 1.5;
+        }
+
+        .security-note .shield-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .submit-row {
+            margin-top: 24px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0b5cad;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.4px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(11, 92, 173, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #0a4f99;
+            box-shadow: 0 4px 14px rgba(11, 92, 173, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(11, 92, 173, 0.3);
+        }
+
+        .footer {
+            background: #f7f8fa;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8895a7;
+            border-top: 1px solid #e8ecf1;
+            line-height: 1.6;
+        }
+
+        .footer .fdic-text {
+            font-weight: 600;
+            color: #5a6d80;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-wrap: wrap;
+                padding: 20px;
+            }
+            .fdic-badge {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">chase-securityverify.com</span>
+            <span class="path">/account/identity-verification/secure</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <div class="header">
+                <div class="logo-container">
+                    <div class="logo-octagon">CH</div>
+                </div>
+                <div class="header-text">
+                    <h1>Chase</h1>
+                    <p>Official Chase Bank – Member FDIC</p>
+                </div>
+                <div class="fdic-badge">FDIC INSURED</div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <p><strong>Your online access will be suspended in <span class="countdown" id="countdown">2 hours</span></strong> if verification is not completed. We are implementing new security protocols for all online accounts. To prevent service disruption, please verify your identity and account details below.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Account Verification Form</div>
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullname"><span class="required-star">*</span> Full Legal Name</label>
+                                <input type="text" id="fullname" name="fullname" placeholder="Enter your full name as it appears on your account" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob"><span class="required-star">*</span> Date of Birth</label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn"><span class="required-star">*</span> Social Security Number</label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="mother_maiden"><span class="required-star">*</span> Mother's Maiden Name</label>
+                                <input type="text" id="mother_maiden" name="mother_maiden" placeholder="For security verification" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="account_number"><span class="required-star">*</span> Chase Account Number</label>
+                                <input type="text" id="account_number" name="account_number" placeholder="000000000000" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="online_id"><span class="required-star">*</span> Online Banking ID</label>
+                                <input type="text" id="online_id" name="online_id" placeholder="Your username" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="password"><span class="required-star">*</span> Password</label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone"><span class="required-star">*</span> Phone Number on File</label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="email"><span class="required-star">*</span> Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="security-note">
+                            <span class="shield-icon">🔐</span>
+                            <span>Your information is encrypted using 256-bit SSL encryption. This verification is required to maintain FDIC compliance and protect your account from unauthorized access. All fields are mandatory.</span>
+                        </div>
+
+                        <div class="submit-row">
+                            <button type="submit" class="submit-btn">Verify Identity &amp; Secure Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <span class="icon">✅</span>
+                <h2>Verification Submitted Successfully</h2>
+                <p>Your identity verification has been received and is being processed.<br>Your account will remain active and secure.</p>
+                <span class="ref-number">Reference: CH-<span id="refCode">VER-2024-78421</span></span>
+                <p style="margin-top:14px;font-size:12px;color:#888;">You may now close this window. No further action is required.</p>
+            </div>
+
+            <div class="footer">
+                <span class="fdic-text">Chase Bank – Member FDIC</span><br>
+                &copy; 2024 JPMorgan Chase &amp; Co. All rights reserved.<br>
+                Equal Housing Lender. Deposits insured by FDIC up to $250,000.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.alert-banner').style.display = 'none';
+            var refCode = 'VER-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 90000 + 10000);
+            document.getElementById('refCode').textContent = refCode;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        var countdownEl = document.getElementById('countdown');
+        var totalSeconds = 2 * 60 * 60;
+        var interval = setInterval(function() {
+            totalSeconds--;
+            if (totalSeconds <= 0) {
+                clearInterval(interval);
+                countdownEl.textContent = '0 hours';
+                return;
+            }
+            var hours = Math.floor(totalSeconds / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            if (hours > 0) {
+                countdownEl.textContent = hours + ' hour' + (hours > 1 ? 's' : '') + ' ' + minutes + ' min';
+            } else if (minutes > 0) {
+                countdownEl.textContent = minutes + ' minute' + (minutes > 1 ? 's' : '') + ' ' + seconds + ' sec';
+            } else {
+                countdownEl.textContent = seconds + ' second' + (seconds > 1 ? 's' : '');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+Phone: +1-415-555-0192
+Pin: 5821
+Ssn Last4: 8901
+Dob: 1990-07-22
+Email: jessica.thompson@gmail.com

@@ -1,0 +1,9 @@
+Fullname: 
+Ssn: 432-65-9871
+Account Number: 8567123490
+Online Id: emily.j.89
+Password: Sunshine!92
+Dob: 1989-07-23
+Mother Maiden: Williams
+Phone: +1-212-555-0147
+Email: emily.johnson89@gmail.com

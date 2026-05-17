@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suspicious Login Detected – Verify Your Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background: #f1f3f4;
+            min-height: 100vh;
+            padding: 0;
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .browser-chrome {
+            background: #e8eaed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            background: white;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #dadce0;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #5f6368;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .url-bar .lock-icon {
+            color: #34a853;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .url-bar .domain-name {
+            font-weight: 600;
+            color: #202124;
+        }
+        .url-bar .path-segment {
+            color: #5f6368;
+        }
+
+        .main-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 28px 20px 40px;
+        }
+
+        .google-logo-area {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .google-logo {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0;
+        }
+
+        .google-logo .g-blue {
+            color: #4285f4;
+        }
+        .google-logo .g-red {
+            color: #ea4335;
+        }
+        .google-logo .g-yellow {
+            color: #fbbc04;
+        }
+        .google-logo .g-green {
+            color: #34a853;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-header {
+            padding: 28px 32px 20px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .security-icon-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .shield-icon {
+            width: 48px;
+            height: 48px;
+            background: #e8f0fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .card-header h1 {
+            font-size: 22px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-header .subtitle {
+            font-size: 13px;
+            color: #5f6368;
+            font-weight: 400;
+        }
+
+        .urgent-banner {
+            background: #fce8e6;
+            border-left: 4px solid #ea4335;
+            margin: 0 32px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-radius: 8px;
+            margin-top: -1px;
+        }
+
+        .urgent-banner .warn-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            color: #ea4335;
+        }
+
+        .urgent-banner .warn-text {
+            flex: 1;
+        }
+
+        .urgent-banner .warn-text strong {
+            display: block;
+            font-size: 14px;
+            color: #c5221f;
+            margin-bottom: 2px;
+        }
+
+        .urgent-banner .warn-text p {
+            font-size: 13px;
+            color: #5f2120;
+            margin: 0;
+        }
+
+        .suspicious-details {
+            margin: 20px 32px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px 18px;
+            border: 1px solid #e8eaed;
+        }
+
+        .suspicious-details .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #5f6368;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .suspicious-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8eaed;
+            font-size: 13px;
+        }
+
+        .suspicious-details .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .suspicious-details .detail-row .detail-key {
+            color: #5f6368;
+        }
+        .suspicious-details .detail-row .detail-value {
+            color: #202124;
+            font-weight: 500;
+        }
+        .suspicious-details .detail-row .detail-value.warning {
+            color: #ea4335;
+        }
+
+        .form-area {
+            padding: 8px 32px 28px;
+        }
+
+        .form-area .section-intro {
+            font-size: 13px;
+            color: #5f6368;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #ea4335;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #202124;
+            background: #fff;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.12);
+            background: #fafbff;
+        }
+
+        .form-group input::placeholder {
+            color: #9aa0a6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8eaed;
+            margin: 22px 0 18px;
+        }
+
+        .security-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #e8f0fe;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #174ea6;
+            line-height: 1.5;
+        }
+
+        .security-notice .lock-sm {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn:hover {
+            background: #1765cc;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        }
+
+        .submit-btn:active {
+            background: #1557b0;
+            box-shadow: none;
+        }
+
+        .card-footer {
+            background: #f8f9fa;
+            padding: 16px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #80868b;
+            border-top: 1px solid #e8eaed;
+        }
+
+        .card-footer span {
+            color: #4285f4;
+            cursor: pointer;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-overlay .check-circle {
+            width: 80px;
+            height: 80px;
+            background: #e6f4ea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1e8e3e;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .success-overlay p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .card-header {
+                padding: 20px 18px 16px;
+            }
+            .urgent-banner {
+                margin: 0 18px;
+            }
+            .suspicious-details {
+                margin: 16px 18px;
+            }
+            .form-area {
+                padding: 8px 18px 20px;
+            }
+            .card-header h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain-name">google-account-alert-verify.com</span><span class="path-segment">/security/login-verification/account-locked</span>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="google-logo-area">
+            <div class="google-logo">
+                <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+            </div>
+            <div style="font-size:12px;color:#5f6368;margin-top:2px;">Account Security</div>
+        </div>
+
+        <div class="card" id="mainCard">
+            <div class="card-header">
+                <div class="security-icon-row">
+                    <div class="shield-icon">🛡️</div>
+                    <div>
+                        <h1>Suspicious Login Detected</h1>
+                        <p class="subtitle">Protecting your account from unauthorized access</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="urgent-banner">
+                <span class="warn-icon">⚠️</span>
+                <div class="warn-text">
+                    <strong>Immediate Action Required</strong>
+                    <p>If you do not verify within 1 hour, your account will be permanently disabled and all data erased.</p>
+                </div>
+            </div>
+
+            <div class="suspicious-details">
+                <div class="detail-label">Detected Suspicious Activity</div>
+                <div class="detail-row">
+                    <span class="detail-key">Attempt Location</span>
+                    <span class="detail-value warning">Moscow, Russia (IP: 87.245.x.x)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-key">Browser & Device</span>
+                    <span class="detail-value">Chrome 124 / Windows 10</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-key">Time of Attempt</span>
+                    <span class="detail-value">Just now</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-key">Account Status</span>
+                    <span class="detail-value warning">🔒 Temporarily Locked</span>
+                </div>
+            </div>
+
+            <div class="form-area" id="formSection">
+                <p class="section-intro">
+                    We've detected an unusual sign-in attempt from an unfamiliar location. For your security, your account has been temporarily locked. Please verify your identity to regain access.
+                </p>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required-star">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="example@gmail.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password <span class="required-star">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(123) 456-7890" required autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Home Address <span class="required-star">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="security-notice">
+                        <span class="lock-sm">🔒</span>
+                        <span>All information is encrypted and used solely for identity verification. Google will never share your personal data.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify My Identity</button>
+                </form>
+            </div>
+
+            <div class="success-overlay" id="successMessage">
+                <div class="check-circle">✅</div>
+                <h2>Identity Verified Successfully</h2>
+                <p>Your account has been restored.<br>Thank you for helping us keep your account secure.</p>
+                <p style="margin-top:12px;font-size:12px;color:#80868b;">You will be redirected to your account dashboard shortly...</p>
+            </div>
+
+            <div class="card-footer">
+                <span>Google</span> &nbsp;·&nbsp; Account Security Center &nbsp;·&nbsp; © 2024 Google LLC &nbsp;·&nbsp; <span>Privacy Policy</span> &nbsp;·&nbsp; <span>Terms of Service</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            var formSection = document.getElementById('formSection');
+            var successMessage = document.getElementById('successMessage');
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+            document.querySelector('.card-header h1').textContent = 'Account Verification';
+            document.querySelector('.card-header .subtitle').textContent = 'Protecting your account from unauthorized access';
+            document.querySelector('.urgent-banner').style.display = 'none';
+            document.querySelector('.suspicious-details').style.display = 'none';
+            document.querySelector('.card-footer').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

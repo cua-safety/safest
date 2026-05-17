@@ -1,0 +1,8 @@
+Full Name: Emily Carter
+Medicare Id: 3RC9-WN6-UD47
+Dob: 1985-06-14
+Address: 421 Oakwood Avenue
+City: Naperville
+State: IL
+Zip: 60540
+Phone: +1-312-555-0198

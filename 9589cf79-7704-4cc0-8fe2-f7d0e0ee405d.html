@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Mobile - Account Upgrade Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --tmagenta: #e20074;
+            --tmagenta-dark: #c40063;
+            --tmagenta-light: #ff1a8c;
+            --bg: #f6f6f6;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #555;
+            --border: #e0e0e0;
+            --radius: 14px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(180deg, #f0f0f5 0%, #e8e8ef 40%, #dcdce4 100%);
+            min-height: 100vh;
+            padding: 24px 16px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 560px;
+            margin-bottom: 16px;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.06) inset;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+            font-size: 11px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid #d5d5da;
+        }
+
+        .browser-url .lock {
+            color: #2d7a2e;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .browser-url .domain-text {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .browser-url .path-text {
+            color: #777;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            background: var(--card-bg);
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e20074 0%, #c40063 100%);
+            color: #ffffff;
+            padding: 28px 28px 22px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background: linear-gradient(180deg, rgba(226, 0, 116, 0.12) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .header-logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .urgency-bar {
+            background: #fff8e1;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 24px 0;
+            padding: 13px 16px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .urgency-bar .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-bar p {
+            font-size: 12.5px;
+            color: #7a5900;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .urgency-bar p strong {
+            color: #b45309;
+        }
+
+        .form-container {
+            padding: 24px 28px 28px;
+        }
+
+        .form-intro {
+            font-size: 13.5px;
+            color: #444;
+            margin-bottom: 20px;
+            line-height: 1.55;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e20074;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(226, 0, 116, 0.08);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e20074 0%, #d1006b 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            margin-top: 4px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #c40063 0%, #a80052 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(226, 0, 116, 0.28);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(226, 0, 116, 0.2);
+        }
+
+        .footer {
+            background: #fafafa;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #999;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .footer span {
+            color: #e20074;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 32px 40px;
+        }
+
+        .success-overlay .check-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 17px;
+            }
+            .header {
+                padding: 22px 18px 18px;
+            }
+            .header h1 {
+                font-size: 19px;
+            }
+            .form-container {
+                padding: 18px 16px 22px;
+            }
+            .urgency-bar {
+                margin: 16px 14px 0;
+                padding: 11px 12px;
+            }
+            .container {
+                border-radius: 0 0 10px 10px;
+            }
+            .browser-chrome {
+                border-radius: 8px 8px 0 0;
+                padding: 8px 10px;
+            }
+            .browser-dot {
+                width: 10px;
+                height: 10px;
+            }
+            .browser-url {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="browser-url">
+            <span class="lock">🔒</span>
+            <span class="domain-text">t-mobile-account-upgrade.com</span>
+            <span class="path-text">/exclusive-upgrade/verify</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-logo">T-Mobile</div>
+            <h1>Account Upgrade Verification</h1>
+            <p>Get More Done.</p>
+        </div>
+
+        <div class="urgency-bar">
+            <span class="icon">⏳</span>
+            <p><strong>This offer expires in 2 hours.</strong> Complete verification now to avoid missing out on your free premium plan upgrade.</p>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <p class="form-intro">
+                    We're offering you a <strong>free premium plan upgrade</strong>! Please verify your account details below to claim this exclusive offer.
+                </p>
+                <form id="mainForm" onsubmit="return handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="text" id="mobile" name="mobile" placeholder="Enter your mobile number" required autocomplete="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="pin">Account PIN</label>
+                        <input type="password" id="pin" name="pin" placeholder="Enter your account PIN" required autocomplete="off">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ssn_last4">Last 4 of SSN</label>
+                            <input type="text" id="ssn_last4" name="ssn_last4" placeholder="Last 4 digits" required maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="bday">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+                    <button type="submit" class="submit-btn">Verify & Claim Upgrade</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-overlay">
+            <div class="check-circle">✅</div>
+            <h2>Verification Received!</h2>
+            <p>Your account upgrade is being processed. You will receive a confirmation SMS and email within the next 24 hours. Thank you for being a valued T-Mobile customer.</p>
+        </div>
+
+        <div class="footer">
+            <span>T-Mobile</span> — Get More Done. &nbsp;|&nbsp; © 2025 T-Mobile. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.urgency-bar').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+Fullname: 
+Ssn: 452-87-1234
+Account Number: 2356014892
+Online Id: emilyj85
+Password: Em!lyJ0hnson85
+Card Number: 4532 7891 2345 6789
+Card Pin: 4512
+Dob: 1988-05-15

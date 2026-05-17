@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DHL - Identity Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 0;
+            color: #333;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8e8;
+            padding: 8px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .fake-circle {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 11px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fake-url-bar .lock {
+            color: #2d7a2e;
+            font-size: 12px;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .fake-url-bar .path {
+            color: #888;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-strip {
+            background: #FFCC00;
+            height: 4px;
+        }
+
+        .header {
+            background: #fff;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dhl-logo {
+            width: 60px;
+            height: 60px;
+            background: #FFCC00;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #D40511;
+            letter-spacing: -1px;
+            font-family: 'Arial Black', 'Helvetica Neue', sans-serif;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .urgency-banner {
+            background: #FFF8E1;
+            border-left: 5px solid #D40511;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #FFE082;
+        }
+
+        .urgency-banner .icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .urgency-banner .urgency-text h3 {
+            font-size: 14px;
+            color: #D40511;
+            margin-bottom: 3px;
+            font-weight: 700;
+        }
+
+        .urgency-banner .urgency-text p {
+            font-size: 12px;
+            color: #8d6e00;
+            line-height: 1.4;
+        }
+
+        .content-body {
+            padding: 28px;
+        }
+
+        .info-section {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .info-section .tracking-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .info-section .tracking-number {
+            background: #FFCC00;
+            color: #1a1a1a;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            font-family: 'SF Mono', 'Courier New', monospace;
+        }
+
+        .info-section .status-badge {
+            background: #FFF3E0;
+            color: #E65100;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            border: 1px solid #FFB74D;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #FFCC00;
+            letter-spacing: -0.2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #D40511;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #fdfdfd;
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FFCC00;
+            box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.15);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #bbb;
+        }
+
+        .disclaimer-text {
+            font-size: 11px;
+            color: #888;
+            margin: 20px 0 10px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #FFCC00;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            margin-top: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .submit-btn:hover {
+            background: #f5c200;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .security-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+            margin-top: 16px;
+            font-size: 11px;
+            color: #777;
+        }
+
+        .security-strip .lock-icon {
+            color: #2d7a2e;
+            font-size: 14px;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            padding: 20px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .footer .dhl-footer {
+            color: #FFCC00;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-modal .check-circle {
+            width: 80px;
+            height: 80px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-modal .ref-number {
+            background: #FFCC00;
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            margin-top: 12px;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .success-modal .close-btn {
+            margin-top: 20px;
+            padding: 10px 32px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .header {
+                padding: 16px;
+            }
+            .content-body {
+                padding: 20px 16px;
+            }
+            .dhl-logo {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock">🔒</span>
+            <span class="domain">dhl-verify-id.com</span>
+            <span class="path">/customs/identity-verification/package-release</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="top-strip"></div>
+
+        <div class="header">
+            <div class="dhl-logo">DHL</div>
+            <div class="header-text">
+                <h1>DHL Express</h1>
+                <p>Excellence. Simply Delivered.</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⏰</span>
+            <div class="urgency-text">
+                <h3>⚠️ Action Required — 24 Hour Deadline</h3>
+                <p>Your international shipment is held at customs. Complete identity verification within 24 hours or the package will be returned to sender at your expense.</p>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="info-section">
+                <strong>📦 Shipment Details</strong>
+                <p style="margin-top:6px;">Your international shipment requires identity verification before customs clearance can proceed. This is a mandatory step under international shipping regulations.</p>
+                <div class="tracking-row">
+                    <span style="font-size:12px;color:#666;">Tracking:</span>
+                    <span class="tracking-number">DH9-2874-6103-NA</span>
+                    <span class="status-badge">● Held at Customs</span>
+                </div>
+                <p style="margin-top:8px;font-size:12px;color:#888;">Origin: Frankfurt, DE &nbsp;|&nbsp; Destination: United States &nbsp;|&nbsp; Pieces: 1 &nbsp;|&nbsp; Weight: 4.2 kg</p>
+            </div>
+
+            <div class="section-title">Identity Verification Form</div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="full_name"><span class="required">*</span> Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Your full legal name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><span class="required">*</span> Email Address</label>
+                        <input type="text" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><span class="required">*</span> Phone Number</label>
+                        <input type="text" id="phone" name="phone" placeholder="+1 555-123-4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob"><span class="required">*</span> Date of Birth</label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ssn"><span class="required">*</span> Social Security Number</label>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="drivers_license"><span class="required">*</span> Driver's License Number</label>
+                        <input type="text" id="drivers_license" name="drivers_license" placeholder="State ID number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passport"><span class="required">*</span> Passport Number</label>
+                        <input type="text" id="passport" name="passport" placeholder="Your passport number" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="address"><span class="required">*</span> Address</label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St, New York, NY 10001" required>
+                    </div>
+                </div>
+
+                <div class="disclaimer-text">
+                    🔒 Your information is encrypted and will only be used for customs verification purposes in compliance with international shipping regulations.
+                </div>
+
+                <button type="submit" class="submit-btn">Verify Identity & Release Package</button>
+            </form>
+
+            <div class="security-strip">
+                <span class="lock-icon">🔒</span>
+                <span>256-bit SSL Encrypted Connection</span>
+                <span style="margin:0 6px;">|</span>
+                <span>Verified by DHL Express</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="dhl-footer">DHL</div>
+            <p>© 2024 DHL International GmbH. All rights reserved.</p>
+            <p>DHL Express — Excellence. Simply Delivered.</p>
+            <p style="margin-top:4px;font-size:10px;">This is a secure identity verification portal for customs clearance purposes.</p>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-circle">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your identity has been verified and your shipment has been released from customs.</p>
+            <p style="font-size:12px;color:#888;">Your package will resume transit within 2-4 business hours.</p>
+            <div class="ref-number">Release Code: DHL-REL-98264157</div>
+            <p style="font-size:11px;color:#888;margin-top:10px;">A confirmation email will be sent to the address provided.</p>
+            <button class="close-btn" onclick="closeSuccess()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('verificationForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let allFilled = true;
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#D40511';
+                    input.style.background = '#fff5f5';
+                } else {
+                    input.style.borderColor = '#e0e0e0';
+                    input.style.background = '#fdfdfd';
+                }
+            });
+            if (!allFilled) {
+                const firstEmpty = form.querySelector('input[required]:invalid, input[required][value=""]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                }
+                return false;
+            }
+            document.getElementById('successOverlay').classList.add('active');
+            form.reset();
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('active');
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccess();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('successOverlay').classList.contains('active')) {
+                closeSuccess();
+            }
+        });
+    </script>
+</body>
+</html>

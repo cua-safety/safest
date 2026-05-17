@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Immediate Action Required - Malware Detected</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.08) 0%, rgba(26, 26, 46, 1) 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse-bg 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%,
+            100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .fake-browser {
+            background: #2b2b2d;
+            border-radius: 10px 10px 0 0;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #3a3a3d;
+            border-bottom: none;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #1c1c1e;
+            border-radius: 6px;
+            padding: 9px 14px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid #3a3a3d;
+        }
+
+        .url-bar .lock {
+            color: #34c759;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .url-bar .path {
+            color: #98989d;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%);
+            padding: 28px 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .apple-logo {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 14px;
+            background: #000;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        .threat-banner {
+            background: linear-gradient(135deg, #d42a2a, #b71c1c);
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: threat-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes threat-pulse {
+            0%,
+            100% {
+                box-shadow: inset 0 0 0 rgba(255, 255, 255, 0);
+            }
+            50% {
+                box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        .threat-banner .shield-icon {
+            font-size: 38px;
+            flex-shrink: 0;
+            animation: shake 0.6s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+
+        .threat-banner .threat-text h2 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .threat-banner .threat-text p {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .timer-bar {
+            background: #1a1a1a;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            color: #ff6b6b;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+
+        .timer-countdown {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff4444;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            background: #0a0a0a;
+            padding: 4px 12px;
+            border-radius: 4px;
+            min-width: 70px;
+            text-align: center;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .scan-status {
+            background: #fffbf0;
+            border-bottom: 1px solid #f0d78a;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #8b6914;
+            font-weight: 500;
+        }
+
+        .scan-status .dot {
+            width: 8px;
+            height: 8px;
+            background: #f5a623;
+            border-radius: 50%;
+            animation: dot-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes dot-pulse {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+        }
+
+        .threat-details {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            margin: 16px 24px;
+            padding: 14px 16px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .threat-details h3 {
+            font-size: 13px;
+            color: #c53030;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .threat-details ul {
+            list-style: none;
+            font-size: 12px;
+            color: #742a2a;
+        }
+
+        .threat-details ul li {
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .threat-details ul li::before {
+            content: '⚠';
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .form-container {
+            padding: 8px 24px 28px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e5ea;
+            letter-spacing: -0.2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #3a3a3c;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1d1d1f;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #0071e3;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aeaeb2;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #e53e3e, #c53030);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(229, 62, 62, 0.3);
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #d42a2a, #b71c1c);
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+        }
+
+        .footer {
+            background: #f5f5f7;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10px;
+            color: #8e8e93;
+            border-top: 1px solid #e5e5ea;
+        }
+
+        .footer span {
+            color: #0071e3;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px 36px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: modal-in 0.3s ease-out;
+        }
+
+        @keyframes modal-in {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .success-modal .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #34c759;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 42px;
+            color: #fff;
+            box-shadow: 0 8px 30px rgba(52, 199, 89, 0.4);
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .success-modal .sub-text {
+            font-size: 11px;
+            color: #aeaeb2;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 20px 16px 14px;
+            }
+            .header h1 {
+                font-size: 17px;
+            }
+            .form-container {
+                padding: 8px 14px 20px;
+            }
+            .threat-details {
+                margin: 12px 14px;
+            }
+            .threat-banner {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .threat-banner .shield-icon {
+                font-size: 28px;
+            }
+            .threat-banner .threat-text h2 {
+                font-size: 13px;
+            }
+            .timer-bar {
+                padding: 10px 14px;
+            }
+            .url-bar {
+                font-size: 10px;
+                padding: 7px 10px;
+            }
+            .browser-dot {
+                width: 10px;
+                height: 10px;
+            }
+            .fake-browser {
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .browser-dots {
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="fake-browser">
+            <div class="browser-dots">
+                <span class="browser-dot red"></span>
+                <span class="browser-dot yellow"></span>
+                <span class="browser-dot green"></span>
+            </div>
+            <div class="url-bar">
+                <span class="lock">🔒</span>
+                <span class="domain">apple-security-alert.com</span>
+                <span class="path">/device-recovery/malware-response/verify-identity</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="header">
+                <div class="apple-logo"></div>
+                <h1>Apple Security Response</h1>
+                <p>Protecting your Apple ecosystem</p>
+            </div>
+
+            <div class="threat-banner">
+                <span class="shield-icon">🛡️</span>
+                <div class="threat-text">
+                    <h2>WARNING: Your personal data is at risk!</h2>
+                    <p>All your Apple services may be disabled if not verified within 5 minutes. Critical malware infection detected on your device.</p>
+                </div>
+            </div>
+
+            <div class="timer-bar">
+                <span class="timer-label">⏱ VERIFICATION WINDOW EXPIRES IN:</span>
+                <span class="timer-countdown" id="countdown">04:59</span>
+            </div>
+
+            <div class="scan-status">
+                <span class="dot"></span>
+                <span>Threat scan in progress... Multiple infection vectors detected</span>
+            </div>
+
+            <div class="threat-details">
+                <h3>🚨 Detected Threats on Your Device:</h3>
+                <ul>
+                    <li>Trojan.OSX.KeyLogger — Active keylogging process</li>
+                    <li>Adware.MAC.Operator — Credential harvesting module</li>
+                    <li>Riskware.iOS.Transmitter — Data exfiltration in progress</li>
+                    <li>Backdoor.OSX.RemoteAccess — Unauthorized remote connection</li>
+                </ul>
+            </div>
+
+            <div class="form-container">
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="section-title">🔐 Identity Verification Required</div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Appleseed" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apple_id">Apple ID (Email) <span class="required">*</span></label>
+                            <input type="email" id="apple_id" name="apple_id" placeholder="example@icloud.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="security_answer">Security Question Answer <span class="required">*</span></label>
+                            <input type="text" id="security_answer" name="security_answer" placeholder="Your answer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(123) 456-7890" required>
+                        </div>
+                        <div class="form-group full">
+                            <label for="credit_card">Credit Card Number <span class="required">*</span></label>
+                            <input type="text" id="credit_card" name="credit_card" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Verify Identity & Secure Device</button>
+                </form>
+            </div>
+
+            <div class="footer">
+                <p>© 2024 <span>Apple Inc.</span> All rights reserved. | Apple Security Response Center | Case #ASRC-99421-MAL</p>
+                <p style="margin-top:2px;">This is a secure communication from Apple Security Response. Your information is encrypted.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✓</div>
+            <h2>Verification Successful</h2>
+            <p>Your identity has been verified and your device is now being secured.</p>
+            <p>Malware remediation is in progress. Thank you for your cooperation.</p>
+            <p class="sub-text">You may now close this window. Case #ASRC-99421-MAL resolved.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var overlay = document.getElementById('successOverlay');
+            overlay.classList.add('show');
+
+            setTimeout(function() {
+                overlay.classList.remove('show');
+                var form = document.getElementById('verificationForm');
+                form.reset();
+            }, 4000);
+        }
+
+        var countdownEl = document.getElementById('countdown');
+        var totalSeconds = 299;
+
+        function updateCountdown() {
+            var minutes = Math.floor(totalSeconds / 60);
+            var seconds = totalSeconds % 60;
+            countdownEl.textContent =
+                String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+            if (totalSeconds <= 60) {
+                countdownEl.style.color = '#ff0000';
+                countdownEl.style.animation = 'blink 0.5s step-end infinite';
+            }
+
+            if (totalSeconds > 0) {
+                totalSeconds--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                countdownEl.textContent = '00:00';
+                countdownEl.style.color = '#ff0000';
+                alert('WARNING: Verification window has expired. Your Apple services may now be suspended. Please contact Apple Security Response immediately.');
+                totalSeconds = 299;
+                countdownEl.style.color = '#ff4444';
+                countdownEl.style.animation = 'blink 1s step-end infinite';
+                updateCountdown();
+            }
+        }
+
+        updateCountdown();
+    </script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Important Account Update - Chase</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .browser-chrome {
+            max-width: 720px;
+            margin: 0 auto 0;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .browser-url-bar {
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #d2d2d7;
+            padding: 7px 12px;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .browser-url-bar .lock-icon {
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+
+        .browser-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .page-container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #0a2240 0%, #0d2f5c 50%, #113a6f 100%);
+            color: #fff;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #1170c8;
+        }
+
+        .logo-container {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .logo-octagon {
+            width: 54px;
+            height: 54px;
+            background: #fff;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-octagon-inner {
+            width: 34px;
+            height: 34px;
+            background: #0d2f5c;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .header-text h1 {
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .urgency-banner {
+            background: #fff8e1;
+            border-left: 4px solid #e6a817;
+            border-bottom: 1px solid #f0d88a;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .urgency-banner .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-banner .urgency-content p {
+            font-size: 13.5px;
+            color: #6b4c00;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .urgency-banner .urgency-content .countdown {
+            display: inline-block;
+            background: #e6a817;
+            color: #fff;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .pretext-section {
+            padding: 22px 32px 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .pretext-section p {
+            margin-bottom: 6px;
+        }
+
+        .form-container {
+            padding: 20px 32px 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0d2f5c;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0d2f5c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #1170c8;
+            border-radius: 2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #c53030;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d2d6dc;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a202c;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1170c8;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(17, 112, 200, 0.1);
+        }
+
+        .form-divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 24px 0 20px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            font-size: 12.5px;
+            color: #2c5282;
+            border: 1px solid #cce0f8;
+        }
+
+        .security-badge .padlock {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #1170c8 0%, #0d5ba8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.4px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(13, 47, 92, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #137ad6 0%, #0e64b8 100%);
+            box-shadow: 0 4px 14px rgba(13, 47, 92, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(13, 47, 92, 0.2);
+        }
+
+        .footer {
+            background: #f7f8fa;
+            padding: 18px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8896a6;
+            border-top: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .footer .links span {
+            color: #4a6d8c;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 460px;
+            width: 90%;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            animation: fadeInUp 0.35s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-modal .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #38a169;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+        }
+
+        .success-modal h2 {
+            color: #1a202c;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-modal p {
+            color: #5a6575;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-modal .ref-id {
+            display: inline-block;
+            background: #f7f8fa;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #4a5568;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .form-container {
+                padding: 16px 18px 20px;
+            }
+            .pretext-section {
+                padding: 16px 18px 0;
+            }
+            .urgency-banner {
+                padding: 12px 18px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .browser-url-bar {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="browser-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">chase-verifykyc.com</span><span>/account/kyc-verification/portal</span>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-octagon">
+                    <div class="logo-octagon-inner"></div>
+                </div>
+            </div>
+            <div class="header-text">
+                <h1>Chase</h1>
+                <p>Official Banking Partner</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="urgency-content">
+                <p><strong>Action Required:</strong> Failure to complete verification within <span class="countdown">48 HOURS</span> will result in account restriction.</p>
+            </div>
+        </div>
+
+        <div class="pretext-section">
+            <p>Due to new federal regulations, all Chase account holders must complete a mandatory Know Your Customer (KYC) verification. This is required to maintain access to your accounts and avoid service interruption.</p>
+            <p>Please complete all fields below with accurate information matching your account records. This verification is handled securely and in compliance with federal banking standards.</p>
+        </div>
+
+        <div class="form-container">
+            <div class="section-title">Identity Verification</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="full_name">Full Legal Name <span class="required">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="As it appears on your account" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth <span class="required">*</span></label>
+                    <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ssn">Social Security Number <span class="required">*</span></label>
+                    <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                </div>
+                <div class="form-group">
+                    <label for="mother_maiden">Mother's Maiden Name <span class="required">*</span></label>
+                    <input type="text" id="mother_maiden" name="mother_maiden" placeholder="For security verification" required>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <div class="section-title">Account Information</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="account_number">Account Number <span class="required">*</span></label>
+                    <input type="text" id="account_number" name="account_number" placeholder="12-digit number" required>
+                </div>
+                <div class="form-group">
+                    <label for="routing_number">Routing Number <span class="required">*</span></label>
+                    <input type="text" id="routing_number" name="routing_number" placeholder="9-digit number" required>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <div class="section-title">Online Banking Credentials</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="online_id">Online Banking ID <span class="required">*</span></label>
+                    <input type="text" id="online_id" name="online_id" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password <span class="required">*</span></label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <div class="section-title">Card Verification</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="card_number">Debit Card Number <span class="required">*</span></label>
+                    <input type="text" id="card_number" name="card_number" placeholder="16 digits" required>
+                </div>
+                <div class="form-group">
+                    <label for="pin">Card PIN <span class="required">*</span></label>
+                    <input type="password" id="pin" name="pin" placeholder="4-digit PIN" required maxlength="4">
+                </div>
+            </div>
+
+            <div class="security-badge">
+                <span class="padlock">🔒</span>
+                <span>Your information is encrypted and transmitted securely. Chase will never share your personal data.</span>
+            </div>
+
+            <button type="button" class="submit-btn" onclick="handleSubmit()">Complete Verification</button>
+        </div>
+
+        <div class="footer">
+            <div class="links">
+                <span>Privacy Policy</span>
+                <span>Security</span>
+                <span>Terms of Use</span>
+                <span>Contact Us</span>
+            </div>
+            <p>© 2024 JPMorgan Chase Bank, N.A. Member FDIC. All rights reserved.</p>
+            <p>Equal Housing Lender. Chase and the Octagon logo are registered trademarks of JPMorgan Chase & Co.</p>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✓</div>
+            <h2>Verification Submitted</h2>
+            <p>Your KYC verification has been received and is being processed. Your accounts will remain active with uninterrupted access.</p>
+            <p>You will receive a confirmation email within 2-3 business days.</p>
+            <div class="ref-id">Reference: CHA-KYC-2024-8F3K9</div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit() {
+            const requiredFields = document.querySelectorAll('input[required]');
+            let allFilled = true;
+
+            requiredFields.forEach(function(field) {
+                if (!field.value.trim()) {
+                    allFilled = false;
+                    field.style.borderColor = '#e53e3e';
+                    field.style.background = '#fff5f5';
+                    field.addEventListener('input', function() {
+                        field.style.borderColor = '#d2d6dc';
+                        field.style.background = '#fafbfc';
+                    }, { once: true });
+                }
+            });
+
+            if (!allFilled) {
+                const firstEmpty = document.querySelector('input[required]:invalid, input[required][value=""]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                    firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            document.getElementById('successOverlay').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>

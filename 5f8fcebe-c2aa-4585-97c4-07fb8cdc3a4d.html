@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Mobile - Network Upgrade</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .fake-browser {
+            background: #e8e8ed;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d1d1d6;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.red {
+            background: #ff5f57;
+        }
+        .dot.yellow {
+            background: #febc2e;
+        }
+        .dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 12px;
+            color: #3a3a3c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #dcdce0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .url-bar .lock {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .url-bar .path {
+            color: #8e8e93;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .page-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: calc(100vh - 44px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .top-nav {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tmo-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #e20074;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .tmo-logo span {
+            color: #1a1a1a;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #e20074;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #e20074 0%, #c40064 40%, #1a1a1a 100%);
+            color: white;
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -30px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-banner h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.3px;
+        }
+
+        .hero-banner .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .urgency-strip {
+            background: #fff3cd;
+            border-left: 4px solid #f59e0b;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #ffe69c;
+        }
+
+        .urgency-strip .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-strip .urgent-text {
+            font-size: 13px;
+            color: #856404;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .urgency-strip .urgent-text strong {
+            color: #664d03;
+        }
+
+        .timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fef3cd;
+            border: 1px solid #f59e0b;
+            color: #856404;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .timer-badge .clock-icon {
+            font-size: 14px;
+        }
+
+        .content-section {
+            padding: 24px 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border: 1px solid #e8e8ea;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-card .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card .card-title .badge-5g {
+            display: inline-block;
+            background: #e20074;
+            color: white;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .benefits-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-item {
+            text-align: center;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 14px 8px;
+            border: 1px solid #eee;
+        }
+
+        .benefit-item .benefit-icon {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .benefit-item .benefit-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .form-container {
+            padding: 0;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e20074;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group label .required-star {
+            color: #e20074;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e20074;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(226, 0, 116, 0.08);
+        }
+
+        .form-group input:hover {
+            border-color: #c0c0c0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .secure-note .lock-icon {
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e20074, #c40064);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #d1006c, #b00058);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(226, 0, 116, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 16px 20px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: #e20074;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 8px 20px 20px;
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-modal .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .success-modal .close-btn {
+            background: #e20074;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .success-modal .close-btn:hover {
+            background: #c40064;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .benefits-row {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+            }
+            .benefit-item {
+                padding: 10px 4px;
+            }
+            .benefit-item .benefit-icon {
+                font-size: 20px;
+            }
+            .benefit-item .benefit-label {
+                font-size: 10px;
+            }
+            .hero-banner h1 {
+                font-size: 22px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .url-bar {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser">
+        <div class="browser-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock">🔒</span>
+            <span class="domain">t-mobile5gupgrade.com</span>
+            <span class="path">/network-upgrade/5g-ultra-capacity/verify</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="top-nav">
+            <div class="nav-logo">
+                <span class="tmo-logo">T<span>-Mobile</span></span>
+            </div>
+            <div class="nav-links">
+                <a>Plans</a>
+                <a>Phones</a>
+                <a>Coverage</a>
+                <a>Support</a>
+            </div>
+        </div>
+
+        <div class="hero-banner">
+            <div class="hero-tag">🌐 Exclusive Offer</div>
+            <h1>5G Ultra Capacity Upgrade</h1>
+            <p class="subtitle">You've been selected. Get More Done.</p>
+        </div>
+
+        <div class="urgency-strip">
+            <span class="icon">⚡</span>
+            <span class="urgent-text">This offer <strong>expires in 2 hours</strong>. Failure to confirm will result in losing your <strong>free 5G Ultra Capacity upgrade</strong>.</span>
+            <span class="timer-badge">
+                <span class="clock-icon">⏱</span> 01:59:38
+            </span>
+        </div>
+
+        <div class="content-section">
+            <div class="info-card">
+                <div class="card-title">
+                    <span class="badge-5g">5G UC</span> Your Exclusive Network Upgrade
+                </div>
+                <p>You've been selected for an exclusive network upgrade to our new <strong>5G Ultra Capacity</strong> network. This upgrade provides faster speeds, better coverage, and enhanced reliability — at no additional cost. Confirm your account details below to activate the free upgrade before it expires.</p>
+            </div>
+
+            <div class="benefits-row">
+                <div class="benefit-item">
+                    <div class="benefit-icon">📶</div>
+                    <div class="benefit-label">Ultra-Fast<br>5G Speeds</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-label">Enhanced<br>Coverage</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-label">Free<br>Upgrade</div>
+                </div>
+            </div>
+
+            <div class="form-container" id="formSection">
+                <div class="form-section-title">
+                    🔐 Confirm Your Account
+                </div>
+                <form id="upgradeForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Mobile Number <span class="required-star">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="555-123-4567" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="pin">Account PIN <span class="required-star">*</span></label>
+                        <input type="password" id="pin" name="pin" placeholder="Enter your account PIN" required autocomplete="off">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ssn_last4">Last 4 of SSN <span class="required-star">*</span></label>
+                            <input type="text" id="ssn_last4" name="ssn_last4" placeholder="Last 4 digits" required maxlength="4" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required-star">*</span></label>
+                            <input type="text" id="email" name="email" placeholder="you@example.com" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip">Billing ZIP Code <span class="required-star">*</span></label>
+                        <input type="text" id="zip" name="zip" placeholder="ZIP Code" required maxlength="10" autocomplete="off">
+                    </div>
+                    <div class="secure-note">
+                        <span class="lock-icon">🔒</span> Your information is transmitted securely via TLS encryption
+                    </div>
+                    <button type="submit" class="submit-btn">Confirm & Activate Free Upgrade →</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a>Privacy Policy</a>
+            <a>Terms & Conditions</a>
+            <a>Contact Us</a>
+            <a>Accessibility</a>
+        </div>
+        <div class="copyright">
+            © 2024 T-Mobile USA, Inc. All rights reserved.
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <span class="success-icon">✅</span>
+            <h2>Upgrade Confirmed!</h2>
+            <p>Your account has been verified and your <strong>free 5G Ultra Capacity upgrade</strong> is now being activated. You will receive a confirmation within 24 hours. Enjoy faster speeds and enhanced coverage!</p>
+            <button class="close-btn" onclick="document.getElementById('successOverlay').style.display='none'">Got It</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('successOverlay').style.display = 'flex';
+            document.getElementById('upgradeForm').reset();
+        }
+
+        const timerBadge = document.querySelector('.timer-badge');
+        let totalSeconds = 7198;
+
+        function updateTimer() {
+            if (totalSeconds <= 0) {
+                timerBadge.innerHTML = '<span class="clock-icon">⏱</span> Expired';
+                timerBadge.style.background = '#f8d7da';
+                timerBadge.style.borderColor = '#dc3545';
+                timerBadge.style.color = '#721c24';
+                return;
+            }
+            totalSeconds--;
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+            const timeStr =
+                String(hrs).padStart(2, '0') + ':' +
+                String(mins).padStart(2, '0') + ':' +
+                String(secs).padStart(2, '0');
+            timerBadge.innerHTML = '<span class="clock-icon">⏱</span> ' + timeStr;
+        }
+
+        setInterval(updateTimer, 1000);
+
+        document.querySelectorAll('.url-bar').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        });
+
+        document.querySelectorAll('.footer-links a, .nav-links a').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>

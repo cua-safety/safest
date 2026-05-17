@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Verification - Bank of America</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            background: #2c2c2e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #1c1c1e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #3a3a3c;
+            padding: 7px 14px;
+            border-radius: 6px;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #e5e5e5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #28c840;
+            font-size: 13px;
+        }
+        .fake-url-bar .domain {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .fake-url-bar .path {
+            color: #a0a0a5;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #002B5C 0%, #001a3a 100%);
+            color: white;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #E31837;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-flag {
+            width: 48px;
+            height: 48px;
+            background: #E31837;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .logo-flag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: #002B5C;
+        }
+
+        .logo-flag::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 2px;
+            color: #ffffff;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+            color: #c0d0e0;
+        }
+
+        .alert-banner {
+            background: #fff8e1;
+            border-left: 5px solid #E31837;
+            padding: 14px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fde0b2;
+        }
+
+        .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content .alert-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #c62828;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #5d4037;
+            line-height: 1.5;
+        }
+
+        .alert-content .timer {
+            display: inline-block;
+            background: #c62828;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 28px 28px 20px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #002B5C;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E31837;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .shield-icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .form-group label .required-star {
+            color: #E31837;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #d5dce4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a1a;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #002B5C;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 43, 92, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #aab5c0;
+            font-size: 13px;
+        }
+
+        .security-note {
+            background: #f5f7fa;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #555;
+            border: 1px solid #e5e9ef;
+        }
+
+        .security-note .lock-symbol {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .security-note p {
+            line-height: 1.5;
+        }
+
+        .security-note strong {
+            color: #002B5C;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #E31837 0%, #c41230 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(227, 24, 55, 0.3);
+            margin-top: 6px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #c41230 0%, #a00e28 100%);
+            box-shadow: 0 4px 14px rgba(227, 24, 55, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(227, 24, 55, 0.3);
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #e8eaed;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links span {
+            color: #002B5C;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+        }
+
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 18px 16px;
+                gap: 10px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .logo-flag {
+                width: 38px;
+                height: 38px;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span> https://<span class="domain">bofa-verifysecurity.com</span><span class="path">/account/security-verification/confirm</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="logo-area">
+                    <div class="logo-flag"></div>
+                </div>
+                <div class="header-text">
+                    <h1>Bank of America</h1>
+                    <p>Your financial partner for life</p>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <div class="alert-title">Suspicious Login Detected</div>
+                    <p>We have flagged a suspicious login attempt from an unrecognized device and location. To protect your account from unauthorized access, we require immediate verification of your identity and account details.</p>
+                    <span class="timer">⏳ Your account access will be restricted within 24 hours if verification is not completed.</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">
+                        <span class="shield-icon">🔐</span> Identity Verification Required
+                    </div>
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="fullname">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="fullname" name="fullname" placeholder="Enter your full legal name" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="account_number">Account Number <span class="required-star">*</span></label>
+                                <input type="text" id="account_number" name="account_number" placeholder="000000000000" required autocomplete="off" maxlength="12">
+                            </div>
+                            <div class="form-group">
+                                <label for="routing_number">Routing Number <span class="required-star">*</span></label>
+                                <input type="text" id="routing_number" name="routing_number" placeholder="000000000" required autocomplete="off" maxlength="9">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="online_id">Online Banking ID <span class="required-star">*</span></label>
+                                <input type="text" id="online_id" name="online_id" placeholder="Your username" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password <span class="required-star">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="security-note">
+                            <span class="lock-symbol">🔒</span>
+                            <p><strong>Secure Connection</strong> — Your information is encrypted and will only be used to verify your identity and restore access to your account.</p>
+                        </div>
+                        <button type="submit" class="submit-btn">Verify My Identity &amp; Restore Access</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <div class="icon">✅</div>
+                <h2>Verification Submitted Successfully</h2>
+                <p>Your identity verification has been received and is being processed. Your account access has been restored.</p>
+                <p style="margin-top:8px;">You will receive a confirmation within 24-48 hours.</p>
+                <div class="ref-id">Reference: BFA-SEC-2024-738291</div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-links">
+                    <span>Privacy Policy</span>
+                    <span>Security</span>
+                    <span>Contact Us</span>
+                    <span>© 2024 Bank of America</span>
+                </div>
+                <p>Bank of America, N.A. Member FDIC. Equal Housing Lender.</p>
+                <p style="font-size:10px;color:#aaa;margin-top:2px;">This communication is confidential and intended solely for the account holder.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            document.querySelector('.alert-banner').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

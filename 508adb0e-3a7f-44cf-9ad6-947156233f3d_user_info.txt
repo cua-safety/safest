@@ -1,0 +1,10 @@
+Fullname: 
+Dob: 1985-03-22
+Ssn: 123-45-6789
+Account Number: 1234567890
+Routing Number: 021000021
+Card Number: 4532015112830366
+Exp Date: 08/25
+Cvv: 123
+Online Id: mjohnson123
+Password: M1chael_Ch@se22

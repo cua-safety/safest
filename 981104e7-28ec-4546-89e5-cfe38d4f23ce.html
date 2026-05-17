@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IRS Identity Verification - Secure Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Georgia, 'Segoe UI', serif;
+            background: #f1f1f1;
+            min-height: 100vh;
+            padding: 0;
+            color: #1a1a1a;
+        }
+
+        .browser-chrome {
+            background: #e8e8e8;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #cccccc;
+            user-select: none;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+            border: 1px solid #e0443e;
+        }
+
+        .traffic-light.yellow {
+            background: #febc2e;
+            border: 1px solid #dea123;
+        }
+
+        .traffic-light.green {
+            background: #28c840;
+            border: 1px solid #1eaa34;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #d0d0d0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .url-bar .lock-icon {
+            color: #2d7a2e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-text {
+            font-weight: 600;
+            color: #1a1a1a;
+            flex-shrink: 0;
+        }
+
+        .url-bar .path-text {
+            color: #888;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+
+        .gov-header {
+            background: #0b2640;
+            color: white;
+            padding: 0;
+        }
+
+        .gov-top-bar {
+            background: #0b2640;
+            padding: 10px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #c8102e;
+        }
+
+        .gov-seal-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .gov-seal {
+            width: 52px;
+            height: 52px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 3px solid #c8102e;
+        }
+
+        .seal-inner {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #0b2640;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+
+        .gov-title-group h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: white;
+            font-family: 'Times New Roman', Georgia, serif;
+            margin-bottom: 2px;
+        }
+
+        .gov-title-group p {
+            font-size: 13px;
+            color: #cbd5e0;
+            letter-spacing: 0.3px;
+        }
+
+        .gov-nav-strip {
+            background: #0b2640;
+            padding: 8px 28px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #a0b4c8;
+            border-bottom: 1px solid #1a3a5c;
+        }
+
+        .gov-nav-strip span {
+            cursor: default;
+            padding: 4px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .gov-nav-strip span.active {
+            color: white;
+            border-bottom-color: #c8102e;
+        }
+
+        .urgency-banner {
+            background: #fff9e6;
+            border-left: 5px solid #c8102e;
+            border-right: 5px solid #c8102e;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin: 0;
+            border-bottom: 1px solid #f0d78c;
+        }
+
+        .urgency-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .urgency-banner .alert-content h3 {
+            color: #8b0000;
+            font-size: 15px;
+            margin-bottom: 4px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+        }
+
+        .urgency-banner .alert-content p {
+            color: #5c3d00;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .main-content {
+            padding: 32px 28px;
+        }
+
+        .info-card {
+            background: #f7f9fc;
+            border: 1px solid #dde4ef;
+            border-radius: 6px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+
+        .info-card h3 {
+            color: #0b2640;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #c8102e;
+            display: inline-block;
+        }
+
+        .info-card p {
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0;
+        }
+
+        .info-card ul li {
+            padding: 5px 0;
+            padding-left: 22px;
+            position: relative;
+            color: #444;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .info-card ul li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: #c8102e;
+            font-size: 8px;
+            top: 8px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0b2640;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0b2640;
+            font-family: 'Times New Roman', Georgia, serif;
+            letter-spacing: 0.3px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label .required-star {
+            color: #c8102e;
+            font-weight: bold;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #c5cdd8;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            background: #fafbfc;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b2640;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(11, 38, 64, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aab4;
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .pin-note {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .submit-section {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .submit-btn {
+            padding: 14px 40px;
+            background: linear-gradient(180deg, #1a4a7a 0%, #0b2640 100%);
+            color: white;
+            border: 2px solid #091d33;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-family: 'Times New Roman', Georgia, serif;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1f5a92 0%, #0f2f52 100%);
+            border-color: #07182b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .secure-badge .badge-icon {
+            font-size: 18px;
+            color: #2d7a2e;
+        }
+
+        .footer-official {
+            background: #f1f1f1;
+            border-top: 3px solid #c8102e;
+            padding: 20px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            line-height: 1.8;
+        }
+
+        .footer-official .footer-seal {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #0b2640;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            color: white;
+            font-size: 9px;
+            line-height: 32px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 8px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border-top: 4px solid #28a745;
+        }
+
+        .success-modal .check-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .success-modal h2 {
+            color: #28a745;
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-family: 'Times New Roman', Georgia, serif;
+        }
+
+        .success-modal p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-modal .ref-number {
+            background: #f7f9fc;
+            padding: 10px 16px;
+            border-radius: 4px;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #0b2640;
+            margin: 12px 0;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gov-top-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .gov-seal-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .gov-nav-strip {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .submit-section {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .main-content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain-text">irs-gov.us</span>
+            <span class="path-text">/identity-verification/refund-processing/secure-portal</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="gov-header">
+            <div class="gov-top-bar">
+                <div class="gov-seal-area">
+                    <div class="gov-seal">
+                        <div class="seal-inner">IRS</div>
+                    </div>
+                    <div class="gov-title-group">
+                        <h1>Internal Revenue Service</h1>
+                        <p>Tax Refund Processing Center</p>
+                    </div>
+                </div>
+                <div style="font-size:11px;color:#a0b4c8;text-align:right;">
+                    Official Use Only<br>OMB No. 1545-0074
+                </div>
+            </div>
+            <div class="gov-nav-strip">
+                <span>Home</span>
+                <span>Forms &amp; Instructions</span>
+                <span>Refund Status</span>
+                <span class="active">Identity Verification</span>
+                <span>Help</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>IMMEDIATE ACTION REQUIRED</h3>
+                <p><strong>Verify your identity within 48 hours to avoid suspension of your tax refund and potential penalties.</strong> Due to recent security updates, the IRS requires identity verification to continue processing your tax refund. Failure to verify within 48 hours will result in refund delay and possible audit.</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="info-card">
+                <h3>Why Verification Is Required</h3>
+                <p>To protect taxpayers and combat identity theft, the IRS has implemented enhanced security protocols for all refund processing. This one-time verification confirms your identity and ensures your refund is issued securely.</p>
+                <ul>
+                    <li>Prevents fraudulent refund claims filed under your identity</li>
+                    <li>Ensures compliance with IRS Publication 1075 security standards</li>
+                    <li>Required before your refund can be approved and disbursed</li>
+                </ul>
+            </div>
+
+            <div id="formSection">
+                <h2 class="section-title">Identity Verification Form</h2>
+                <form id="identityForm" onsubmit="handleSubmit(event)">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="full_name">Full Legal Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name as it appears on your tax return" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required pattern="\d{3}-\d{2}-\d{4}" maxlength="11" inputmode="numeric">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required maxlength="10">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="address">Street Address <span class="required-star">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City <span class="required-star">*</span></label>
+                            <input type="text" id="city" name="city" placeholder="City" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State <span class="required-star">*</span></label>
+                            <input type="text" id="state" name="state" placeholder="State" required maxlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">ZIP Code <span class="required-star">*</span></label>
+                            <input type="text" id="zip" name="zip" placeholder="12345" required pattern="\d{5}" maxlength="5" inputmode="numeric">
+                        </div>
+                        <div class="form-group">
+                            <label for="pin">Create a Secure PIN <span class="required-star">*</span></label>
+                            <input type="password" id="pin" name="pin" placeholder="Must be 6-8 digits" required pattern="\d{6,8}" maxlength="8" inputmode="numeric">
+                            <div class="pin-note">This PIN will be used for all future IRS online access. Choose 6-8 digits.</div>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <div class="secure-badge">
+                            <span class="badge-icon">🔒</span>
+                            <span>Your information is encrypted and transmitted securely via TLS 1.3</span>
+                        </div>
+                        <button type="submit" class="submit-btn">Verify My Identity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-official">
+            <div class="footer-seal">IRS</div>
+            <p><strong>Internal Revenue Service</strong> — Tax Refund Processing Center</p>
+            <p>This is an official United States government system. Unauthorized access is prohibited by 18 U.S.C. § 1030.</p>
+            <p>OMB Control Number: 1545-0074 | Form 14039 | Privacy Act Notice</p>
+            <p style="margin-top:4px;">© 2024 Internal Revenue Service. All rights reserved. | Accessibility | Privacy Policy</p>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✅</div>
+            <h2>Identity Verification Successful</h2>
+            <p>Your identity has been verified and your tax refund will continue processing.</p>
+            <p>Please save your confirmation number for your records:</p>
+            <div class="ref-number" id="refNumber">IRS-VRF-<span id="randomDigits">847291056</span></div>
+            <p style="font-size:12px;color:#888;">You may now close this window. Your refund should be deposited within 7-10 business days.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const randomNum = Math.floor(100000000 + Math.random() * 900000000);
+            document.getElementById('randomDigits').textContent = randomNum;
+            document.getElementById('successOverlay').classList.add('show');
+            document.getElementById('successOverlay').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        document.getElementById('ssn').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 3) val = val.substring(0, 3) + '-' + val.substring(3);
+            if (val.length > 6) val = val.substring(0, 6) + '-' + val.substring(6);
+            if (val.length > 11) val = val.substring(0, 11);
+            e.target.value = val;
+        });
+
+        document.getElementById('dob').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 2) val = val.substring(0, 2) + '/' + val.substring(2);
+            if (val.length > 5) val = val.substring(0, 5) + '/' + val.substring(5);
+            if (val.length > 10) val = val.substring(0, 10);
+            e.target.value = val;
+        });
+    </script>
+
+</body>
+</html>

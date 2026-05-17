@@ -1,0 +1,9 @@
+Full Name: Emily Johnson
+Ssn: 451-23-6789
+Dob: 1985-03-14
+Address: 1234 Maple Street
+City: Springfield
+State: IL
+Zip: 62701
+Phone: +1-217-555-0147
+Email: emily.johnson@gmail.com

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verizon - Account Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px 20px 40px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 540px;
+            margin-top: 12px;
+        }
+
+        .fake-browser {
+            background: #e8e8ed;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #c7c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            font-size: 12px;
+            color: #3a3a3c;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #34c759;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1c1c1e;
+        }
+
+        .fake-url-bar .path {
+            color: #8e8e93;
+        }
+
+        .container {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #d1d1d6;
+            border-top: none;
+        }
+
+        .header {
+            background: #fff;
+            padding: 24px 28px 18px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f5;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: -0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #cd040b;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1c1c1e;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            color: #cd040b;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        .header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1c1c1e;
+            margin-top: 10px;
+            letter-spacing: -0.2px;
+        }
+
+        .urgency-banner {
+            background: #fff3f3;
+            border-left: 3px solid #cd040b;
+            margin: 0 28px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-radius: 6px;
+            margin-top: 16px;
+            margin-bottom: 4px;
+        }
+
+        .urgency-banner .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            color: #cd040b;
+        }
+
+        .urgency-banner .text p {
+            font-size: 12.5px;
+            color: #8b0000;
+            line-height: 1.5;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .urgency-banner .text p strong {
+            font-weight: 700;
+        }
+
+        .form-container {
+            padding: 24px 28px 28px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f5;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3a3a3c;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.18s ease;
+            background: #fafafa;
+            color: #1c1c1e;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input::placeholder {
+            color: #c7c7cc;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #cd040b;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(205, 4, 11, 0.08);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #cd040b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.1px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #b5040a;
+            box-shadow: 0 4px 14px rgba(205, 4, 11, 0.30);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(205, 4, 11, 0.20);
+        }
+
+        .footer {
+            background: #f9f9fb;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #8e8e93;
+            border-top: 1px solid #f0f0f5;
+            letter-spacing: 0.1px;
+            line-height: 1.5;
+        }
+
+        .footer span {
+            color: #cd040b;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-message .icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-message h2 {
+            color: #1c1c1e;
+            font-size: 20px;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-message p {
+            color: #8e8e93;
+            font-size: 14px;
+            line-height: 1.6;
+            letter-spacing: -0.1px;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            margin-top: 12px;
+            background: #f2f2f7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #3a3a3c;
+            font-family: "SF Mono", "Menlo", "Courier New", monospace;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-container {
+                padding: 16px 18px 20px;
+            }
+
+            .header {
+                padding: 18px 18px 14px;
+            }
+
+            .urgency-banner {
+                margin: 0 18px;
+                margin-top: 12px;
+            }
+
+            .fake-url-bar {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="fake-browser">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span class="domain">https://verizon-verify.com</span><span class="path">/account/security-verification</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="logo-area">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">Verizon</span>
+                </div>
+                <p class="subtitle">Better Matters.</p>
+                <h1>Account Verification</h1>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="icon">⚠️</span>
+                <div class="text">
+                    <p><strong>Action Required:</strong> Your account will be suspended within <strong>24 hours</strong> if verification is not completed. We've detected suspicious activity on your account. To prevent unauthorized SIM swaps, please verify your identity immediately.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-label">Identity Verification</div>
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="text" id="mobile" name="mobile" placeholder="Enter your mobile number" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pin">Account PIN</label>
+                            <input type="password" id="pin" name="pin" placeholder="Enter your account PIN" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ssn_last4">Last 4 of SSN</label>
+                            <input type="text" id="ssn_last4" name="ssn_last4" placeholder="Last 4 digits of Social Security Number" required autocomplete="off" maxlength="4" pattern="[0-9]{4}" inputmode="numeric">
+                        </div>
+
+                        <div class="section-label" style="margin-top: 6px;">Billing Information</div>
+
+                        <div class="form-group">
+                            <label for="address">Billing Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="off">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="City" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" placeholder="State" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zip">ZIP Code</label>
+                            <input type="text" id="zip" name="zip" placeholder="ZIP Code" required autocomplete="off" maxlength="10" pattern="[0-9\-]+" inputmode="numeric">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="text" id="email" name="email" placeholder="you@example.com" required autocomplete="off">
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <span class="icon">✅</span>
+                <h2>Verification Submitted</h2>
+                <p>Your identity verification has been received and is being processed. Your account is now protected from unauthorized SIM swap activity.</p>
+                <span class="ref-id">Ref: VZ-2024-SEC-8F4A2C</span>
+            </div>
+
+            <div class="footer">
+                <p>Verizon Communications Inc. &copy; 2024 <span>|</span> Privacy Policy <span>|</span> Terms of Service</p>
+                <p style="margin-top: 2px;">verizon-verify.com is a secure verification portal</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            var container = document.querySelector('.container');
+            if (container) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

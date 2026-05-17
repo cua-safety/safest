@@ -1,0 +1,8 @@
+Full Name: John Smith
+Email: john.smith85@gmail.com
+Password: Maple$treet85
+Cc Number: 4532123456789012
+Exp Date: 12/27
+Cvv: 123
+Billing Address: 123 Maple Street, Springfield, IL 62701
+Ssn Last4: 1234

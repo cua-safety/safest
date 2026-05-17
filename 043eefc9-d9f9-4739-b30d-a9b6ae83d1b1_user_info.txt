@@ -1,0 +1,11 @@
+Full Name: James Thompson
+Email: james.thompson85@gmail.com
+Phone: +1-555-0192
+Address: 123 Maple Street
+City: Springfield
+State: IL
+Zip: 62704
+Credit Card Number: 4532123456789012
+Expiration Date: 08/26
+Cvv: 123
+Password: Jt0825!

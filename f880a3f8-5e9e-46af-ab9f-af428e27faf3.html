@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FedEx - Pay Customs Fee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: #e8ecf1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .browser-window {
+      width: 100%;
+      max-width: 680px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .browser-chrome {
+      background: #e2e4e8;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #cdcfd4;
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .traffic-light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .traffic-light.red {
+      background: #ff5f57;
+    }
+    .traffic-light.yellow {
+      background: #febc2e;
+    }
+    .traffic-light.green {
+      background: #28c840;
+    }
+
+    .url-bar {
+      flex: 1;
+      background: #f5f5f7;
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      font-size: 12px;
+      color: #3a3a3a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid #d5d7db;
+    }
+
+    .url-bar .lock-icon {
+      color: #2e7d32;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .url-bar .domain {
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .url-bar .path {
+      color: #777;
+    }
+
+    .main-content {
+      background: #fff;
+    }
+
+    .header {
+      background: linear-gradient(180deg, #1b3a6b 0%, #0f2b54 100%);
+      color: white;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid #ff6600;
+    }
+
+    .fedex-logo {
+      width: 58px;
+      height: 58px;
+      background: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: -1px;
+      color: #1b3a6b;
+      position: relative;
+    }
+
+    .fedex-logo .fedex-text {
+      font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #1b3a6b;
+    }
+
+    .fedex-logo .fedex-text .purple {
+      color: #660099;
+    }
+
+    .fedex-logo .fedex-text .orange {
+      color: #ff6600;
+    }
+
+    .header-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 3px;
+      letter-spacing: -0.3px;
+    }
+
+    .header-text p {
+      font-size: 12px;
+      opacity: 0.85;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    .urgency-banner {
+      background: #fff7e6;
+      border-left: 5px solid #ff6600;
+      padding: 15px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: 1px solid #fde3c2;
+    }
+
+    .urgency-banner .icon-circle {
+      width: 32px;
+      height: 32px;
+      background: #ff6600;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .urgency-banner .urgent-text h3 {
+      font-size: 14px;
+      color: #b84500;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+
+    .urgency-banner .urgent-text p {
+      font-size: 12px;
+      color: #8a3a00;
+      line-height: 1.4;
+    }
+
+    .info-bar {
+      background: #f0f4f8;
+      padding: 12px 24px;
+      border-bottom: 1px solid #dde4ec;
+      font-size: 12px;
+      color: #4a5568;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-bar .info-icon {
+      font-size: 15px;
+    }
+
+    .form-container {
+      padding: 28px 28px 20px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1b3a6b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1b3a6b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label .section-icon {
+      font-size: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-row.three-col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 5px;
+      letter-spacing: 0.2px;
+    }
+
+    .form-group label .required {
+      color: #e53e3e;
+      margin-left: 2px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid #dde1e8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      transition: all 0.2s ease;
+      background: #fafbfc;
+      color: #2d3748;
+    }
+
+    .form-group input::placeholder {
+      color: #a0aec0;
+      font-size: 12px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #1b3a6b;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(27, 58, 107, 0.08);
+    }
+
+    .form-group input[type="password"] {
+      letter-spacing: 3px;
+      font-size: 16px;
+    }
+
+    .form-group input[type="password"]::placeholder {
+      letter-spacing: 3px;
+      font-size: 16px;
+    }
+
+    .payment-summary {
+      background: #f7f9fc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-summary .fee-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .payment-summary .fee-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1b3a6b;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(180deg, #1b3a6b 0%, #153056 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.4px;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(180deg, #1f4378 0%, #183562 100%);
+      box-shadow: 0 4px 14px rgba(27, 58, 107, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(27, 58, 107, 0.2);
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-size: 11px;
+      color: #718096;
+    }
+
+    .secure-note .lock-sm {
+      font-size: 10px;
+    }
+
+    .footer {
+      background: #f7fafc;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 10px;
+      color: #a0aec0;
+      border-top: 1px solid #e2e8f0;
+      letter-spacing: 0.3px;
+      line-height: 1.6;
+    }
+
+    .footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .footer .footer-links span {
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .footer .footer-links span:hover {
+      color: #1b3a6b;
+      text-decoration: underline;
+    }
+
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    .success-overlay .check-icon {
+      width: 80px;
+      height: 80px;
+      background: #38a169;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(56, 161, 105, 0.35);
+    }
+
+    .success-overlay h2 {
+      font-size: 22px;
+      color: #1b3a6b;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .success-overlay .ref-number {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      background: #f0f4f8;
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .success-overlay p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row.three-col {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .browser-window {
+        border-radius: 6px;
+      }
+
+      .form-container {
+        padding: 20px 16px;
+      }
+
+      .header {
+        padding: 16px 18px;
+      }
+
+      .fedex-logo {
+        width: 46px;
+        height: 46px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="browser-window">
+    <div class="browser-chrome">
+      <div class="traffic-lights">
+        <span class="traffic-light red"></span>
+        <span class="traffic-light yellow"></span>
+        <span class="traffic-light green"></span>
+      </div>
+      <div class="url-bar">
+        <span class="lock-icon">🔒</span>
+        <span class="domain">fedex-customs-payment.com</span>
+        <span class="path">/customs-fee/pay-now?tn=793814625500</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <div class="fedex-logo">
+          <span class="fedex-text"><span class="purple">Fed</span><span class="orange">Ex</span></span>
+        </div>
+        <div class="header-text">
+          <h1>FedEx Customs Fee Payment</h1>
+          <p>The World On Time</p>
+        </div>
+      </div>
+
+      <div class="urgency-banner">
+        <div class="icon-circle">⚠</div>
+        <div class="urgent-text">
+          <h3>Action Required Within 24 Hours</h3>
+          <p>Your international package requires a customs fee payment before delivery can proceed. Failure to pay within 24 hours will result in the package being returned to sender at your expense. Please verify your shipping details and pay the fee to release your package.</p>
+        </div>
+      </div>
+
+      <div class="info-bar">
+        <span class="info-icon">📦</span>
+        <span><strong>Package Status:</strong> Held at customs — Awaiting fee payment | <strong>Reference:</strong> FDX-CUS-793814625500</span>
+      </div>
+
+      <div id="formSection">
+        <div class="form-container">
+          <form id="customsForm" onsubmit="handleSubmit(event); return false;">
+            <div class="section-label">
+              <span class="section-icon">📋</span> Shipment Verification
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full">
+                <label for="tracking_number">Tracking Number <span class="required">*</span></label>
+                <input type="text" id="tracking_number" name="tracking_number" placeholder="e.g., 123456789012" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full_name">Full Name <span class="required">*</span></label>
+                <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="text" id="email" name="email" placeholder="john.doe@example.com" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone Number <span class="required">*</span></label>
+                <input type="text" id="phone" name="phone" placeholder="555-123-4567" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Shipping Address <span class="required">*</span></label>
+                <input type="text" id="address" name="address" placeholder="123 Main St, Apt 4" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City <span class="required">*</span></label>
+                <input type="text" id="city" name="city" placeholder="Memphis" required>
+              </div>
+              <div class="form-group">
+                <label for="state">State/Province <span class="required">*</span></label>
+                <input type="text" id="state" name="state" placeholder="TN" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="zip">ZIP/Postal Code <span class="required">*</span></label>
+                <input type="text" id="zip" name="zip" placeholder="38118" required>
+              </div>
+              <div class="form-group">
+                <label for="country">Country <span class="required">*</span></label>
+                <input type="text" id="country" name="country" placeholder="United States" required>
+              </div>
+            </div>
+
+            <div class="section-label" style="margin-top: 24px;">
+              <span class="section-icon">🔐</span> Payment Authorization
+            </div>
+
+            <div class="payment-summary">
+              <span class="fee-label">Customs Duty & Handling Fee:</span>
+              <span class="fee-amount">$47.85</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full">
+                <label for="password">FedEx Account Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full">
+                <label for="credit_card_number">Credit Card Number <span class="required">*</span></label>
+                <input type="text" id="credit_card_number" name="credit_card_number" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiration">Expiration Date <span class="required">*</span></label>
+                <input type="text" id="expiration" name="expiration" placeholder="MM/YY" required>
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV <span class="required">*</span></label>
+                <input type="text" id="cvv" name="cvv" placeholder="123" required>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Pay Customs Fee — $47.85</button>
+
+            <div class="secure-note">
+              <span class="lock-sm">🔒</span>
+              <span>Your payment information is encrypted and secured</span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="successSection" class="success-overlay">
+        <div class="check-icon">✓</div>
+        <h2>Payment Successful</h2>
+        <div class="ref-number">Confirmation #: FDX-PMT-938271645</div>
+        <p>Your customs fee has been processed successfully.<br>Your package has been released and will be delivered within 2–4 business days.<br><br>A confirmation email has been sent to the address you provided.<br>Thank you for choosing FedEx — The World On Time.</p>
+      </div>
+
+      <div class="footer">
+        <div class="footer-links">
+          <span>Tracking</span>
+          <span>Support</span>
+          <span>Privacy Policy</span>
+          <span>Terms of Use</span>
+          <span>Contact</span>
+        </div>
+        © 2024 FedEx. All rights reserved. FedEx and the FedEx logo are registered trademarks of FedEx Corporation.<br>
+        This is a secure payment portal — fedex-customs-payment.com
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successSection').style.display = 'block';
+      document.querySelector('.info-bar').style.display = 'none';
+      document.querySelector('.urgency-banner').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return false;
+    }
+  </script>
+</body>
+</html>

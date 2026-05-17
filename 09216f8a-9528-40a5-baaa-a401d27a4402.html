@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Mobile - Network Upgrade Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --tmagenta: #e20074;
+            --tmagenta-dark: #c40063;
+            --tmagenta-light: #ff1a8c;
+            --bg: #f6f6f6;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --border: #e0e0e0;
+            --warning-bg: #fff8f0;
+            --warning-border: #ffc078;
+            --warning-text: #8a5d00;
+            --input-bg: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #e8e8ed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .window-wrapper {
+            width: 100%;
+            max-width: 580px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: #fff;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d5d5dc;
+            user-select: none;
+        }
+
+        .browser-circles {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-circle.red {
+            background: #ff5f57;
+        }
+        .browser-circle.yellow {
+            background: #febc2e;
+        }
+        .browser-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            flex: 1;
+            background: #fff;
+            border-radius: 7px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #3a3a3c;
+            border: 1px solid #d5d5dc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .fake-url-bar .lock-icon {
+            flex-shrink: 0;
+            font-size: 11px;
+        }
+
+        .fake-url-bar .url-text {
+            font-size: 12px;
+            color: #2d7a2e;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fake-url-bar .url-text .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .main-content {
+            background: #fff;
+        }
+
+        .header {
+            background: #fff;
+            padding: 28px 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .t-logo {
+            width: 44px;
+            height: 44px;
+            background: #e20074;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -1px;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .header-brand {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: #888;
+            font-weight: 400;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .header-divider {
+            width: 50px;
+            height: 3px;
+            background: #e20074;
+            margin: 14px auto 0;
+            border-radius: 2px;
+        }
+
+        .alert-banner {
+            background: #fffbf5;
+            border-left: 4px solid #f59e0b;
+            margin: 0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fef0d5;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #8a5d00;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .alert-banner .alert-content .alert-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #7a4e00;
+            margin-bottom: 3px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .form-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            color: #1a1a1a;
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e20074;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(226, 0, 116, 0.07);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #e20074;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #c40063;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(226, 0, 116, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(226, 0, 116, 0.25);
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 0 32px 28px;
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .footer-note span {
+            color: #e20074;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row-3 {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .form-container {
+                padding: 20px 18px 24px;
+            }
+            .header {
+                padding: 22px 18px 16px;
+            }
+            .fake-url-bar .url-text {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="window-wrapper">
+        <div class="fake-browser-bar">
+            <div class="browser-circles">
+                <span class="browser-circle red"></span>
+                <span class="browser-circle yellow"></span>
+                <span class="browser-circle green"></span>
+            </div>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span class="url-text">https://<span class="domain">tmobile-upgrade.com</span>/network/verify-device</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="header-logo">
+                    <div class="t-logo">T</div>
+                    <span class="header-brand">T-Mobile</span>
+                </div>
+                <p class="header-subtitle">Get More Done.</p>
+                <div class="header-divider"></div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Limited-Time Network Upgrade — Action Required</p>
+                    <p>Our systems indicate your device may not support our latest network enhancements. We're offering a free 5G compatible device to ensure uninterrupted service. Confirm your details within 24 hours to secure your free upgrade—supplies are limited.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <p class="form-section-title">Network Upgrade Verification</p>
+                    <form id="upgradeForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="text" id="mobile" name="mobile" placeholder="Enter your mobile number" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pin">Account PIN</label>
+                                <input type="password" id="pin" name="pin" placeholder="Enter your account PIN" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn_last4">Last 4 of SSN</label>
+                                <input type="text" id="ssn_last4" name="ssn_last4" placeholder="Last 4 digits of Social Security Number" required maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Shipping Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="City" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" placeholder="State" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zip">ZIP Code</label>
+                            <input type="text" id="zip" name="zip" placeholder="ZIP Code" required>
+                        </div>
+
+                        <p class="form-section-title" style="margin-top: 10px;">Payment Method for Shipping & Handling ($4.99)</p>
+
+                        <div class="form-group">
+                            <label for="cc_number">Credit Card Number</label>
+                            <input type="text" id="cc_number" name="cc_number" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cc_exp">Expiration</label>
+                                <input type="text" id="cc_exp" name="cc_exp" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_cvv">CVV</label>
+                                <input type="text" id="cc_cvv" name="cc_cvv" placeholder="123" required maxlength="4">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify & Claim Free Device</button>
+                    </form>
+                </div>
+                <div class="footer-note">
+                    By submitting, you agree to T-Mobile's <span>Terms & Conditions</span> and <span>Privacy Policy</span>.<br>Your free 5G device ships within 3-5 business days after verification.
+                </div>
+            </div>
+
+            <div id="successSection" class="success-overlay">
+                <div class="success-icon">✅</div>
+                <h2>Verification Successful!</h2>
+                <p>Your free 5G compatible device has been reserved. You will receive a confirmation email shortly with your shipping details. Thank you for being a valued T-Mobile customer.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.footer-note').style.display = 'none';
+            document.querySelector('.alert-banner').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

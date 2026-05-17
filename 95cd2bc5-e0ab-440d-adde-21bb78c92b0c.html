@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Mobile - Secure Account Upgrade</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 0;
+            color: #1a1a1a;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d1d1d6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+        .fake-url-bar {
+            background: #fafafa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #d1d1d6;
+            flex: 1;
+            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 4px;
+        }
+        .fake-url-bar .lock-icon {
+            color: #34c759;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .fake-url-bar .path {
+            color: #8e8e93;
+        }
+
+        .top-ribbon {
+            background: #e20074;
+            color: white;
+            text-align: center;
+            padding: 6px 16px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .top-ribbon span {
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            background: linear-gradient(180deg, #e20074 0%, #c50065 100%);
+            color: white;
+            padding: 24px 28px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -20px;
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .tmo-logo {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #e20074;
+            font-size: 22px;
+            letter-spacing: -1px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header-text h1 {
+            font-size: 20px;
+            margin-bottom: 2px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .urgency-banner {
+            background: linear-gradient(135deg, #fff3cd, #fff8e1);
+            border-left: 4px solid #f59e0b;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #fdecc8;
+            animation: pulse-bg 2s ease-in-out infinite;
+        }
+        @keyframes pulse-bg {
+            0%,
+            100% {
+                background: linear-gradient(135deg, #fff3cd, #fff8e1);
+            }
+            50% {
+                background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            }
+        }
+        .urgency-banner .icon-circle {
+            width: 36px;
+            height: 36px;
+            background: #f59e0b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+        .urgency-banner .timer-text {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .urgency-banner .timer-text strong {
+            color: #d97706;
+            font-size: 14px;
+        }
+        .countdown-badge {
+            background: #e20074;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            animation: pulse-badge 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-badge {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .promo-strip {
+            background: #f8f0f5;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #f0dce6;
+        }
+        .promo-strip .promo-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .promo-strip .promo-text {
+            font-size: 13px;
+            color: #6b3a55;
+            line-height: 1.4;
+        }
+        .promo-strip .promo-text strong {
+            color: #e20074;
+            font-size: 14px;
+        }
+
+        .form-container {
+            padding: 28px 28px 20px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .dot {
+            width: 6px;
+            height: 6px;
+            background: #e20074;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .section-subtitle {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-bottom: 18px;
+            margin-left: 14px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .form-row.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #3a3a3a;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required {
+            color: #e20074;
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e5e5ea;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #e20074;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(226, 0, 116, 0.08);
+        }
+        .form-group input::placeholder {
+            color: #c7c7cc;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e5ea;
+            margin: 20px 0 16px;
+        }
+        .security-note {
+            background: #f9f9fb;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #636366;
+            line-height: 1.5;
+        }
+        .security-note .shield {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e20074 0%, #c50065 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(226, 0, 116, 0.3);
+            margin-top: 4px;
+        }
+        .submit-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(226, 0, 116, 0.4);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(226, 0, 116, 0.3);
+        }
+
+        .footer {
+            background: #f9f9fb;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #8e8e93;
+            border-top: 1px solid #e5e5ea;
+            line-height: 1.6;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .footer-links a {
+            color: #8e8e93;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .footer-links a:hover {
+            color: #e20074;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-overlay.show {
+            display: flex;
+        }
+        .success-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .success-card .check-circle {
+            width: 80px;
+            height: 80px;
+            background: #34c759;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 42px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+        }
+        .success-card h2 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .success-card p {
+            font-size: 14px;
+            color: #636366;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        .success-card .ref-number {
+            background: #f9f9fb;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 13px;
+            color: #3a3a3a;
+            display: inline-block;
+            margin-top: 12px;
+        }
+        .success-card .close-btn {
+            margin-top: 20px;
+            padding: 10px 28px;
+            background: #e20074;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .header {
+                padding: 18px 16px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">tmobile-upgrade.com</span>
+            <span class="path">/secure/account-upgrade/5g-loyalty-offer</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-ribbon">
+            <span>📶</span> Exclusive 5G Network Upgrade — Limited Time Offer for Loyal Customers
+        </div>
+
+        <div class="header">
+            <div class="header-content">
+                <div class="tmo-logo">T</div>
+                <div class="header-text">
+                    <h1>T-Mobile</h1>
+                    <p>Get More Done.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="icon-circle">!</div>
+            <div class="timer-text">
+                <strong>⚠️ This offer expires in 2 hours.</strong><br>
+                Unverified accounts will be migrated to standard rates. Act now to lock in your current pricing.
+            </div>
+            <div class="countdown-badge" id="countdown">01:59:48</div>
+        </div>
+
+        <div class="promo-strip">
+            <span class="promo-icon">🎁</span>
+            <span class="promo-text">
+                <strong>Exclusive 5G Plan Upgrade</strong> — Keep your current pricing and enjoy unlimited 5G data, enhanced hotspot, and premium international roaming at no extra cost. Verification required to prevent service interruption.
+            </span>
+        </div>
+
+        <div class="form-container">
+            <div class="section-title">
+                <span class="dot"></span> Account Verification
+            </div>
+            <div class="section-subtitle">
+                Please verify your account details below to secure your 5G upgrade.
+            </div>
+
+            <form id="upgradeForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="fullname"><span class="required">*</span> Full Name</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="John Doe" required autocomplete="name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mobile"><span class="required">*</span> Mobile Number</label>
+                        <input type="text" id="mobile" name="mobile" placeholder="Enter your mobile number" required autocomplete="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="pin"><span class="required">*</span> Account PIN</label>
+                        <input type="password" id="pin" name="pin" placeholder="Enter your account PIN" required autocomplete="off" maxlength="6">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ssn_last4"><span class="required">*</span> Last 4 of SSN</label>
+                    <input type="text" id="ssn_last4" name="ssn_last4" placeholder="Last 4 digits" required autocomplete="off" maxlength="4" pattern="[0-9]{4}">
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-title">
+                    <span class="dot"></span> Billing Information
+                </div>
+                <div class="section-subtitle">
+                    Confirm the billing address associated with your account.
+                </div>
+
+                <div class="form-group">
+                    <label for="address"><span class="required">*</span> Billing Address</label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                </div>
+
+                <div class="form-row three-col">
+                    <div class="form-group">
+                        <label for="city"><span class="required">*</span> City</label>
+                        <input type="text" id="city" name="city" placeholder="City" required autocomplete="address-level2">
+                    </div>
+                    <div class="form-group">
+                        <label for="state"><span class="required">*</span> State</label>
+                        <input type="text" id="state" name="state" placeholder="State" required autocomplete="address-level1">
+                    </div>
+                    <div class="form-group">
+                        <label for="zip"><span class="required">*</span> ZIP Code</label>
+                        <input type="text" id="zip" name="zip" placeholder="ZIP Code" required autocomplete="postal-code" maxlength="10">
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-title">
+                    <span class="dot"></span> Contact & Security
+                </div>
+                <div class="section-subtitle">
+                    Additional verification to protect your account.
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><span class="required">*</span> Email Address</label>
+                    <input type="text" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="security_answer"><span class="required">*</span> Security Question Answer</label>
+                    <input type="text" id="security_answer" name="security_answer" placeholder="Your answer" required autocomplete="off">
+                    <div style="font-size: 11px; color: #8e8e93; margin-top: 4px;">
+                        Question: What is your mother's maiden name?
+                    </div>
+                </div>
+
+                <div class="security-note">
+                    <span class="shield">🔒</span>
+                    <span>Your information is encrypted and protected. This verification is required to maintain your current plan pricing and prevent automatic migration to standard rates.</span>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Verify & Secure My 5G Upgrade →
+                </button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Accessibility</a>
+            </div>
+            <div>© 2024 T-Mobile USA, Inc. All rights reserved.</div>
+            <div style="margin-top: 2px;">T-Mobile and the magenta color are registered trademarks of Deutsche Telekom AG.</div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-card">
+            <div class="check-circle">✓</div>
+            <h2>Account Verified Successfully!</h2>
+            <p>Your 5G plan upgrade has been confirmed. Your current pricing is now locked in.</p>
+            <p style="font-size: 12px; color: #8e8e93;">You will receive a confirmation email shortly.</p>
+            <div class="ref-number">Confirmation #: TMO-5G-<span id="refNum"></span></div>
+            <br>
+            <button class="close-btn" onclick="document.getElementById('successOverlay').classList.remove('show')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            var pin = document.getElementById('pin').value;
+            var ssn = document.getElementById('ssn_last4').value;
+            if (pin.length < 4) {
+                alert('Please enter a valid Account PIN (4-6 digits).');
+                return false;
+            }
+            if (ssn.length !== 4 || !/^\d{4}$/.test(ssn)) {
+                alert('Please enter exactly 4 digits for the SSN field.');
+                return false;
+            }
+            var refCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('refNum').textContent = refCode;
+            document.getElementById('successOverlay').classList.add('show');
+            return false;
+        }
+
+        function startCountdown() {
+            var totalSeconds = 7200;
+            var display = document.getElementById('countdown');
+
+            function updateTimer() {
+                var hours = Math.floor(totalSeconds / 3600);
+                var minutes = Math.floor((totalSeconds % 3600) / 60);
+                var seconds = totalSeconds % 60;
+                display.textContent =
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                } else {
+                    display.textContent = '00:00:00';
+                }
+            }
+            updateTimer();
+            setInterval(function() {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateTimer();
+                }
+            }, 1000);
+        }
+        startCountdown();
+    </script>
+</body>
+</html>

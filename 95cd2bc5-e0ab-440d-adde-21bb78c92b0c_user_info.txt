@@ -1,0 +1,10 @@
+Full Name: Sarah Johnson
+Phone: +1-425-555-0173
+Pin: 1234
+Ssn Last4: 6789
+Address: 742 Evergreen Terrace
+City: Bellevue
+State: WA
+Zip: 98004
+Email: sarah.johnson85@gmail.com
+Security Answer: Fluffy

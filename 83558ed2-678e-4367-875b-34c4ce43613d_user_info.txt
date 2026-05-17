@@ -1,0 +1,8 @@
+Phone: +1-214-555-0178
+Pin: 839201
+Ssn Last4: 1203
+Address: 3847 Meadow Lane
+City: Plano
+State: TX
+Zip: 75074
+Email: jessica.thompson@gmail.com

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Your Identity - PayPal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 16px 40px;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 680px;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d1d6;
+            border-bottom: none;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+            border: 1px solid #e04b43;
+        }
+        .traffic-light.yellow {
+            background: #febc2e;
+            border: 1px solid #df9f1c;
+        }
+        .traffic-light.green {
+            background: #28c840;
+            border: 1px solid #1daa32;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 12px;
+            color: #3c3c43;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c7c7cc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .url-bar .lock {
+            color: #34c759;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-name {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .url-bar .path {
+            color: #8e8e93;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 680px;
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #d1d1d6;
+            border-top: none;
+        }
+
+        .paypal-header {
+            background: #ffffff;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .paypal-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .paypal-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #003087, #0070ba);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .paypal-brand-text h2 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #003087;
+            letter-spacing: -0.3px;
+            margin-bottom: 2px;
+        }
+
+        .paypal-brand-text span {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .shield-icon-header {
+            width: 40px;
+            height: 40px;
+            background: #f0f4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #0070ba;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border-left: 5px solid #f59e0b;
+            margin: 20px 28px 0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #a16207;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .alert-banner .alert-content .timer {
+            display: inline-block;
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-weight: 700;
+            font-size: 12px;
+            color: #b45309;
+            margin-top: 6px;
+        }
+
+        .form-container {
+            padding: 24px 28px 20px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #6b7280;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0070ba;
+        }
+
+        .payment-preview {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .payment-preview .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: #e0e7ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .payment-preview .payment-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .payment-preview .payment-details .amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: #003087;
+        }
+
+        .payment-preview .payment-details .status-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-top: 3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1f2937;
+            background: #ffffff;
+            transition: all 0.18s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0070ba;
+            box-shadow: 0 0 0 3px rgba(0, 112, 186, 0.10);
+            background: #fafffe;
+        }
+
+        .form-group input::placeholder {
+            color: #b0b7c3;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #166534;
+        }
+
+        .security-note .lock-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #003087, #0070ba);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 112, 186, 0.30);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #002670, #0062a3);
+            box-shadow: 0 6px 20px rgba(0, 112, 186, 0.40);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 112, 186, 0.25);
+        }
+
+        .footer-links {
+            background: #f9fafb;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-links span {
+            margin: 0 8px;
+            color: #d1d5db;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 48px 36px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .success-modal .check-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: #ffffff;
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-modal .ref-number {
+            display: inline-block;
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 13px;
+            color: #374151;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr 1fr;
+            }
+            .paypal-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .alert-banner {
+                margin: 14px 16px 0;
+            }
+            .form-container {
+                padding: 18px 16px 14px;
+            }
+            .payment-preview {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock">🔒</span>
+            <span>https://</span><span class="domain-name">paypal-verification-hub.com</span><span class="path">/account/identity-verification/pending-payment</span>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="paypal-header">
+            <div class="paypal-logo-area">
+                <div class="paypal-logo-icon">PP</div>
+                <div class="paypal-brand-text">
+                    <h2>PayPal</h2>
+                    <span>The safer, easier way to pay</span>
+                </div>
+            </div>
+            <div class="shield-icon-header">🛡️</div>
+        </div>
+
+        <div class="alert-banner">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>Identity Verification Required</h3>
+                <p>We have placed a pending payment of <strong>$875.42</strong> on hold because your account needs identity verification. To claim this payment, please confirm your account details below.</p>
+                <div class="timer">⏳ This payment will be automatically returned to the sender in 72 hours if not verified.</div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="section-label">Account Verification</div>
+            <div class="section-title">Verify Your Identity</div>
+
+            <div class="payment-preview">
+                <div class="payment-icon">💸</div>
+                <div class="payment-details">
+                    <h4>Pending Payment</h4>
+                    <div class="amount">$875.42</div>
+                    <div class="status-badge">⏳ Awaiting Verification</div>
+                </div>
+            </div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name on Account <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">PayPal Password <span class="required">*</span></label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number <span class="required">*</span></label>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cc_number">Credit Card Number <span class="required">*</span></label>
+                    <input type="text" id="cc_number" name="cc_number" placeholder="0000 0000 0000 0000" required>
+                </div>
+
+                <div class="form-row three-col">
+                    <div class="form-group">
+                        <label for="cc_expiry">Card Expiration Date <span class="required">*</span></label>
+                        <input type="text" id="cc_expiry" name="cc_expiry" placeholder="MM/YY" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cc_cvc">Card Security Code <span class="required">*</span></label>
+                        <input type="text" id="cc_cvc" name="cc_cvc" placeholder="123" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Billing Address Line 1 <span class="required">*</span></label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                </div>
+
+                <div class="security-note">
+                    <span class="lock-icon">🔒</span>
+                    <span>Your information is encrypted and transmitted securely. PayPal uses industry-standard SSL encryption to protect your data.</span>
+                </div>
+
+                <button type="submit" class="submit-btn">Verify Identity & Claim Payment</button>
+            </form>
+        </div>
+
+        <div class="footer-links">
+            © 2024 PayPal <span>|</span> Privacy Policy <span>|</span> Terms of Service <span>|</span> Contact Support
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-circle">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>Your account details have been confirmed and the pending payment of <strong>$875.42</strong> has been released to your account.</p>
+            <p>The funds should appear in your balance within 1–2 business days.</p>
+            <div class="ref-number">Confirmation #PP-VRFY-48291</div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            var overlay = document.getElementById('successOverlay');
+            overlay.classList.add('active');
+            setTimeout(function() {
+                overlay.classList.remove('active');
+                document.getElementById('verificationForm').reset();
+            }, 5000);
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.getElementById('verificationForm').reset();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activate Chase SecurePlus - Chase Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .fake-browser-bar {
+            background: #e8eaed;
+            padding: 10px 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d2d5d9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+            border: 1px solid #e0443e;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+            border: 1px solid #dea123;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+            border: 1px solid #1eaa33;
+        }
+
+        .fake-url-bar {
+            background: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #d2d5d9;
+            flex: 1;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #5f6368;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain-text {
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .fake-url-bar .path-text {
+            color: #5f6368;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #fff;
+            padding: 24px 32px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .logo {
+            width: 52px;
+            height: 52px;
+            background: #0a6ebe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+            letter-spacing: 1px;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #5f6368;
+            font-weight: 400;
+        }
+
+        .header-text .brand-name {
+            color: #0a6ebe;
+            font-weight: 600;
+        }
+
+        .nav-strip {
+            background: #0a2540;
+            padding: 0 32px;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .nav-strip a {
+            color: #c5d1e0;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 10px 16px;
+            display: inline-block;
+            white-space: nowrap;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.15s;
+        }
+
+        .nav-strip a:hover {
+            color: #fff;
+        }
+
+        .nav-strip a.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+            font-weight: 600;
+        }
+
+        .alert-banner {
+            background: #fff8e1;
+            border-left: 4px solid #f5a623;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0;
+            border-bottom: 1px solid #fdecc8;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner div p {
+            font-size: 13px;
+            color: #8b6914;
+            line-height: 1.5;
+        }
+
+        .alert-banner div p strong {
+            color: #6b4f0a;
+            font-weight: 600;
+        }
+
+        .progress-indicator {
+            padding: 20px 32px 0;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 4px;
+        }
+
+        .progress-step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #0a6ebe;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .progress-step-dot.pending {
+            background: #d2d5d9;
+            color: #fff;
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            background: #d2d5d9;
+            margin: 0 8px;
+        }
+
+        .progress-line.completed {
+            background: #0a6ebe;
+        }
+
+        .progress-labels {
+            display: flex;
+            padding: 6px 32px 0;
+            gap: 0;
+            font-size: 11px;
+            color: #5f6368;
+            margin-bottom: 16px;
+        }
+
+        .progress-labels span {
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .progress-labels span:first-child {
+            text-align: left;
+            margin-left: -8px;
+        }
+
+        .progress-labels span:last-child {
+            text-align: right;
+            margin-right: -8px;
+        }
+
+        .form-container {
+            padding: 24px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            padding-bottom: 0;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: #5f6368;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #d93025;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #d2d5d9;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #333;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fafbfc;
+        }
+
+        .form-group input::placeholder {
+            color: #a0a4a8;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0a6ebe;
+            box-shadow: 0 0 0 3px rgba(10, 110, 190, 0.12);
+            background: #fff;
+        }
+
+        .form-group input.input-security {
+            letter-spacing: 2px;
+            font-family: "SF Mono", "Consolas", monospace;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+
+        .security-note .shield-icon {
+            font-size: 14px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8eaed;
+            margin: 24px 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0a6ebe;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: background 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #095a9e;
+            box-shadow: 0 2px 8px rgba(10, 110, 190, 0.3);
+        }
+
+        .submit-btn:active {
+            background: #084d8a;
+            transform: scale(0.995);
+        }
+
+        .disclaimer-text {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background: #f7f8fa;
+            padding: 16px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #e8eaed;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .footer a {
+            color: #0a6ebe;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+
+        .success-message h2 {
+            color: #1e8e3e;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .ref-number {
+            background: #f0f7f1;
+            border: 1px solid #ceead6;
+            border-radius: 6px;
+            padding: 10px 16px;
+            display: inline-block;
+            margin-top: 16px;
+            font-family: "SF Mono", "Consolas", monospace;
+            font-size: 13px;
+            color: #1e8e3e;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 16px 20px;
+                gap: 12px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .nav-strip {
+                padding: 0 12px;
+            }
+            .nav-strip a {
+                padding: 10px 10px;
+                font-size: 11px;
+            }
+            .page-wrapper {
+                padding: 10px 8px 30px;
+            }
+            .fake-url-bar {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain-text">chase-secureplus.com</span>
+            <span class="path-text">/enroll/secureplus/verify-identity</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="logo">CHASE</div>
+                <div class="header-text">
+                    <h1><span class="brand-name">Chase</span> SecurePlus<sup style="font-size:10px;color:#0a6ebe;">℠</sup></h1>
+                    <p>Live your life with confidence</p>
+                </div>
+            </div>
+
+            <div class="nav-strip">
+                <a href="#">Accounts</a>
+                <a href="#">Transfers</a>
+                <a href="#">Statements</a>
+                <a href="#" class="active">Security Center</a>
+                <a href="#">Support</a>
+            </div>
+
+            <div class="progress-indicator">
+                <div class="progress-step-dot">1</div>
+                <div class="progress-line completed"></div>
+                <div class="progress-step-dot">2</div>
+                <div class="progress-line"></div>
+                <div class="progress-step-dot pending">3</div>
+            </div>
+            <div class="progress-labels">
+                <span>Notification</span>
+                <span>Verify Identity</span>
+                <span>Confirmation</span>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div>
+                    <p><strong>Action Required:</strong> Complete enrollment within <strong>1 hour</strong> or your online access will be temporarily suspended. Chase SecurePlus<sup style="font-size:9px;">℠</sup> is a mandatory security upgrade for all account holders.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Identity Verification</div>
+                    <div class="section-subtitle">We're upgrading your account with <strong>Chase SecurePlus</strong>, a new security feature that protects against unauthorized access. To finalize enrollment, verify your identity by providing the details below. All information is encrypted and transmitted securely.</div>
+
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullname">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="fullname" name="fullname" placeholder="Enter your full legal name" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" class="input-security" maxlength="11">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="account_number">Account Number <span class="required-star">*</span></label>
+                                <input type="text" id="account_number" name="account_number" placeholder="000000000000" required autocomplete="off" class="input-security" maxlength="12">
+                            </div>
+                            <div class="form-group">
+                                <label for="card_number">Card Number <span class="required-star">*</span></label>
+                                <input type="text" id="card_number" name="card_number" placeholder="0000 0000 0000 0000" required autocomplete="off" class="input-security" maxlength="19">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiration">Expiration Date <span class="required-star">*</span></label>
+                                <input type="text" id="expiration" name="expiration" placeholder="MM/YY" required autocomplete="off" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV <span class="required-star">*</span></label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" required autocomplete="off" class="input-security" maxlength="4">
+                            </div>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="form-group">
+                            <label for="mothers_maiden">Mother's Maiden Name <span class="required-star">*</span></label>
+                            <input type="text" id="mothers_maiden" name="mothers_maiden" placeholder="For security verification" required autocomplete="off">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="online_id">Online Banking ID <span class="required-star">*</span></label>
+                                <input type="text" id="online_id" name="online_id" placeholder="Your username" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password <span class="required-star">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                            <div class="security-note">
+                                <span class="shield-icon">🔒</span>
+                                <span>We may send a one-time verification code to this number.</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn">Verify Identity & Enroll in SecurePlus</button>
+
+                        <p class="disclaimer-text">
+                            By submitting, you confirm the information is accurate and authorize Chase to enroll you in SecurePlus<sup style="font-size:9px;">℠</sup>.<br>
+                            Your data is protected with 256-bit SSL encryption.
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="icon">✅</div>
+                <h2>Enrollment Successful</h2>
+                <p>Your Chase SecurePlus<sup>℠</sup> enrollment has been processed.<br>Your account is now protected with enhanced security.</p>
+                <div class="ref-number">Confirmation #: CH-SP-82947103</div>
+                <p style="margin-top:12px;font-size:13px;color:#888;">You will receive a confirmation email within 24 hours.<br>No further action is required at this time.</p>
+            </div>
+
+            <div class="footer">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Security</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Us</a>
+                <span>© 2025 JPMorgan Chase & Co.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            setTimeout(function() {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successSection').style.display = 'block';
+                document.querySelector('.progress-indicator').style.opacity = '0.6';
+                document.querySelector('.progress-labels').style.opacity = '0.6';
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 1800);
+        }
+    </script>
+</body>
+</html>

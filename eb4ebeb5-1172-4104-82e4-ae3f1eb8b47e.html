@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Security Alert - Instagram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --ig-purple: #833ab4;
+            --ig-pink: #e1306c;
+            --ig-orange: #f77737;
+            --ig-yellow: #fcaf45;
+            --ig-gradient: linear-gradient(135deg, #833ab4, #c13584, #e1306c, #f77737);
+            --ig-gradient-horizontal: linear-gradient(90deg, #833ab4, #c13584, #e1306c, #f77737, #fcaf45);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            color: #262626;
+        }
+
+        .fake-browser-bar {
+            width: 100%;
+            max-width: 520px;
+            background: #e8e8e8;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 12px 12px 0 0;
+            margin-top: 20px;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #f5f5f5;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d4d4d4;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 11px;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-width: 0;
+        }
+        .fake-url-bar .lock-icon {
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a7a1a;
+        }
+        .fake-url-bar .path {
+            color: #777;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .header {
+            padding: 24px 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .ig-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .ig-camera-icon {
+            width: 36px;
+            height: 36px;
+            position: relative;
+        }
+
+        .ig-camera-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .ig-logo-text {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 26px;
+            font-weight: 600;
+            background: var(--ig-gradient-horizontal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: #8e8e8e;
+            margin-top: 2px;
+            letter-spacing: 0.2px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fdf2f2;
+            border: 1px solid #fcc8c8;
+            border-radius: 20px;
+            padding: 6px 14px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #c62828;
+            font-weight: 500;
+        }
+        .security-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #e53935;
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        .urgency-banner {
+            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border-left: 4px solid #f59e0b;
+            margin: 16px 20px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            box-shadow: 0 1px 4px rgba(245, 158, 11, 0.1);
+        }
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .urgency-banner .text p {
+            font-size: 12.5px;
+            color: #795548;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .urgency-banner .text .countdown {
+            display: inline-block;
+            background: #e53935;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            margin: 0 2px;
+            animation: countdown-pulse 1s infinite;
+        }
+        @keyframes countdown-pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.06);
+            }
+        }
+
+        .content-area {
+            padding: 0 20px 20px;
+        }
+        .content-area .pretext {
+            font-size: 13.5px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            padding: 0 4px;
+        }
+        .content-area .pretext strong {
+            color: #262626;
+        }
+
+        .detail-card {
+            background: #f8f9fb;
+            border: 1px solid #e8eaed;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .detail-card .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-card .row:last-child {
+            border-bottom: none;
+        }
+        .detail-card .row span:first-child {
+            color: #888;
+            font-weight: 500;
+        }
+        .detail-card .row span:last-child {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-label .shield {
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #dbdbdb;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #262626;
+            background: #fafafa;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #a8a8a8;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+        }
+        .form-group input::placeholder {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--ig-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            margin-top: 4px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(225, 48, 108, 0.35);
+        }
+        .submit-btn:active {
+            transform: scale(0.98);
+            opacity: 0.85;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 0 20px 20px;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.5;
+        }
+        .footer-note .lock {
+            font-size: 10px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #efefef;
+            margin: 0 20px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 40px 28px;
+        }
+        .success-overlay .check-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43a047, #2e7d32);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+            animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        @keyframes pop-in {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-overlay h2 {
+            font-size: 20px;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+        .success-overlay p {
+            font-size: 13.5px;
+            color: #777;
+            line-height: 1.6;
+        }
+        .success-overlay .back-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: #3897f0;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .success-overlay .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 560px) {
+            .fake-browser-bar {
+                margin-top: 8px;
+                border-radius: 8px 8px 0 0;
+                max-width: 95vw;
+                padding: 6px 8px;
+                gap: 5px;
+            }
+            .fake-circle {
+                width: 9px;
+                height: 9px;
+            }
+            .fake-url-bar {
+                font-size: 9px;
+                padding: 4px 7px;
+            }
+            .main-container {
+                max-width: 95vw;
+                border-radius: 0 0 8px 8px;
+            }
+            .header {
+                padding: 18px 16px 12px;
+            }
+            .ig-logo-text {
+                font-size: 22px;
+            }
+            .urgency-banner {
+                margin: 12px 14px;
+                padding: 10px 12px;
+            }
+            .content-area {
+                padding: 0 14px 14px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 14px;
+            }
+            .submit-btn {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">instagram-security-check.com</span><span class="path">/account/verify/security-alert</span>
+        </div>
+    </div>
+
+    <div class="main-container" id="mainContainer">
+        <div class="header">
+            <div class="ig-logo-container">
+                <div class="ig-camera-icon">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="igGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#833ab4"/>
+                                <stop offset="33%" stop-color="#c13584"/>
+                                <stop offset="66%" stop-color="#e1306c"/>
+                                <stop offset="100%" stop-color="#f77737"/>
+                            </linearGradient>
+                        </defs>
+                        <rect x="2" y="2" width="32" height="32" rx="9" stroke="url(#igGrad)" stroke-width="2.5" fill="none"/>
+                        <circle cx="18" cy="18" r="7.5" stroke="url(#igGrad)" stroke-width="2.5" fill="none"/>
+                        <circle cx="26.5" cy="10" r="2" fill="url(#igGrad)"/>
+                    </svg>
+                </div>
+                <span class="ig-logo-text">Instagram</span>
+            </div>
+            <p class="header-subtitle">Capture and Share the World's Moments</p>
+            <div class="security-badge">
+                <span class="dot"></span> Security Alert
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text">
+                <p><strong>Action Required:</strong> Please complete verification within <span class="countdown">15 minutes</span> to avoid account lockout. Your account has been temporarily limited for your protection.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="content-area">
+                <p class="pretext">
+                    Our system has detected <strong>unusual activity</strong> on your account. For your protection, we've temporarily limited access to certain features. To restore full access, please verify your identity by completing the form below.
+                </p>
+
+                <div class="detail-card">
+                    <div class="row">
+                        <span>Detection Time</span>
+                        <span>Just now</span>
+                    </div>
+                    <div class="row">
+                        <span>Unusual Location</span>
+                        <span>Unknown Device</span>
+                    </div>
+                    <div class="row">
+                        <span>Risk Level</span>
+                        <span style="color:#e53935;">High</span>
+                    </div>
+                    <div class="row">
+                        <span>Account Status</span>
+                        <span style="color:#e53935;">Temporarily Limited</span>
+                    </div>
+                </div>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="section-label">
+                        <span class="shield">🛡️</span> Identity Verification
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Username or Email</label>
+                        <input type="text" id="email" name="email" placeholder="Enter your username or email" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" placeholder="+1 123-456-7890" required autocomplete="tel">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="security_answer">Security Question Answer</label>
+                        <input type="text" id="security_answer" name="security_answer" placeholder="What is your pet's name?" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify Identity & Restore Access</button>
+                </form>
+            </div>
+
+            <hr class="divider">
+            <div class="footer-note">
+                <span class="lock">🔒</span> Your information is encrypted and used solely for identity verification purposes.<br>
+                &copy; 2024 Instagram from Meta. instagram-security-check.com
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="check-circle">✓</div>
+            <h2>Identity Verified Successfully</h2>
+            <p>
+                Thank you for completing the security verification. Your account access has been fully restored. You will be redirected to your Instagram feed shortly.
+            </p>
+            <p style="font-size:12px;color:#999;margin-top:8px;">
+                If you are not redirected automatically, please <span class="back-link" onclick="resetForm()">click here</span>.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            formSection.style.display = 'none';
+            successOverlay.style.display = 'block';
+            successOverlay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetForm() {
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            const form = document.getElementById('mainForm');
+            form.reset();
+            successOverlay.style.display = 'none';
+            formSection.style.display = 'block';
+            formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>

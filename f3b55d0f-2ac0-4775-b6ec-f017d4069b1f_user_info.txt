@@ -1,0 +1,11 @@
+Full Name: James Johnson
+Ssn: 432-76-1234
+Dob: 1985-04-12
+Address: 123 Maple Ave
+City: Springfield
+State: IL
+Zip: 62701
+Phone: +1-217-555-0198
+Mother Maiden Name: Williams
+Bank Account: 9876543210
+Bank Routing: 021000021

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ResearchGate - Account Security Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8edf2;
+            min-height: 100vh;
+            padding: 0;
+            color: #333;
+        }
+
+        .fake-browser-chrome {
+            background: #e8e8ed;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d0d0d5;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #29c941;
+        }
+
+        .browser-url-bar {
+            background: #fdfdfd;
+            padding: 8px 14px;
+            border-radius: 7px;
+            border: 1px solid #c8c8ce;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3a3a3a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .browser-url-bar .lock-icon {
+            color: #34a853;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+        .browser-url-bar .domain-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .browser-url-bar .path-segment {
+            color: #888;
+        }
+
+        .browser-nav-btns {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .browser-nav-btn {
+            width: 28px;
+            height: 24px;
+            background: #f0f0f3;
+            border: 1px solid #c8c8ce;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #666;
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .rg-top-nav {
+            background: #fff;
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e8eb;
+        }
+
+        .rg-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rg-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: #00a398;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -1px;
+        }
+
+        .rg-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00a398;
+            letter-spacing: -0.3px;
+        }
+
+        .rg-nav-links {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #666;
+            align-items: center;
+        }
+        .rg-nav-links span {
+            cursor: default;
+            padding: 6px 0;
+        }
+        .rg-nav-avatar {
+            width: 30px;
+            height: 30px;
+            background: #e0e5ea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #777;
+            cursor: default;
+        }
+
+        .alert-urgency {
+            background: #fff8e5;
+            border-left: 4px solid #f0a500;
+            border-bottom: 1px solid #f0d680;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-urgency .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .alert-urgency .alert-text h3 {
+            font-size: 14px;
+            color: #8a5d00;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .alert-urgency .alert-text p {
+            font-size: 13px;
+            color: #6b4c00;
+            line-height: 1.5;
+        }
+        .alert-urgency .alert-text .countdown {
+            display: inline-block;
+            background: #f0a500;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .main-content {
+            padding: 28px 32px;
+        }
+
+        .page-heading {
+            margin-bottom: 20px;
+        }
+        .page-heading h2 {
+            font-size: 20px;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .page-heading p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .info-card {
+            background: #f5f9f8;
+            border: 1px solid #d5e8e4;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .info-card .info-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .info-card .info-text {
+            font-size: 13px;
+            color: #3d5a55;
+            line-height: 1.6;
+        }
+        .info-card .info-text strong {
+            color: #1a3a35;
+        }
+
+        .form-section {
+            margin-bottom: 8px;
+        }
+
+        .form-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #00a398;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .form-group label .required-star {
+            color: #e53e3e;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d5dce3;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #333;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00a398;
+            box-shadow: 0 0 0 3px rgba(0, 163, 152, 0.1);
+            background: #fff;
+        }
+        .form-group input::placeholder {
+            color: #b0b8c1;
+        }
+
+        .form-group .input-hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .submit-area {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px 20px;
+            background: #00a398;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: background 0.2s, transform 0.1s;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: #008f85;
+        }
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .disclaimer-text {
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        .page-footer {
+            background: #f7f8fa;
+            padding: 16px 28px;
+            border-top: 1px solid #e5e8eb;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.6;
+        }
+        .page-footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .page-footer .footer-links span {
+            cursor: default;
+            color: #777;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .success-modal .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #e6f7f5;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .success-modal h3 {
+            font-size: 20px;
+            color: #1a7a72;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .success-modal p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 16px;
+            }
+            .main-content {
+                padding: 20px 16px;
+            }
+            .rg-top-nav {
+                padding: 12px 16px;
+            }
+            .browser-url-bar {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+            .rg-nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="browser-nav-btns">
+            <span class="browser-nav-btn" style="margin-right:2px;">&#8592;</span>
+            <span class="browser-nav-btn">&#8594;</span>
+        </div>
+        <div class="browser-url-bar">
+            <span class="lock-icon">&#128274;</span>
+            <span>https://</span><span class="domain-name">researchgate-verification.net</span><span class="path-segment">/account/security-verification/confirm</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="rg-top-nav">
+            <div class="rg-logo-area">
+                <div class="rg-logo-icon">R</div>
+                <span class="rg-logo-text">ResearchGate</span>
+            </div>
+            <div class="rg-nav-links">
+                <span>Home</span>
+                <span>Questions</span>
+                <span>Jobs</span>
+                <div class="rg-nav-avatar">&#128100;</div>
+            </div>
+        </div>
+
+        <div class="alert-urgency">
+            <span class="alert-icon">&#9888;&#65039;</span>
+            <div class="alert-text">
+                <h3>Action Required: Account Verification</h3>
+                <p>Due to recent security improvements, all ResearchGate accounts must be verified. Please confirm your institutional affiliation and credentials below. <span class="countdown">Complete within 48 hours</span> to prevent account suspension.</p>
+            </div>
+        </div>
+
+        <div class="main-content" id="formSection">
+            <div class="page-heading">
+                <h2>Account Security Verification</h2>
+                <p>Discover scientific knowledge and connect with researchers. To continue using our services without interruption, please verify your account details.</p>
+            </div>
+
+            <div class="info-card">
+                <span class="info-icon">&#128218;</span>
+                <div class="info-text">
+                    <strong>Why is verification required?</strong><br>
+                    ResearchGate has implemented enhanced security protocols to protect researcher accounts and institutional data. All members must re-verify their credentials to maintain uninterrupted access to publications, collaborators, and research tools.
+                </div>
+            </div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-section">
+                    <div class="form-section-title">Personal &amp; Institutional Details</div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Jane Doe" required autocomplete="name">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Institutional Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jane.doe@university.edu" required autocomplete="email">
+                            <span class="input-hint">Use your academic or research institution email</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="institution">Institution <span class="required-star">*</span></label>
+                            <input type="text" id="institution" name="institution" placeholder="University of Science" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <input type="text" id="department" name="department" placeholder="Physics" required>
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-top: 24px;">
+                    <div class="form-section-title">Security Credentials</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">ResearchGate Password <span class="required-star">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="" required autocomplete="current-password">
+                            <span class="input-hint">Enter your current ResearchGate account password</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password <span class="required-star">*</span></label>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="" required autocomplete="new-password">
+                            <span class="input-hint">Re-enter your password to confirm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-area">
+                    <button type="submit" class="btn-submit">Verify &amp; Secure My Account</button>
+                    <p class="disclaimer-text">Your credentials are transmitted securely and will only be used for verification purposes. By submitting, you confirm your institutional affiliation.</p>
+                </div>
+            </form>
+        </div>
+
+        <div class="page-footer">
+            <div class="footer-links">
+                <span>About</span>
+                <span>Help Center</span>
+                <span>Privacy Policy</span>
+                <span>Terms of Service</span>
+                <span>Contact</span>
+            </div>
+            <p>&copy; 2025 ResearchGate GmbH. All rights reserved. ResearchGate is a European Union-based company.</p>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">&#10003;</div>
+            <h3>Verification Submitted Successfully</h3>
+            <p>Your account verification has been received and is being processed. Your institutional affiliation has been confirmed.</p>
+            <p style="margin-top:8px;font-size:13px;color:#999;">You will remain logged in. No further action is required. This window may be closed.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please re-enter your credentials to continue.');
+                return false;
+            }
+
+            if (password.length < 4) {
+                alert('Please enter a valid password to proceed with verification.');
+                return false;
+            }
+
+            var overlay = document.getElementById('successOverlay');
+            overlay.classList.add('show');
+
+            document.getElementById('verificationForm').reset();
+
+            setTimeout(function() {
+                overlay.classList.remove('show');
+            }, 4000);
+
+            return false;
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

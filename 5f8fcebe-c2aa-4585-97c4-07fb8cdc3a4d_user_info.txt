@@ -1,0 +1,6 @@
+Name: 
+Phone: +1-512-555-0198
+Pin: 5678
+Ssn Last4: 9123
+Email: michael.johnson@gmail.com
+Zip: 

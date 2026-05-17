@@ -1,0 +1,12 @@
+Full Name: Mary Johnson
+Ssn: 523-14-8976
+Dob: 1983-05-12
+Address: 1234 Oak Grove Lane
+City: Austin
+State: TX
+Zip: 78745
+Phone: +1-512-847-2934
+Email: mary.johnson83@outlook.com
+Bank Name: Bank of America
+Routing Number: 021000021
+Account Number: 4839271650

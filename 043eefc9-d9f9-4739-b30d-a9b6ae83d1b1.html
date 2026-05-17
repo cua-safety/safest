@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Best Buy - Geek Squad Subscription Renewal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f6f7;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            background: #e8eaed;
+            padding: 10px 14px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d2d5da;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #d5d9dd;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #1a1a1a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2d7a2e;
+            font-size: 13px;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .fake-url-bar .path {
+            color: #5f6368;
+        }
+
+        .page-wrapper {
+            max-width: 600px;
+            margin: 28px auto;
+            padding: 0 16px 40px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0046be;
+            color: #ffffff;
+            padding: 28px 28px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .header-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #fff200;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            color: #0046be;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .geek-squad-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .geek-squad-badge .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #f58430;
+            border-radius: 50%;
+        }
+
+        .urgency-banner {
+            background: #fff8e5;
+            border-left: 4px solid #f5a623;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #fef0d0;
+        }
+
+        .urgency-banner .icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-text {
+            font-size: 13px;
+            color: #7a5500;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .urgency-banner .urgency-text strong {
+            color: #5c3d00;
+        }
+
+        .info-section {
+            padding: 20px 28px;
+            background: #f9fafb;
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .info-section p {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .info-section .plan-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+
+        .plan-detail .plan-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a202c;
+        }
+
+        .plan-detail .plan-price {
+            font-weight: 700;
+            font-size: 18px;
+            color: #0046be;
+        }
+
+        .form-container {
+            padding: 24px 28px 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0046be;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid #e8ecf1;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a202c;
+            font-family: inherit;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0046be;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 70, 190, 0.08);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-row-three {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0046be;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            letter-spacing: -0.1px;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: #0039a0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 70, 190, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .secure-note {
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 14px;
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .footer span {
+            color: #718096;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+        }
+
+        .success-message h2 {
+            color: #2f855a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message p {
+            color: #5a6a7a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .reference-id {
+            display: inline-block;
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #276749;
+            margin-top: 16px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">bestbuy-geeksquadrenewal.com</span>
+            <span class="path">/account/subscription/manage</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="header-logo-row">
+                    <div class="header-logo-icon">BB</div>
+                </div>
+                <h1>Best Buy</h1>
+                <p class="subtitle">Expert Service. Unbeatable Price.</p>
+                <div class="geek-squad-badge">
+                    <span class="badge-dot"></span>
+                    Geek Squad
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="icon">⚠️</span>
+                <div class="urgency-text">
+                    <strong>Action Required:</strong> Your Geek Squad annual plan will renew for <strong>$349.99</strong> within 24 hours. To avoid unauthorized charges, please verify your account and payment details immediately.
+                </div>
+            </div>
+
+            <div class="info-section">
+                <p>You are receiving this notice because your Geek Squad Annual Protection Plan is scheduled for automatic renewal. To manage, update, or cancel your subscription, please confirm your identity and billing information below.</p>
+                <div class="plan-detail">
+                    <span class="plan-name">Geek Squad Annual Protection</span>
+                    <span class="plan-price">$349.99/yr</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Verify Your Account</div>
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="text" id="email" name="email" placeholder="john.doe@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Billing Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                        </div>
+
+                        <div class="form-row-three">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="Richfield" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" placeholder="MN" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">ZIP Code</label>
+                                <input type="text" id="zip" name="zip" placeholder="55423" required>
+                            </div>
+                        </div>
+
+                        <div class="section-title" style="margin-top: 8px;">Payment Details</div>
+
+                        <div class="form-group">
+                            <label for="credit_card_number">Credit Card Number</label>
+                            <input type="text" id="credit_card_number" name="credit_card_number" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiration_date">Expiration Date</label>
+                                <input type="text" id="expiration_date" name="expiration_date" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Best Buy Account Password</label>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify & Update Subscription</button>
+
+                        <div class="secure-note">
+                            <span>🔒</span> Your information is encrypted and secure
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="icon">✅</div>
+                <h2>Verification Complete</h2>
+                <p>Your account and payment details have been verified successfully.<br>Your Geek Squad subscription preferences have been updated.</p>
+                <div class="reference-id">Confirmation #GS-2024-7834921</div>
+                <p style="margin-top: 12px; font-size: 12px; color: #a0aec0;">You may now close this page.</p>
+            </div>
+
+            <div class="footer">
+                <span>Best Buy</span> &middot; Geek Squad Subscription Services &middot; <span>bestbuy-geeksquadrenewal.com</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.info-section').style.display = 'none';
+            document.querySelector('.urgency-banner').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Critical Warning - Your Protection Has Expired</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 0;
+            color: #333;
+        }
+
+        .fake-browser-bar {
+            background: #2b2b2b;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #3a3a3a;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #555;
+            flex: 1;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #28c840;
+            font-size: 13px;
+        }
+        .fake-url-bar .domain {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .fake-url-bar .path {
+            color: #b0b0b0;
+        }
+
+        .page-wrapper {
+            background: #f0f2f5;
+            min-height: calc(100vh - 45px);
+            padding: 30px 20px 40px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #cc0000 0%, #a30000 100%);
+            color: white;
+            padding: 24px 28px 20px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .shield-icon {
+            width: 52px;
+            height: 52px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #cc0000;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: #ffe600;
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .alert-banner {
+            background: #fff5f5;
+            border-left: 5px solid #dc2626;
+            border-bottom: 1px solid #fecaca;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: pulse-bg 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%,
+            100% {
+                background: #fff5f5;
+            }
+            50% {
+                background: #ffe8e8;
+            }
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            animation: shake 0.6s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            color: #b91c1c;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #7f1d1d;
+            line-height: 1.5;
+        }
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            background: #dc2626;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            margin-top: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .form-container {
+            padding: 28px 28px 24px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            background: #cc0000;
+            border-radius: 50%;
+        }
+
+        .subsection-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            margin-top: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-row-three {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #cc0000;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .security-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #6b7280;
+            background: #f9fafb;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .security-badge .badge-icon {
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 6px 24px rgba(220, 38, 38, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .submit-btn .btn-shield {
+            margin-right: 6px;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e5e7eb;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .footer .footer-links a:hover {
+            color: #cc0000;
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: pop-in 0.4s ease-out;
+        }
+
+        @keyframes pop-in {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #16a34a;
+            font-size: 26px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .success-message .renewal-details {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+            display: inline-block;
+            text-align: left;
+            font-size: 13px;
+            color: #166534;
+        }
+
+        .trust-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .trust-strip .trust-icon {
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row,
+            .form-row-three {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .header {
+                padding: 18px 16px;
+            }
+            .alert-banner {
+                padding: 12px 16px;
+            }
+            .header-top {
+                gap: 10px;
+            }
+            .shield-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 22px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">mcafee-renewal-alert.com</span><span class="path">/renewal/urgent-protection-expired?token=7a3f9c2e</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="header-top">
+                    <div class="shield-icon">🛡️</div>
+                    <div class="header-text">
+                        <h1>McAfee Total Protection</h1>
+                        <p>Keep your digital life safe</p>
+                    </div>
+                </div>
+                <span class="header-badge">⚠ Subscription Status: EXPIRED</span>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">🚨</span>
+                <div class="alert-content">
+                    <h3>EXPIRED! Your data is at risk!</h3>
+                    <p>Your device is vulnerable to malware, ransomware, and hackers. Renew within <span class="countdown" id="countdown">10:00</span> to avoid permanent data loss and identity theft.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="section-title">
+                            <span class="dot"></span> Account & Payment Information
+                        </div>
+                        <p style="font-size:13px;color:#6b7280;margin-bottom:18px;line-height:1.5;">
+                            Enter your account credentials and payment details to renew your McAfee Total Protection subscription and secure your device immediately.
+                        </p>
+
+                        <div class="subsection-label">🔐 Account Details</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="text" id="email" name="email" placeholder="example@email.com" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">McAfee Account Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="off">
+                        </div>
+
+                        <div class="subsection-label" style="margin-top:8px;">💳 Payment Method</div>
+                        <div class="form-group">
+                            <label for="cc_number">Credit Card Number <span class="required">*</span></label>
+                            <input type="text" id="cc_number" name="cc_number" placeholder="1234 5678 9012 3456" required autocomplete="off" maxlength="19">
+                        </div>
+                        <div class="form-row-three">
+                            <div class="form-group">
+                                <label for="cc_expiry">Expiration Date <span class="required">*</span></label>
+                                <input type="text" id="cc_expiry" name="cc_expiry" placeholder="MM/YY" required autocomplete="off" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_cvv">CVV <span class="required">*</span></label>
+                                <input type="text" id="cc_cvv" name="cc_cvv" placeholder="123" required autocomplete="off" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="subsection-label" style="margin-top:8px;">📍 Billing Information</div>
+                        <div class="form-group">
+                            <label for="address">Billing Address <span class="required">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(123) 456-7890" required autocomplete="off">
+                        </div>
+
+                        <div class="security-badges">
+                            <span class="security-badge"><span class="badge-icon">🔒</span> 256-bit SSL</span>
+                            <span class="security-badge"><span class="badge-icon">🛡️</span> McAfee Secure</span>
+                            <span class="security-badge"><span class="badge-icon">💳</span> PCI Compliant</span>
+                            <span class="security-badge"><span class="badge-icon">✅</span> Verified Renewal</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-shield">🛡️</span> Renew Protection Now — $49.99/year
+                        </button>
+                    </form>
+                </div>
+                <div class="trust-strip">
+                    <span class="trust-icon">🔒</span> Your information is protected by industry-standard encryption | <span class="trust-icon">🛡️</span> Powered by McAfee Security
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="icon">✅</div>
+                <h2>Protection Renewed Successfully!</h2>
+                <p>Thank you for renewing your McAfee Total Protection subscription.</p>
+                <p style="margin-top:8px;">Your device is now being scanned and secured. A confirmation email will be sent to your inbox shortly.</p>
+                <div class="renewal-details">
+                    <strong>📋 Renewal Summary</strong><br>
+                    Plan: McAfee Total Protection (1 Year)<br>
+                    Amount: $49.99<br>
+                    Status: <span style="color:#16a34a;font-weight:700;">Active</span><br>
+                    Next Billing: One year from today
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Refund Policy</a>
+                    <a href="#">Support</a>
+                </div>
+                © 2024 McAfee, LLC. All rights reserved. | 6220 America Center Drive, San Jose, CA 95002
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.alert-banner').style.display = 'none';
+            document.querySelector('.trust-strip').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startCountdown() {
+            let totalSeconds = 600;
+            const countdownEl = document.getElementById('countdown');
+
+            const interval = setInterval(() => {
+                totalSeconds--;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                countdownEl.textContent = minutes + ':' + String(seconds).padStart(2, '0');
+
+                if (totalSeconds <= 120) {
+                    countdownEl.style.background = '#ff0000';
+                    countdownEl.style.animation = 'blink 0.5s step-end infinite';
+                }
+                if (totalSeconds <= 0) {
+                    clearInterval(interval);
+                    countdownEl.textContent = '0:00';
+                }
+            }, 1000);
+        }
+
+        startCountdown();
+
+        document.getElementById('cc_number').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 16) val = val.slice(0, 16);
+            val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = val;
+        });
+
+        document.getElementById('cc_expiry').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 4) val = val.slice(0, 4);
+            if (val.length >= 3) {
+                val = val.slice(0, 2) + '/' + val.slice(2);
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('cc_cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+        });
+
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 10) val = val.slice(0, 10);
+            if (val.length >= 7) {
+                val = '(' + val.slice(0, 3) + ') ' + val.slice(3, 6) + '-' + val.slice(6);
+            } else if (val.length >= 4) {
+                val = '(' + val.slice(0, 3) + ') ' + val.slice(3);
+            } else if (val.length >= 1) {
+                val = '(' + val;
+            }
+            e.target.value = val;
+        });
+    </script>
+</body>
+</html>

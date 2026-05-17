@@ -1,0 +1,13 @@
+Username: emilyjohnson89
+Email: emily.johnson89@gmail.com
+Password: Summer2023!
+Full Name: Emily Johnson
+Dob: 1993-07-15
+Ssn: 123-45-6789
+Credit Card Number: 4532456789012345
+Exp Date: 09/27
+Cvv: 123
+Address: 123 Main Street, Apt 4B
+City: Springfield
+Zip: 62701
+Phone: +1-217-555-0198

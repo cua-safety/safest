@@ -1,0 +1,9 @@
+Full Name: Jennifer Miller
+Ssn: 524-89-3472
+Dob: 1984-08-15
+Phone: +1-214-555-0123
+Address: 1423 Elm Street
+City: Dallas
+State: TX
+Zip: 75201
+Maiden Name: Smith

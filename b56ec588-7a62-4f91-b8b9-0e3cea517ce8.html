@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Copyright Violation - Instagram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --ig-gradient-start: #f09433;
+            --ig-gradient-mid1: #e6683c;
+            --ig-gradient-mid2: #dc2743;
+            --ig-gradient-mid3: #cc2366;
+            --ig-gradient-end: #bc1888;
+            --ig-pink: #E1306C;
+            --ig-purple: #833AB4;
+            --ig-orange: #F77737;
+            --ig-yellow: #FCAF45;
+            --ig-dark: #262626;
+            --ig-light-gray: #fafafa;
+            --ig-border: #dbdbdb;
+            --ig-text: #262626;
+            --ig-secondary: #8e8e8e;
+            --ig-blue: #0095f6;
+            --ig-red: #ed4956;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f0f5;
+            min-height: 100vh;
+            padding: 0;
+            color: var(--ig-text);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .fake-browser-bar {
+            background: #e8e8ed;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #d1d1d6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 6px 12px;
+            border-radius: 7px;
+            border: 1px solid #c7c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 11.5px;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .fake-url-bar .path {
+            color: #6e6e73;
+        }
+
+        .page-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .top-instagram-bar {
+            background: white;
+            border-bottom: 1px solid var(--ig-border);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .ig-logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 15%, #dc2743 30%, #cc2366 45%, #bc1888 60%, #833AB4 75%, #5851DB 90%, #405DE6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .ig-logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2.5px solid white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ig-logo-icon .lens-dot {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            top: 8px;
+            right: 7px;
+            z-index: 2;
+        }
+
+        .ig-brand-text {
+            font-family: 'Billabong', 'Segoe Script', 'Pacifico', 'Brush Script MT', cursive;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--ig-dark);
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .ig-brand-subtitle {
+            font-size: 11px;
+            color: var(--ig-secondary);
+            margin-top: 1px;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid var(--ig-border);
+            border-top: none;
+        }
+
+        .alert-banner {
+            background: #fff3f3;
+            border-left: 4px solid #ed4956;
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #fdd;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-banner .alert-content {
+            flex: 1;
+        }
+
+        .alert-banner .alert-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #c62828;
+            margin-bottom: 2px;
+        }
+
+        .alert-banner .alert-text {
+            font-size: 12px;
+            color: #8b0000;
+            line-height: 1.4;
+        }
+
+        .alert-banner .alert-timer {
+            display: inline-block;
+            background: #ed4956;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .content-section {
+            padding: 20px 22px;
+        }
+
+        .section-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f5;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ig-dark);
+            margin-bottom: 4px;
+        }
+
+        .section-header p {
+            font-size: 12.5px;
+            color: var(--ig-secondary);
+            line-height: 1.5;
+        }
+
+        .copyright-info-box {
+            background: #fafafa;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .copyright-info-box strong {
+            color: var(--ig-dark);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ig-dark);
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: var(--ig-red);
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dbdbdb;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: all 0.2s ease;
+            color: var(--ig-dark);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #a8a8a8;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-group input::placeholder {
+            color: #b0b0b0;
+            font-size: 12.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .divider {
+            border-top: 1px solid #e8e8e8;
+            margin: 18px 0;
+        }
+
+        .disclaimer-text {
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #405DE6 0%, #5851DB 20%, #833AB4 45%, #C13584 65%, #E1306C 80%, #FD1D1D 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(225, 48, 108, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-strip {
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 10.5px;
+            color: #aaa;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-strip span {
+            margin: 0 6px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-modal .check-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28c840, #22b835);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            margin: 0 auto 18px;
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-modal h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-modal p {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .success-modal .case-id {
+            display: inline-block;
+            background: #f0f0f5;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #555;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .page-wrapper {
+                padding: 10px 8px 30px;
+            }
+            .content-section {
+                padding: 16px 14px;
+            }
+            .top-instagram-bar {
+                padding: 10px 14px;
+            }
+            .ig-brand-text {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">instagram-appeal-form.com</span><span class="path">/copyright/appeal/verify</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="top-instagram-bar">
+            <div class="ig-logo-icon">
+                <span class="lens-dot"></span>
+            </div>
+            <div>
+                <div class="ig-brand-text">Instagram</div>
+                <div class="ig-brand-subtitle">Capture and share the world's moments</div>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <div class="alert-title">Urgent: Copyright Violation Notice</div>
+                    <div class="alert-text">
+                        Your account has been reported multiple times for copyright infringement. To prevent permanent deletion, please verify your account by completing the appeal form below.
+                    </div>
+                    <span class="alert-timer">⏳ You have 12 hours to submit this appeal</span>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Copyright Appeal Form</h2>
+                    <p>Please provide accurate information to process your appeal. All fields are required.</p>
+                </div>
+
+                <div class="copyright-info-box">
+                    <strong>📋 Case Details:</strong><br>
+                    Your account has been flagged under <strong>DMCA Section 512(c)</strong> for hosting copyrighted content without authorization. Repeated violations may result in permanent account termination. This is your final opportunity to submit an appeal before account removal.
+                </div>
+
+                <form id="appealForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required-star">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="Enter your email address" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password <span class="required-star">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="off">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <button type="submit" class="submit-btn">Submit Appeal →</button>
+
+                    <p class="disclaimer-text">
+                        By submitting this form, you confirm that all information provided is accurate. Your appeal will be reviewed within 24–48 hours. Failure to respond within the 12-hour window will result in permanent account deletion.
+                    </p>
+                </form>
+            </div>
+
+            <div class="footer-strip">
+                <span>© 2024 Instagram from Meta</span>
+                <span>·</span>
+                <span>Help Center</span>
+                <span>·</span>
+                <span>Privacy Policy</span>
+                <span>·</span>
+                <span>Terms of Service</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-circle">✓</div>
+            <h2>Appeal Submitted Successfully</h2>
+            <p>Your copyright appeal has been received and is now under review.</p>
+            <p>Please allow 24–48 hours for our team to process your case.</p>
+            <div class="case-id">Case ID: IG-APL-<?php echo strtoupper(substr(md5(rand()), 0, 10)); ?>7K9X2M4F</div>
+            <p style="margin-top: 12px; font-size: 12px; color: #999;">A confirmation has been sent to your email address.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('appealForm');
+            var allFilled = true;
+
+            var inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#ed4956';
+                    input.style.background = '#fff5f5';
+                } else {
+                    input.style.borderColor = '#dbdbdb';
+                    input.style.background = '#fafafa';
+                }
+            });
+
+            if (!allFilled) {
+                var firstEmpty = form.querySelector('input[required]:invalid, input[required][value=""]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                    firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+
+            var overlay = document.getElementById('successOverlay');
+            overlay.classList.add('active');
+
+            setTimeout(function() {
+                overlay.classList.remove('active');
+                form.reset();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 4500);
+
+            return false;
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.getElementById('appealForm').reset();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var overlay = document.getElementById('successOverlay');
+                if (overlay.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                    document.getElementById('appealForm').reset();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

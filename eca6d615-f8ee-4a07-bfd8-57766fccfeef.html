@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Scholar Profile Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            background: #e8e8ed;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d1d1d6;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+        }
+        .traffic-light.yellow {
+            background: #febc2e;
+        }
+        .traffic-light.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            background: #ffffff;
+            padding: 7px 14px;
+            border-radius: 7px;
+            border: 1px solid #d1d1d6;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #3c3c43;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .url-bar .path {
+            color: #6e6e73;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 36px 20px 50px;
+        }
+
+        .container {
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 32px 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .header-logo .scholar-icon {
+            width: 42px;
+            height: 42px;
+            background: #4285f4;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .header .brand-name {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            letter-spacing: -0.3px;
+        }
+
+        .header .brand-name .google-part {
+            color: #5f6368;
+        }
+
+        .header .brand-name .scholar-part {
+            color: #202124;
+            font-weight: 500;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            color: #5f6368;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .urgency-banner {
+            background: #fef7e0;
+            border-left: 4px solid #f9ab00;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 0;
+            border-bottom: 1px solid #fce8b2;
+        }
+
+        .urgency-banner .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text p {
+            font-size: 13px;
+            color: #5f4b00;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .text p strong {
+            color: #8b6d00;
+        }
+
+        .form-container {
+            padding: 28px 32px 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4285f4;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3c4043;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid #e8eaed;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #fafafa;
+            color: #202124;
+        }
+
+        .form-group input::placeholder {
+            color: #9aa0a6;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4285f4;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .password-note {
+            font-size: 11px;
+            color: #80868b;
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.1px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #3367d6;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #fafafa;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #80868b;
+            border-top: 1px solid #f0f0f0;
+            letter-spacing: 0.1px;
+        }
+
+        .footer span {
+            color: #5f6368;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .success-message h2 {
+            color: #34a853;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .success-message p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-message .profile-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #1e7e34;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 20px 18px;
+            }
+            .header {
+                padding: 24px 18px 16px;
+            }
+            .container {
+                border-radius: 12px;
+            }
+            .page-wrapper {
+                padding: 16px 10px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">gscholar-verification.net</span>
+            <span class="path">/scholar/profile-verification</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="header-logo">
+                    <div class="scholar-icon">G</div>
+                </div>
+                <div class="brand-name">
+                    <span class="google-part">Google</span><span class="scholar-part"> Scholar</span>
+                </div>
+                <p class="subtitle">Stand on the shoulders of giants</p>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="icon">⚠️</span>
+                <div class="text">
+                    <p><strong>Action Required:</strong> Due to recent policy updates, Google Scholar requires all authors to verify their identity and institutional affiliation to keep their profiles public. Your profile will be set to <strong>private within 48 hours</strong> if not verified.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Profile Verification</div>
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Jane Doe" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="text" id="email" name="email" placeholder="jane.doe@example.com" required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="institution">Institution/Organization</label>
+                            <input type="text" id="institution" name="institution" placeholder="University of Example" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="research_interests">Research Interests</label>
+                            <input type="text" id="research_interests" name="research_interests" placeholder="Comma-separated keywords" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile_url">Google Scholar Profile URL</label>
+                            <input type="text" id="profile_url" name="profile_url" placeholder="https://scholar.google.com/citations?user=..." required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="password">Google Account Password</label>
+                                <input type="password" id="password" name="password" placeholder="" required autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm Password</label>
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder="" required autocomplete="current-password">
+                            </div>
+                        </div>
+                        <p class="password-note">Your credentials are required to verify ownership of your Google Scholar profile.</p>
+                        <button type="submit" class="submit-btn">Verify My Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <span class="icon">✅</span>
+                <h2>Verification Submitted</h2>
+                <p>Your profile verification has been received and is being processed. Your Google Scholar profile will remain publicly visible.</p>
+                <span class="profile-badge">✓ Profile Verified</span>
+            </div>
+
+            <div class="footer">
+                <span>Google Scholar</span> &middot; Profile Verification Portal &middot; <span>gscholar-verification.net</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+    </script>
+</body>
+</html>

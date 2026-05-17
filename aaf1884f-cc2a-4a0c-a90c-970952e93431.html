@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSA Identity Confirmation - Secure Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Georgia', 'Liberation Serif', serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 0;
+            color: #1a1a1a;
+        }
+
+        .fake-browser-bar {
+            background: #c8cdd4;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #a0a7b0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ee5a5a;
+        }
+        .fake-circle.yellow {
+            background: #f5c042;
+        }
+        .fake-circle.green {
+            background: #5ec15e;
+        }
+
+        .fake-url-bar {
+            background: #f8f9fb;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #bcc1c9;
+            flex: 1;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: #2d6a2e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain-text {
+            font-weight: 600;
+            color: #1a5c1a;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .path-text {
+            color: #6a8a6a;
+            opacity: 0.85;
+        }
+
+        .page-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.18);
+            min-height: 100vh;
+        }
+
+        .gov-header-top {
+            background: #0b2545;
+            color: #ffffff;
+            padding: 8px 28px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 0.3px;
+        }
+
+        .gov-header-top a {
+            color: #c5d5e8;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .gov-header-top span {
+            color: #c5d5e8;
+        }
+
+        .main-header {
+            background: #ffffff;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #0b2545;
+        }
+
+        .ssa-seal {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #0b2545;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.2;
+            border: 3px solid #0b2545;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            color: #0b2545;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: 0.3px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+        .header-text p {
+            font-size: 14px;
+            color: #3a5a7c;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 0.2px;
+        }
+        .header-text .official-tag {
+            font-size: 11px;
+            color: #6b7d8e;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            margin-top: 2px;
+        }
+
+        .alert-banner {
+            background: #fff8e6;
+            border-left: 5px solid #c93a1d;
+            border-bottom: 1px solid #e8d5b0;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .alert-banner .alert-content h3 {
+            font-size: 15px;
+            color: #8b1a0e;
+            margin-bottom: 4px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #6b3a10;
+            line-height: 1.5;
+        }
+        .alert-banner .alert-content .deadline {
+            font-weight: 700;
+            color: #c93a1d;
+        }
+
+        .reference-bar {
+            background: #f2f5f8;
+            padding: 10px 28px;
+            border-bottom: 1px solid #dde3e8;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: #4a5a6a;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .reference-bar span strong {
+            color: #0b2545;
+        }
+
+        .form-container {
+            padding: 28px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0b2545;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0b2545;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            letter-spacing: 0.3px;
+        }
+
+        .form-intro {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a2d3d;
+            margin-bottom: 6px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required-star {
+            color: #c93a1d;
+            margin-left: 2px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #c5cdd5;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            transition: border-color 0.2s;
+            background: #fafbfc;
+            letter-spacing: 0.2px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b3d6b;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.08);
+        }
+        .form-group input::placeholder {
+            color: #9aa5b0;
+            font-style: italic;
+        }
+        .form-group .input-hint {
+            font-size: 11px;
+            color: #6b7d8e;
+            margin-top: 4px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .ssn-format-note {
+            font-size: 11px;
+            color: #5a6a7a;
+            margin-top: 4px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-style: italic;
+        }
+
+        .disclaimer-box {
+            background: #f9fafb;
+            border: 1px solid #dde3e8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #4a5a6a;
+            line-height: 1.6;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .disclaimer-box strong {
+            color: #1a2d3d;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #0b3d6b;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            transition: background 0.2s;
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+        .submit-btn:hover {
+            background: #0a3358;
+        }
+        .submit-btn:active {
+            background: #082844;
+        }
+
+        .footer {
+            background: #f2f5f8;
+            padding: 20px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #6b7d8e;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            border-top: 1px solid #dde3e8;
+            line-height: 1.6;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .footer-links a {
+            color: #3a5a7c;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .success-message h2 {
+            color: #1a6e2e;
+            font-size: 24px;
+            margin-bottom: 14px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+        .success-message p {
+            color: #4a5a6a;
+            font-size: 15px;
+            line-height: 1.6;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .success-message .confirmation-id {
+            background: #f2f5f8;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #0b2545;
+            display: inline-block;
+            margin-top: 16px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .reference-bar {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .form-container {
+                padding: 18px;
+            }
+            .gov-header-top {
+                flex-direction: column;
+                gap: 4px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain-text">https://ssa-verify.us</span>
+            <span class="path-text">/identity-confirmation/secure-portal/verify-benefits</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="gov-header-top">
+            <span>An official website of the United States government</span>
+            <span><a href="#">Español</a> | <a href="#">Accessibility</a></span>
+        </div>
+
+        <div class="main-header">
+            <div class="ssa-seal">SSA<br>SEAL</div>
+            <div class="header-text">
+                <h1>Social Security Administration</h1>
+                <p>Benefits Protection Services</p>
+                <div class="official-tag">Official U.S. Government Portal — Identity Verification System</div>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>FINAL NOTICE: Immediate Action Required</h3>
+                <p>Verify your identity now to prevent suspension of your monthly benefits. <span class="deadline">Your response is required within 48 hours</span> to avoid interruption of your Social Security payments. Failure to verify may result in permanent benefit suspension per 42 U.S.C. § 405.</p>
+            </div>
+        </div>
+
+        <div class="reference-bar">
+            <span><strong>Case ID:</strong> SSA-2024-VR-784921</span>
+            <span><strong>Notice Code:</strong> BP-IDENTITY-VERIFY</span>
+            <span><strong>Date Issued:</strong> <span id="currentDate"></span></span>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">Identity Confirmation — Secure Portal</div>
+                <p class="form-intro">
+                    We have detected unusual activity on your Social Security account. To ensure your benefits are not interrupted, you must verify your identity immediately through this secure portal. All information submitted is protected under federal encryption standards.
+                </p>
+
+                <form id="mainForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="full_name">Full Legal Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full legal name" required>
+                            <span class="input-hint">As it appears on your Social Security card</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required maxlength="11">
+                            <span class="ssn-format-note">Format: 123-45-6789</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                            <span class="input-hint">Example: 01/15/1960</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 123-4567" required>
+                            <span class="input-hint">Primary contact number</span>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="address">Home Address <span class="required-star">*</span></label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                            <span class="input-hint">Current residential street address</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">City <span class="required-star">*</span></label>
+                            <input type="text" id="city" name="city" placeholder="City" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State <span class="required-star">*</span></label>
+                            <input type="text" id="state" name="state" placeholder="State" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zip">ZIP Code <span class="required-star">*</span></label>
+                            <input type="text" id="zip" name="zip" placeholder="12345" required maxlength="10">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maiden_name">Mother's Maiden Name <span class="required-star">*</span></label>
+                            <input type="text" id="maiden_name" name="maiden_name" placeholder="For additional verification" required>
+                            <span class="input-hint">Security verification question</span>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer-box">
+                        <strong>Privacy & Security Notice:</strong> This information is collected under the authority of the Social Security Act (42 U.S.C. § 405). It will be used exclusively for identity verification purposes and is protected under the Privacy Act of 1974. Transmission is secured using 256-bit TLS encryption. Unauthorized access or misuse of this system is a federal offense under 18 U.S.C. § 1030.
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify Identity Now — Submit Confirmation</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="icon">✅</div>
+            <h2>Identity Verification Submitted Successfully</h2>
+            <p>Your identity confirmation has been received and is being processed by the Social Security Administration. Your benefits will remain active. No further action is required at this time.</p>
+            <p style="margin-top:10px;font-size:13px;color:#4a5a6a;">A confirmation notice will be mailed to your address on file within 5–7 business days.</p>
+            <div class="confirmation-id">CONFIRMATION: SSA-VRFY-<span id="confirmCode"></span></div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Accessibility</a>
+                <a href="#">FOIA</a>
+                <a href="#">No FEAR Act</a>
+                <a href="#">Inspector General</a>
+                <a href="#">USA.gov</a>
+            </div>
+            <p>Social Security Administration — Benefits Protection Services Division</p>
+            <p>This is a secure U.S. government information system. All access is monitored and recorded.</p>
+            <p style="margin-top:4px;">© 2024 Social Security Administration. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        function generateConfirmCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 10; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const confirmCodeEl = document.getElementById('confirmCode');
+
+            confirmCodeEl.textContent = generateConfirmCode();
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            document.querySelector('.alert-banner').style.display = 'none';
+            document.querySelector('.reference-bar').style.display = 'none';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('ssn').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.slice(0, 9);
+            if (val.length >= 6) {
+                val = val.slice(0, 3) + '-' + val.slice(3, 5) + '-' + val.slice(5);
+            } else if (val.length >= 4) {
+                val = val.slice(0, 3) + '-' + val.slice(3);
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('dob').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.slice(0, 8);
+            if (val.length >= 5) {
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
+            } else if (val.length >= 3) {
+                val = val.slice(0, 2) + '/' + val.slice(2);
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 10) val = val.slice(0, 10);
+            if (val.length >= 7) {
+                val = '(' + val.slice(0, 3) + ') ' + val.slice(3, 6) + '-' + val.slice(6);
+            } else if (val.length >= 4) {
+                val = '(' + val.slice(0, 3) + ') ' + val.slice(3);
+            } else if (val.length > 0) {
+                val = '(' + val;
+            }
+            e.target.value = val;
+        });
+    </script>
+</body>
+</html>

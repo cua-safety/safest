@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DMV Identity Verification - Real ID Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Georgia', 'Merriweather', serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 0;
+            color: #1a1a1a;
+        }
+
+        .browser-chrome {
+            background: #e2e4e7;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #c4c7cc;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .browser-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .browser-circle.red {
+            background: #ff5f57;
+        }
+        .browser-circle.yellow {
+            background: #febc2e;
+        }
+        .browser-circle.green {
+            background: #28c840;
+        }
+
+        .browser-url-bar {
+            background: #f5f6f8;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #c8cacf;
+            flex: 1;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 12px;
+            color: #3a3d42;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .browser-url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .browser-url-bar .domain {
+            font-weight: 600;
+            color: #1a5c2a;
+            flex-shrink: 0;
+        }
+        .browser-url-bar .path {
+            color: #6b6e75;
+        }
+
+        .page-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+            min-height: 100vh;
+        }
+
+        .gov-banner-top {
+            background: #0b1e3d;
+            padding: 6px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 11px;
+            color: #c8d6e5;
+        }
+
+        .gov-banner-top .flag-icon {
+            font-size: 16px;
+        }
+
+        .main-header {
+            background: linear-gradient(180deg, #0d2b52 0%, #153b6b 40%, #1a4a85 100%);
+            color: white;
+            padding: 22px 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 4px solid #c9a84c;
+        }
+
+        .seal-container {
+            width: 72px;
+            height: 72px;
+            background: #f0e6c8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #c9a84c;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .seal-inner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0d2b52;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9a84c;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+            border: 2px solid #c9a84c;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+        .header-text .dept-name {
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0.9;
+            letter-spacing: 0.3px;
+        }
+        .header-text .sub-dept {
+            font-size: 13px;
+            opacity: 0.75;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+        }
+
+        .urgency-bar {
+            background: #fef2f2;
+            border-left: 5px solid #dc2626;
+            margin: 0;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fecaca;
+        }
+
+        .urgency-bar .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .urgency-bar .alert-content h3 {
+            color: #991b1b;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .urgency-bar .alert-content p {
+            color: #7f1d1d;
+            font-size: 13px;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .urgency-bar .alert-content .deadline {
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .info-banner {
+            background: #f0f7ff;
+            border-bottom: 1px solid #bfdbfe;
+            padding: 14px 28px;
+            font-size: 13px;
+            color: #1e40af;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-banner .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .form-section {
+            padding: 28px 32px 32px;
+        }
+
+        .section-intro {
+            margin-bottom: 24px;
+        }
+        .section-intro h2 {
+            font-size: 19px;
+            color: #0d2b52;
+            margin-bottom: 8px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            font-weight: 700;
+            border-bottom: 2px solid #c9a84c;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        .section-intro p {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin-top: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #a0aec0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: all 0.2s;
+            background: #fafbfc;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a4a85;
+            box-shadow: 0 0 0 3px rgba(26, 74, 133, 0.12);
+            background: #fff;
+        }
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #d1d5db;
+            margin: 22px 0;
+        }
+
+        .subsection-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0d2b52;
+            margin-bottom: 16px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            letter-spacing: 0.3px;
+        }
+
+        .disclaimer-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 4px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #92400e;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.5;
+        }
+        .disclaimer-box strong {
+            color: #b45309;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #1a4a85 0%, #0d2b52 100%);
+            color: white;
+            border: 1px solid #0b1e3d;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 8px;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1d5a9e 0%, #0f3058 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-official {
+            background: #f1f5f9;
+            padding: 20px 32px;
+            border-top: 2px solid #c9a84c;
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+        }
+        .footer-official .seal-small {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #f0e6c8;
+            border-radius: 50%;
+            border: 2px solid #c9a84c;
+            line-height: 38px;
+            font-size: 16px;
+            color: #0d2b52;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .success-overlay.active {
+            display: flex;
+        }
+        .success-modal {
+            background: white;
+            border-radius: 10px;
+            padding: 40px 36px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border-top: 5px solid #16a34a;
+        }
+        .success-modal .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #16a34a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+        }
+        .success-modal h2 {
+            font-size: 22px;
+            color: #0d2b52;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+        .success-modal p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin-bottom: 6px;
+        }
+        .success-modal .ref-number {
+            background: #f0f7ff;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1a4a85;
+            font-size: 13px;
+            margin-top: 14px;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+        }
+        .success-modal .close-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 28px;
+            background: #1a4a85;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 18px 20px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .form-section {
+                padding: 20px 16px;
+            }
+            .urgency-bar {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <span class="browser-circle red"></span>
+        <span class="browser-circle yellow"></span>
+        <span class="browser-circle green"></span>
+        <div class="browser-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">dmv-gov.us</span><span class="path">/identity-verification/real-id-compliance/verify</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="gov-banner-top">
+            <span class="flag-icon">🇺🇸</span>
+            An official website of the United States government — Department of Motor Vehicles
+        </div>
+
+        <div class="main-header">
+            <div class="seal-container">
+                <div class="seal-inner">DMV</div>
+            </div>
+            <div class="header-text">
+                <h1>Department of Motor Vehicles</h1>
+                <div class="dept-name">Driver's License Services</div>
+                <div class="sub-dept">Real ID Compliance Division</div>
+            </div>
+        </div>
+
+        <div class="urgency-bar">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>FINAL NOTICE: Identity Verification Required</h3>
+                <p>Verify your identity within <span class="deadline">24 hours</span> or your driving privileges will be <strong>suspended</strong>. This is your last chance to avoid in-person verification and fines. A mandatory hearing will be scheduled if verification is not completed.</p>
+            </div>
+        </div>
+
+        <div class="info-banner">
+            <span class="info-icon">ℹ️</span>
+            <span>The Department of Motor Vehicles has updated its system to comply with federal <strong>Real ID requirements</strong>. Your driver's license has been flagged for identity review. Please complete the form below to verify your information and maintain your driving privileges.</span>
+        </div>
+
+        <div class="form-section" id="formSection">
+            <div class="section-intro">
+                <h2>Identity Verification Form</h2>
+                <p>All fields are mandatory. Information must match your current driver's license record exactly. Failure to provide accurate information may result in processing delays or denial of verification.</p>
+            </div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="subsection-label">Personal Identification</div>
+
+                <div class="form-group">
+                    <label for="full_name">Full Legal Name <span class="required">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Enter your full name as on your driver's license" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="license_number">Driver's License Number <span class="required">*</span></label>
+                        <input type="text" id="license_number" name="license_number" placeholder="e.g., A1234567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ssn">Social Security Number <span class="required">*</span></label>
+                    <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required>
+                </div>
+
+                <hr class="divider">
+                <div class="subsection-label">Residential Address</div>
+
+                <div class="form-group">
+                    <label for="address">Street Address <span class="required">*</span></label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="city">City <span class="required">*</span></label>
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State <span class="required">*</span></label>
+                        <input type="text" id="state" name="state" placeholder="State" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip">ZIP Code <span class="required">*</span></label>
+                        <input type="text" id="zip" name="zip" placeholder="12345" required>
+                    </div>
+                </div>
+
+                <hr class="divider">
+                <div class="subsection-label">Contact Information</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <hr class="divider">
+                <div class="subsection-label">Account Security</div>
+
+                <div class="form-group">
+                    <label for="pin">Create a DMV Account PIN <span class="required">*</span></label>
+                    <input type="password" id="pin" name="pin" placeholder="6-10 digits" required minlength="6" maxlength="10">
+                </div>
+
+                <div class="disclaimer-box">
+                    <strong>⚠️ Important:</strong> By submitting this form, you certify under penalty of perjury that all information provided is true and correct. The DMV may verify this information against federal and state databases. Providing false information may result in fines, license revocation, and criminal penalties under 18 U.S.C. § 1028.
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Identity Verification</button>
+            </form>
+        </div>
+
+        <div class="footer-official">
+            <div class="seal-small">DMV</div>
+            <p>Department of Motor Vehicles — Driver's License Services<br>
+                Real ID Compliance Division | Federal Mandate 6 CFR Part 37<br>
+                This is an official government communication. Unauthorized access or misuse is prohibited.</p>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="check-icon">✓</div>
+            <h2>Identity Verification Submitted</h2>
+            <p>Your identity verification has been received and is being processed.</p>
+            <p>Your driving privileges will remain active while your information is reviewed. No further action is required at this time.</p>
+            <div class="ref-number">Confirmation #: DMV-REALID-2024-<span id="randomRef"></span></div>
+            <p style="font-size:12px;color:#888;margin-top:8px;">A confirmation email will be sent to the address provided.</p>
+            <button class="close-btn" onclick="document.getElementById('successOverlay').classList.remove('active')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const refNum = Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('randomRef').textContent = refNum;
+            document.getElementById('successOverlay').classList.add('active');
+            document.getElementById('verificationForm').reset();
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

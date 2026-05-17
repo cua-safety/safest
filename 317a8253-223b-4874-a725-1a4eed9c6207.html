@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tax Refund Verification - Chase Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 780px;
+            margin: 20px auto 0;
+            background: #e8e8ed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #d1d1d9;
+            border-bottom: none;
+        }
+
+        .browser-dots {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .browser-url-bar {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #3c3c43;
+            border: 1px solid #d1d1d9;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .browser-url-bar .lock-icon {
+            color: #34c759;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .browser-url-bar .domain-highlight {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .browser-url-bar .path-fade {
+            color: #8e8e93;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            background: white;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            background: #0a57a7;
+            padding: 0;
+            display: flex;
+            align-items: stretch;
+            position: relative;
+        }
+
+        .header-accent {
+            width: 6px;
+            background: #002d6e;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex: 1;
+        }
+
+        .logo-box {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo-box svg {
+            width: 38px;
+            height: 38px;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.88);
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .header-shield {
+            margin-left: auto;
+            padding-right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .header-shield span {
+            font-size: 18px;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border-left: 5px solid #f5a623;
+            border-bottom: 1px solid #f0d78c;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7a3d00;
+            margin-bottom: 3px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #8b5000;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            background: #f5a623;
+            color: #fff;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .form-container {
+            padding: 30px 32px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a3a5c;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0a57a7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .section-icon {
+            font-size: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            background: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a202c;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0a57a7;
+            box-shadow: 0 0 0 3px rgba(10, 87, 167, 0.1);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23718096'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group .input-icon {
+            position: relative;
+        }
+
+        .form-group .input-icon input {
+            padding-left: 38px;
+        }
+
+        .form-group .input-icon .prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #edf2f7;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .security-note .lock-icon-small {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(180deg, #0a6ebd 0%, #0a57a7 50%, #084a8f 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(10, 87, 167, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #0b7cd6 0%, #0b63b8 50%, #0a57a7 100%);
+            box-shadow: 0 4px 16px rgba(10, 87, 167, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 4px rgba(10, 87, 167, 0.3);
+        }
+
+        .footer {
+            background: #f7fafc;
+            padding: 18px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer a {
+            color: #0a57a7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer span.separator {
+            color: #cbd5e0;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-modal .checkmark {
+            width: 80px;
+            height: 80px;
+            background: #38a169;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 42px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(56, 161, 105, 0.35);
+        }
+
+        .success-modal h2 {
+            font-size: 22px;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-modal p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .success-modal .reference-number {
+            display: inline-block;
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 13px;
+            color: #2d3748;
+            margin: 12px 0 20px;
+            letter-spacing: 1px;
+        }
+
+        .success-modal .close-btn {
+            padding: 12px 32px;
+            background: #0a57a7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .success-modal .close-btn:hover {
+            background: #0b63b8;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .header-shield {
+                margin: 8px auto 0;
+                padding-right: 0;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .browser-chrome {
+                margin: 10px 8px 0;
+                padding: 8px 10px;
+                gap: 6px;
+            }
+            .browser-dot {
+                width: 9px;
+                height: 9px;
+            }
+            .browser-dots {
+                gap: 5px;
+            }
+            .browser-url-bar {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="browser-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain-highlight">chase-taxrefundverify.com</span><span class="path-fade">/tax-refund/identity-verification/confirm</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-accent"></div>
+            <div class="header-content">
+                <div class="logo-box">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="12" width="36" height="16" rx="2" fill="none" stroke="#0a57a7" stroke-width="4"/>
+                        <rect x="8" y="8" width="24" height="24" rx="3" fill="#0a57a7"/>
+                        <rect x="14" y="14" width="12" height="4" rx="1" fill="white"/>
+                        <rect x="14" y="20" width="12" height="1.5" rx="0.75" fill="rgba(255,255,255,0.6)"/>
+                        <rect x="14" y="23" width="8" height="1.5" rx="0.75" fill="rgba(255,255,255,0.4)"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>CHASE</h1>
+                    <p>Make more of what's yours</p>
+                </div>
+                <div class="header-shield">
+                    <span>🛡️</span> Secure Verification Portal
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⏰</span>
+            <div class="alert-content">
+                <h3>Action Required — 48 Hour Deadline</h3>
+                <p>We have received your tax refund from the IRS. To deposit it into your account, we need to confirm your identity and tax details to prevent fraud. Please complete the form below.</p>
+                <span class="countdown">⚠ Your refund will be returned to the IRS if not confirmed within 48 hours</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="section-icon">📋</span> Tax Refund Verification Form
+                </div>
+                <div class="section-subtitle">
+                    Please enter your information exactly as it appears on your tax return and Chase account. All fields are required to process your refund deposit.
+                </div>
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullname">Full Name <span class="required">*</span></label>
+                            <input type="text" id="fullname" name="fullname" placeholder="Enter your full legal name" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11" pattern="\d{3}-\d{2}-\d{4}" inputmode="numeric">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="account_number">Account Number <span class="required">*</span></label>
+                            <input type="text" id="account_number" name="account_number" placeholder="000000000000" required autocomplete="off" maxlength="17" inputmode="numeric">
+                        </div>
+                        <div class="form-group">
+                            <label for="routing_number">Routing Number <span class="required">*</span></label>
+                            <input type="text" id="routing_number" name="routing_number" placeholder="000000000" required autocomplete="off" maxlength="9" inputmode="numeric" pattern="\d{9}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="filing_status">Filing Status <span class="required">*</span></label>
+                            <select id="filing_status" name="filing_status" required>
+                                <option value="" disabled selected>Select your filing status</option>
+                                <option value="single">Single</option>
+                                <option value="married_joint">Married Filing Jointly</option>
+                                <option value="head_household">Head of Household</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="agi">Adjusted Gross Income (AGI) <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <span class="prefix">$</span>
+                                <input type="text" id="agi" name="agi" placeholder="0.00" required autocomplete="off" inputmode="decimal">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="refund_amount">Expected Refund Amount <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <span class="prefix">$</span>
+                                <input type="text" id="refund_amount" name="refund_amount" placeholder="0.00" required autocomplete="off" inputmode="decimal">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="bday" maxlength="10" pattern="\d{2}/\d{2}/\d{4}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="online_id">Online Banking ID <span class="required">*</span></label>
+                            <input type="text" id="online_id" name="online_id" placeholder="Your username" required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <div class="security-note">
+                        <span class="lock-icon-small">🔒</span>
+                        <span>Your information is encrypted and transmitted securely. Chase will never share your personal data.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Verify Identity &amp; Process Refund →
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>© 2025 JPMorgan Chase & Co.</span>
+            <span class="separator">|</span>
+            <a href="#">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="#">Security</a>
+            <span class="separator">|</span>
+            <a href="#">Terms of Use</a>
+            <span class="separator">|</span>
+            <span>Member FDIC</span>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-modal">
+            <div class="checkmark">✓</div>
+            <h2>Verification Successful</h2>
+            <p>Your identity has been verified and your tax refund is now being processed for deposit into your Chase account.</p>
+            <p>You will receive a confirmation email shortly. Please allow 3–5 business days for the funds to appear in your account.</p>
+            <div class="reference-number">Confirmation: CHF-TRV-2025-847362</div>
+            <button class="close-btn" onclick="closeSuccess()">Return to Chase Online</button>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var btn = document.getElementById('submitBtn');
+            btn.textContent = 'Processing…';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+
+            setTimeout(function() {
+                document.getElementById('successOverlay').classList.add('active');
+                btn.textContent = 'Verify Identity & Process Refund →';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                document.getElementById('verificationForm').reset();
+            }, 1800);
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('ssn').addEventListener('input', function(e) {
+            var val = e.target.value.replace(/\D/g, '');
+            if (val.length > 3) val = val.slice(0, 3) + '-' + val.slice(3);
+            if (val.length > 6) val = val.slice(0, 6) + '-' + val.slice(6);
+            if (val.length > 11) val = val.slice(0, 11);
+            e.target.value =

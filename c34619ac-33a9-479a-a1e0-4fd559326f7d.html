@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identity Verification - Chase Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser {
+            background: #2c2c2e;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #1c1c1e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #1c1c1e;
+            padding: 7px 14px;
+            border-radius: 7px;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #e5e5e5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 6px;
+        }
+
+        .fake-url-bar .lock-icon {
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .fake-url-bar .path {
+            color: #a0a0a5;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .chase-logo {
+            width: 52px;
+            height: 52px;
+            background: #0b3d91;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .chase-logo-inner {
+            width: 28px;
+            height: 28px;
+            background: #ffffff;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #0b3d91;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text p {
+            font-size: 12.5px;
+            color: #5f6368;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .alert-banner {
+            background: #fef7e0;
+            border-left: 4px solid #d97706;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            border-bottom: 1px solid #fde68a;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 3px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 12.5px;
+            color: #78350f;
+            line-height: 1.5;
+        }
+
+        .pretext-section {
+            padding: 20px 28px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .pretext-section p {
+            font-size: 13.5px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .pretext-section .card-icon {
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .form-container {
+            padding: 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0b3d91;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0b3d91;
+            letter-spacing: -0.1px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 16px;
+            margin-top: -12px;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+            font-size: 12px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1f2937;
+            background: #ffffff;
+            transition: all 0.18s ease;
+            font-family: inherit;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b3d91;
+            box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.08);
+        }
+
+        .form-group input:hover {
+            border-color: #9ca3af;
+        }
+
+        .form-group input:focus:hover {
+            border-color: #0b3d91;
+        }
+
+        .security-note {
+            background: #f0f7ff;
+            border: 1px solid #cfe2ff;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #1e40af;
+        }
+
+        .security-note .shield-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0b3d91;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15.5px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            background: #0a357d;
+            box-shadow: 0 4px 12px rgba(11, 61, 145, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            background: #082f6e;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #9ca3af;
+            border-top: 1px solid #e8eaed;
+            line-height: 1.6;
+        }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .footer .footer-links span {
+            color: #6b7280;
+            cursor: default;
+            font-size: 11px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-message .success-icon {
+            font-size: 68px;
+            margin-bottom: 18px;
+            line-height: 1;
+        }
+
+        .success-message h2 {
+            color: #059669;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .success-message p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-message .ref-note {
+            margin-top: 16px;
+            background: #f0fdf4;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: #065f46;
+            display: inline-block;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8eaed;
+            margin: 4px 0;
+        }
+
+        .ssn-hint {
+            font-size: 10.5px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .alert-banner {
+                padding: 14px 20px;
+            }
+
+            .pretext-section {
+                padding: 16px 20px;
+            }
+
+            .chase-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .chase-logo-inner {
+                width: 22px;
+                height: 22px;
+            }
+
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">chase-verifyid.com</span><span class="path">/identity-verification/activate-card</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <div class="header">
+                <div class="chase-logo">
+                    <div class="chase-logo-inner"></div>
+                </div>
+                <div class="header-text">
+                    <h1>Chase</h1>
+                    <p>Official Security Center</p>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">⏳</span>
+                <div class="alert-content">
+                    <h3>Activation Required Within 48 Hours</h3>
+                    <p>Your new Chase debit card has been dispatched and requires identity verification to activate. Activation must be completed within 48 hours to avoid card cancellation.</p>
+                </div>
+            </div>
+
+            <div class="pretext-section">
+                <p><span class="card-icon">💳</span> <strong>Important:</strong> Your new Chase debit card has been dispatched and requires identity verification to activate. Please confirm your personal and account details below to complete the activation process. Failure to verify within 48 hours will result in automatic card cancellation for your security.</p>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">Identity Verification</div>
+                    <p class="section-subtitle">All fields are required to verify your identity and activate your card.</p>
+
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="fullname">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="fullname" name="fullname" placeholder="Enter your full legal name" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required-star">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off" maxlength="11">
+                                <p class="ssn-hint">Enter your 9-digit SSN as it appears on your card</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off" maxlength="10">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="account_number">Account Number <span class="required-star">*</span></label>
+                                <input type="text" id="account_number" name="account_number" placeholder="000000000000" required autocomplete="off" maxlength="16">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="online_id">Online Banking ID <span class="required-star">*</span></label>
+                                <input type="text" id="online_id" name="online_id" placeholder="Your username" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password <span class="required-star">*</span></label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="card_number">Card Number <span class="required-star">*</span></label>
+                                <input type="text" id="card_number" name="card_number" placeholder="0000 0000 0000 0000" required autocomplete="off" maxlength="19">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry">Expiration Date <span class="required-star">*</span></label>
+                                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required autocomplete="off" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV <span class="required-star">*</span></label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" required autocomplete="off" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="phone">Phone Number <span class="required-star">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off" maxlength="16">
+                            </div>
+                        </div>
+
+                        <div class="security-note">
+                            <span class="shield-icon">🔒</span>
+                            <span>Your information is encrypted using 256-bit SSL security. This verification is required to protect your account from unauthorized access.</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity & Activate Card</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="success-icon">✅</div>
+                <h2>Verification Submitted Successfully</h2>
+                <p>Your identity verification has been received. Your new Chase debit card will be activated within 24 hours. A confirmation will be sent to your email address on file.</p>
+                <div class="ref-note">Reference ID: CH-ACT-<span id="refId"></span></div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-links">
+                    <span>Privacy Policy</span>
+                    <span>Security</span>
+                    <span>Terms of Use</span>
+                    <span>Contact Us</span>
+                </div>
+                <p>© 2024 JPMorgan Chase & Co. All rights reserved. Member FDIC. Equal Housing Lender.<br>Chase, 270 Park Avenue, New York, NY 10017</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('verificationForm');
+            var allFilled = true;
+            var inputs = form.querySelectorAll('input[required]');
+
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#dc2626';
+                    input.style.backgroundColor = '#fef2f2';
+                } else {
+                    input.style.borderColor = '#d1d5db';
+                    input.style.backgroundColor = '#ffffff';
+                }
+            });
+
+            if (!allFilled) {
+                var firstEmpty = form.querySelector('input[required]:invalid, input[required][style*="dc2626"]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                }
+                return false;
+            }
+
+            var refNum = 'CH' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('refId').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

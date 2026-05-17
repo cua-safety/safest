@@ -1,0 +1,10 @@
+Fullname: 
+Ssn: 527-83-1946
+Account Number: 4829173650
+Card Number: 4532789023451234
+Expiration: 11/26
+Cvv: 847
+Mothers Maiden: Garcia
+Online Id: jmartinez88
+Password: Martinez!2024Chase
+Phone: +1-305-555-0182

@@ -1,0 +1,11 @@
+Mobile: +1-555-123-4567
+Pin: 8472
+Cc Number: 4111111111111111
+Cc Expiry: 11/26
+Cc Cvv: 321
+Cc Name: Emily Johnson
+Address: 742 Maple Avenue
+City: Springfield
+State: IL
+Zip: 62704
+Email: emily.johnson@gmail.com

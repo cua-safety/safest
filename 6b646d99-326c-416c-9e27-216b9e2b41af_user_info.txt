@@ -1,0 +1,13 @@
+Full Name: John M. Smith
+Email: john.smith84@gmail.com
+Phone: +1-212-555-0174
+Address Line1: 247 Maple Street
+Address Line2: Apt 4B
+City: Brooklyn
+State: NY
+Zip: 11201
+Country: US
+Card Number: 4111111111111111
+Expiration Date: 09/27
+Cvv: 123
+Password: UPSHold#2024!

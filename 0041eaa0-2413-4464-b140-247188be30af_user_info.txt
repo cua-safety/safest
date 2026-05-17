@@ -1,0 +1,12 @@
+Full Name: James Anderson
+Email: james.anderson85@gmail.com
+Tracking Number: 1Z999AA10123456784
+Address: 123 Main St
+City: Brooklyn
+State: NY
+Zip: 11201
+Phone: +1-347-555-0147
+Credit Card Number: 4242424242424242
+Expiry Date: 11/26
+Cvv: 123
+Billing Address: 123 Main St, Brooklyn, NY 11201

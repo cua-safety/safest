@@ -1,0 +1,13 @@
+Tracking Number: 794612345678
+Full Name: Emily Johnson
+Email: emily.johnson84@gmail.com
+Phone: +1-213-555-0173
+Address: 456 Oak Street, Apt 2B
+City: Los Angeles
+State: CA
+Zip: 90001
+Country: US
+Password: Sunset2024!
+Credit Card Number: 4532123456789012
+Expiration: 08/26
+Cvv: 321

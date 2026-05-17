@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identity Verification - Wells Fargo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8e8e8;
+            min-height: 100vh;
+            padding: 0;
+            color: #333;
+        }
+
+        .fake-browser {
+            background: #dedede;
+            border-radius: 8px 8px 0 0;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border-bottom: 1px solid #c0c0c0;
+        }
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .fake-circle.red {
+            background: #ff5f57;
+            border: 1px solid #e0443e;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+            border: 1px solid #dea123;
+        }
+        .fake-circle.green {
+            background: #28c840;
+            border: 1px solid #1eaa32;
+        }
+        .fake-url-bar {
+            background: #f5f5f5;
+            padding: 7px 14px;
+            border-radius: 5px;
+            border: 1px solid #c8c8c8;
+            flex: 1;
+            font-family: "SF Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 8px;
+        }
+        .fake-url-bar .lock-icon {
+            color: #2e7d32;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .fake-url-bar .path {
+            color: #777;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #d52b1e 0%, #b71c1c 100%);
+            color: white;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 4px solid #ffcd00;
+        }
+        .logo-area {
+            width: 50px;
+            height: 50px;
+            background: #ffcd00;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #b71c1c;
+            font-size: 13px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+            line-height: 1.1;
+            text-align: center;
+        }
+        .header-text h1 {
+            font-size: 20px;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .alert-banner {
+            background: #fff8e1;
+            border-left: 5px solid #ff6f00;
+            border-bottom: 1px solid #ffe0b2;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .alert-banner .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            color: #c62828;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .alert-banner .alert-content p {
+            font-size: 13px;
+            color: #5d4037;
+            line-height: 1.5;
+        }
+        .alert-banner .alert-content .frozen-notice {
+            display: inline-block;
+            background: #ffebee;
+            color: #c62828;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-top: 4px;
+            border: 1px solid #ef9a9a;
+        }
+
+        .form-container {
+            padding: 24px 28px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #b71c1c;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #ffcd00;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .icon {
+            font-size: 18px;
+        }
+        .section-subtitle {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 20px;
+            margin-top: -8px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required {
+            color: #d52b1e;
+            font-weight: 700;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 2px solid #d5d5d5;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #d52b1e;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(213, 43, 30, 0.08);
+        }
+        .form-group input::placeholder {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+        .form-group .input-hint {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e5e5;
+            margin: 20px 0;
+        }
+        .security-note {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e8e8;
+        }
+        .security-note .shield {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #d52b1e 0%, #b71c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            box-shadow: 0 3px 12px rgba(183, 28, 28, 0.3);
+        }
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #c62828 0%, #a01515 100%);
+            box-shadow: 0 5px 18px rgba(183, 28, 28, 0.4);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(183, 28, 28, 0.3);
+        }
+        .footer {
+            background: #f8f8f8;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            border-top: 1px solid #e5e5e5;
+            line-height: 1.6;
+        }
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .footer .footer-links span {
+            cursor: pointer;
+            color: #666;
+            font-size: 10px;
+        }
+        .footer .footer-links span:hover {
+            color: #d52b1e;
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .success-message .ref-num {
+            display: inline-block;
+            background: #f5f5f5;
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #333;
+            margin-top: 14px;
+            border: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px;
+            }
+            .form-container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="fake-browser">
+            <span class="fake-circle red"></span>
+            <span class="fake-circle yellow"></span>
+            <span class="fake-circle green"></span>
+            <div class="fake-url-bar">
+                <span class="lock-icon">🔒</span>
+                <span>https://</span><span class="domain">wellsfargo-identityverify.com</span><span class="path">/account/verification/secure</span>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="logo-area">WF</div>
+            <div class="header-text">
+                <h1>Wells Fargo</h1>
+                <p>Established 1852 &nbsp;|&nbsp; Identity Verification Center</p>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <h3>Account Hold Notification</h3>
+                <p>We have placed a temporary hold on your account due to unusual activity. To restore full access, please complete the following identity verification.</p>
+                <span class="frozen-notice">🔒 Your funds are currently frozen and will remain inaccessible until verification is completed.</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="icon">📋</span> Identity Verification Form
+                </div>
+                <p class="section-subtitle">All fields marked with <span class="required">*</span> are required to verify your identity and restore account access.</p>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="fullname" placeholder="John A. Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Social Security Number <span class="required">*</span></label>
+                            <input type="text" name="ssn" placeholder="XXX-XX-XXXX" required maxlength="11">
+                            <span class="input-hint">Enter your full 9-digit SSN</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="text" name="dob" placeholder="MM/DD/YYYY" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number <span class="required">*</span></label>
+                            <input type="text" name="account_number" placeholder="000011112222" required>
+                            <span class="input-hint">10-12 digit account number</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Online Banking ID <span class="required">*</span></label>
+                            <input type="text" name="online_id" placeholder="your.username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="required">*</span></label>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ATM/Debit Card Number <span class="required">*</span></label>
+                            <input type="text" name="card_number" placeholder="0000 0000 0000 0000" required maxlength="19">
+                        </div>
+                        <div class="form-group">
+                            <label>Card PIN <span class="required">*</span></label>
+                            <input type="text" name="card_pin" placeholder="XXXX" required maxlength="4">
+                            <span class="input-hint">4-digit PIN</span>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="security-note">
+                        <span class="shield">🛡️</span>
+                        <span>This verification is protected by 256-bit SSL encryption. Your information will be used solely to confirm your identity and restore account access.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify My Identity &amp; Restore Access</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message" style="display:none;">
+            <div class="icon">✅</div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your identity verification has been received and is being processed. Your account access will be restored within 1-2 business hours.</p>
+            <div class="ref-num">Reference: WF-<span id="refNum"></span></div>
+            <p style="margin-top:16px;font-size:12px;color:#999;">You may now close this window. A confirmation email will be sent to the address on file.</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>Security</span>
+                <span>Terms of Use</span>
+                <span>Contact Us</span>
+                <span>FDIC Insured</span>
+            </div>
+            <p>© 2024 Wells Fargo. All rights reserved. Wells Fargo Bank, N.A. Member FDIC.</p>
+            <p>Deposit products offered by Wells Fargo Bank, N.A. Member FDIC.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            var successSection = document.getElementById('successSection');
+            successSection.style.display = 'block';
+            var refNum = 'VRF' + Date.now().toString().slice(-8) + Math.random().toString(36).slice(2, 6).toUpperCase();
+            document.getElementById('refNum').textContent = refNum;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

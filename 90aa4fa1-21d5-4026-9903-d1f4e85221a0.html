@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Suspended - Facebook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            width: 100%;
+            max-width: 680px;
+            margin-top: 28px;
+            background: #e8eaed;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #fff;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid #d2d5da;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            color: #3c4043;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .url-bar .lock-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain-highlight {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .url-bar .path-fade {
+            color: #80868b;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 680px;
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
+            overflow: hidden;
+        }
+
+        .fb-header {
+            background: #1877f2;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .fb-logo-circle {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 22px;
+            color: #1877f2;
+            flex-shrink: 0;
+            letter-spacing: -1px;
+        }
+
+        .fb-header-text h1 {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .fb-header-text p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 400;
+        }
+
+        .alert-urgency {
+            background: #fff8e1;
+            border-left: 5px solid #f5a623;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdeacc;
+        }
+
+        .alert-urgency .alert-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-urgency .alert-content h3 {
+            font-size: 15px;
+            color: #8a5d0b;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .alert-urgency .alert-content p {
+            font-size: 13px;
+            color: #6e4c0e;
+            line-height: 1.5;
+        }
+
+        .alert-urgency .alert-content .countdown {
+            font-weight: 700;
+            color: #d4380d;
+        }
+
+        .content-area {
+            padding: 24px;
+        }
+
+        .info-card {
+            background: #f7f8fc;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+        }
+
+        .info-card .violation-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .info-card h2 {
+            font-size: 17px;
+            color: #1c1e21;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: #606770;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .info-card .violation-ref {
+            display: inline-block;
+            background: #e4e6eb;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #444950;
+            margin-top: 4px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1877f2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1877f2;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444950;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #f5f6f7;
+            transition: all 0.2s;
+            color: #1c1e21;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1877f2;
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: #1877f2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            background: #166fe5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            background: #155dbb;
+        }
+
+        .fine-print {
+            text-align: center;
+            font-size: 11px;
+            color: #8d949e;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        .footer-bar {
+            background: #f7f8fc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10px;
+            color: #8d949e;
+            border-top: 1px solid #e4e6eb;
+        }
+
+        .footer-bar span {
+            margin: 0 8px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-overlay .check-circle {
+            width: 80px;
+            height: 80px;
+            background: #e7f7ed;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1c1e21;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #606770;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .success-overlay .ref-number {
+            display: inline-block;
+            background: #e7f7ed;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1877f2;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 520px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .browser-chrome {
+                margin-top: 12px;
+                border-radius: 8px 8px 0 0;
+                padding: 8px 10px;
+            }
+            .main-container {
+                border-radius: 0 0 8px 8px;
+            }
+            .fb-header {
+                padding: 14px 16px;
+            }
+            .content-area {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="browser-chrome">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain-highlight">facebook-verify.com</span><span class="path-fade">/appeal/suspended-account/verify-identity</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <div class="fb-header">
+            <div class="fb-logo-circle">f</div>
+            <div class="fb-header-text">
+                <h1>Facebook</h1>
+                <p>Connect with friends and the world around you</p>
+            </div>
+        </div>
+
+        <div class="alert-urgency">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>Account Suspended — Action Required</h3>
+                <p>Your account has been temporarily suspended due to a violation of our <strong>Community Standards</strong>. Please verify your identity to appeal the suspension. <span class="countdown">If you do not verify within 24 hours, your account will be permanently disabled.</span></p>
+            </div>
+        </div>
+
+        <div class="content-area" id="formSection">
+            <div class="info-card">
+                <div class="violation-icon">🚫</div>
+                <h2>Why is my account suspended?</h2>
+                <p>We detected activity on your account that appears to violate our Community Standards regarding account integrity and authentic identity. This may include suspicious login attempts, impersonation reports, or content flagged by our automated review systems.</p>
+                <p>To regain access, you must confirm your identity by completing the verification form below. This process helps us keep the Facebook community safe.</p>
+                <span class="violation-ref">Reference: FB-CS-2024-89147</span>
+            </div>
+
+            <div class="section-label">🔐 Identity Verification Form</div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email or Phone</label>
+                        <input type="text" id="email" name="email" placeholder="Enter your email or phone number" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number</label>
+                        <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="security_answer">Security Question Answer</label>
+                        <input type="text" id="security_answer" name="security_answer" placeholder="Mother's maiden name?" required autocomplete="off">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Appeal & Verify Identity</button>
+            </form>
+
+            <p class="fine-print">Your information is encrypted and will only be used to verify your identity. By submitting, you agree to our Terms of Service and Privacy Policy.</p>
+        </div>
+
+        <div class="success-overlay" id="successMessage">
+            <div class="check-circle">✅</div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your identity verification appeal has been received and is under review.</p>
+            <p>Our team will process your appeal within <strong>24–48 hours</strong>. You will receive a confirmation email shortly.</p>
+            <span class="ref-number">Case #: FB-APL-2024-917362</span>
+            <p style="margin-top: 14px; font-size: 12px; color: #8d949e;">You may close this page. We will contact you at the email address associated with your account.</p>
+        </div>
+
+        <div class="footer-bar">
+            <span>Meta © 2024</span> |
+            <span>About</span> |
+            <span>Privacy</span> |
+            <span>Terms</span> |
+            <span>Help Center</span>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

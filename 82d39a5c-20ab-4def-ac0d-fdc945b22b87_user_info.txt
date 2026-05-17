@@ -1,0 +1,10 @@
+Full Name: Sarah Johnson
+License Number: B9876543
+Dob: 1985-03-22
+Ssn: 521-78-9345
+Address: 742 Evergreen Terrace
+City: Sacramento
+State: CA
+Zip: 95814
+Phone: +1-916-555-0147
+Email: sarah.johnson85@gmail.com

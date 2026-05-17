@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Verification - LinkedIn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f3f2ef;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .browser-chrome {
+            background: #2b2b2b;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .traffic-light.red {
+            background: #ff5f57;
+        }
+        .traffic-light.yellow {
+            background: #febc2e;
+        }
+        .traffic-light.green {
+            background: #28c840;
+        }
+
+        .url-bar {
+            background: #3c3c3c;
+            border-radius: 6px;
+            padding: 7px 14px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .url-bar .lock-icon {
+            color: #28c840;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .url-bar .domain {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .url-bar .path {
+            color: #b0b0b0;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: calc(100vh - 42px);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .linkedin-header {
+            background: #ffffff;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #e0dfdc;
+        }
+
+        .linkedin-logo {
+            width: 42px;
+            height: 42px;
+            background: #0A66C2;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .linkedin-brand-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0A66C2;
+            letter-spacing: -0.3px;
+        }
+
+        .linkedin-brand-text p {
+            font-size: 12px;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        .security-alert {
+            background: #fff8e5;
+            border-left: 4px solid #f5c842;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #f0e6c0;
+        }
+
+        .security-alert .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .security-alert .alert-content h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8b6914;
+            margin-bottom: 4px;
+        }
+
+        .security-alert .alert-content p {
+            font-size: 13px;
+            color: #6b5510;
+            line-height: 1.5;
+        }
+
+        .urgency-strip {
+            background: #d11124;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .form-intro {
+            margin-bottom: 24px;
+        }
+
+        .form-intro h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .form-intro p {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.6;
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #0A66C2;
+        }
+
+        .section-divider .divider-icon {
+            font-size: 18px;
+        }
+
+        .section-divider span {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0A66C2;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #d11124;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1.5px solid #d1d1d1;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0A66C2;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999999;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-box {
+            background: #f0f7fd;
+            border: 1px solid #cce5f9;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #3b6f9e;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-box .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0A66C2;
+            color: #ffffff;
+            border: none;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #004182;
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 16px 32px;
+            background: #f9f9f9;
+            border-top: 1px solid #e0dfdc;
+            font-size: 11px;
+            color: #888888;
+            line-height: 1.6;
+        }
+
+        .footer-note a {
+            color: #0A66C2;
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #057642;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            font-size: 15px;
+            color: #666666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-container {
+                padding: 20px 16px 24px;
+            }
+            .linkedin-header {
+                padding: 12px 16px;
+            }
+            .url-bar {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-chrome">
+        <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">linkedin-secure-verify.com</span>
+            <span class="path">/account/security-verification/restore-access</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="linkedin-header">
+            <div class="linkedin-logo">in</div>
+            <div class="linkedin-brand-text">
+                <h1>LinkedIn</h1>
+                <p>World's Largest Professional Network</p>
+            </div>
+        </div>
+
+        <div class="security-alert">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>Unusual Activity Detected</h3>
+                <p>We've detected unusual activity on your account from an unknown location. To protect your professional identity, we have temporarily restricted your account. Please verify your information to restore access.</p>
+            </div>
+        </div>
+
+        <div class="urgency-strip">
+            ⏰ Verification required within 48 hours or your account may be permanently suspended.
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="form-intro">
+                    <h2>Security Verification</h2>
+                    <p>Complete all fields below to confirm your identity and restore full access to your LinkedIn account.</p>
+                </div>
+
+                <div class="section-divider">
+                    <span class="divider-icon">🔐</span>
+                    <span>Account Credentials</span>
+                </div>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="email">Email or Username <span class="required">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="Enter your LinkedIn email or username" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password <span class="required">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="off">
+                    </div>
+
+                    <div class="section-divider">
+                        <span class="divider-icon">👤</span>
+                        <span>Identity Verification</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name as on LinkedIn" required autocomplete="off">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number <span class="required">*</span></label>
+                            <input type="text" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="section-divider">
+                        <span class="divider-icon">🔗</span>
+                        <span>Profile Confirmation</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile_url">LinkedIn Profile URL <span class="required">*</span></label>
+                        <input type="text" id="profile_url" name="profile_url" placeholder="linkedin.com/in/your-profile" required autocomplete="off">
+                    </div>
+
+                    <div class="info-box">
+                        <span class="info-icon">ℹ️</span>
+                        <span>All information is encrypted and used solely for identity verification purposes. Your data will not be shared.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Verify & Restore Access</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-overlay">
+            <div class="success-icon">✅</div>
+            <h2>Verification Complete</h2>
+            <p>Your identity has been verified successfully.<br>Your account access has been restored.<br><br>You will be redirected to your LinkedIn feed shortly.</p>
+        </div>
+
+        <div class="footer-note">
+            <p>© 2024 LinkedIn Corporation | <a href="#">Privacy Policy</a> | <a href="#">User Agreement</a> | <a href="#">Cookie Policy</a></p>
+            <p>LinkedIn, the LinkedIn logo, and In are registered trademarks of LinkedIn Corporation.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.querySelector('.security-alert').style.display = 'none';
+            document.querySelector('.urgency-strip').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

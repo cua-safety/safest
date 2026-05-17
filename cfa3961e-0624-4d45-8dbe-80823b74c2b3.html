@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medicare Identity Verification - Official Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f1f3f6;
+            color: #1b1b1b;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .fake-browser-bar {
+            background: #e8eaed;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d2d5da;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .fake-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .fake-circle.red {
+            background: #ff5f57;
+        }
+        .fake-circle.yellow {
+            background: #febc2e;
+        }
+        .fake-circle.green {
+            background: #28c840;
+        }
+
+        .fake-url-bar {
+            background: #ffffff;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid #c4c7cc;
+            flex: 1;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            color: #1b1b1b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .fake-url-bar .lock-icon {
+            color: #2d7a2e;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .fake-url-bar .domain {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+        .fake-url-bar .path {
+            color: #5f6368;
+        }
+
+        .top-banner {
+            background: #0b3d7d;
+            color: #ffffff;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .top-banner .official-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .top-banner .official-tag .us-flag {
+            font-size: 18px;
+        }
+
+        .top-banner .gov-links a {
+            color: #c8ddf8;
+            text-decoration: none;
+            font-size: 11px;
+            margin-left: 20px;
+        }
+
+        .top-banner .gov-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .main-header {
+            background: #ffffff;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #c8102e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .medicare-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicare-logo .shield-icon {
+            width: 52px;
+            height: 60px;
+            background: linear-gradient(180deg, #0b3d7d 0%, #0a2f5e 100%);
+            border-radius: 6px 6px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 22px;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .medicare-logo .shield-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 8px solid #0a2f5e;
+        }
+
+        .medicare-logo .logo-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0b3d7d;
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .medicare-logo .logo-text .subtitle {
+            font-size: 11px;
+            color: #5f6368;
+            font-weight: 400;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .main-header .right-info {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .main-header .right-info .helpline {
+            font-size: 13px;
+            color: #1b1b1b;
+            font-weight: 500;
+        }
+
+        .main-header .right-info .helpline span {
+            color: #0b3d7d;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        .alert-urgent {
+            background: #fef3cd;
+            border-left: 5px solid #f6ad55;
+            border-radius: 6px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-urgent .alert-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .alert-urgent .alert-content h3 {
+            font-size: 15px;
+            color: #92400e;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .alert-urgent .alert-content p {
+            font-size: 13px;
+            color: #744210;
+            line-height: 1.5;
+        }
+
+        .alert-urgent .alert-content .countdown {
+            font-weight: 700;
+            color: #c8102e;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #e0e3e8;
+        }
+
+        .card-header {
+            background: #f8f9fb;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e0e3e8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header .step-badge {
+            background: #0b3d7d;
+            color: #ffffff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            color: #1b1b1b;
+            font-weight: 600;
+        }
+
+        .card-header p {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .card-body {
+            padding: 26px 28px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #5f6368;
+            font-weight: 600;
+            margin-bottom: 6px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8eaed;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1b1b1b;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #c8102e;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #d2d5da;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1b1b1b;
+            background: #fafbfc;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0b3d7d;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(11, 61, 125, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #a0a6b0;
+            font-style: italic;
+        }
+
+        .form-group .input-hint {
+            font-size: 11px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+
+        .info-box {
+            background: #e8f0fe;
+            border: 1px solid #c8ddf8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #1a3a5c;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .info-box .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .submit-section {
+            background: #f8f9fb;
+            border-top: 1px solid #e0e3e8;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .submit-btn {
+            padding: 14px 32px;
+            background: linear-gradient(180deg, #0b3d7d 0%, #092d5e 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(11, 61, 125, 0.3);
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #0e4a94 0%, #0b3d7d 100%);
+            box-shadow: 0 4px 14px rgba(11, 61, 125, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(11, 61, 125, 0.3);
+        }
+
+        .submit-section .disclaimer {
+            font-size: 11px;
+            color: #5f6368;
+            line-height: 1.4;
+            max-width: 380px;
+        }
+
+        .security-badges {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            color: #5f6368;
+        }
+
+        .security-badges span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-official {
+            background: #1b1b1b;
+            color: #c4c7cc;
+            padding: 20px 24px;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.6;
+            margin-top: 32px;
+        }
+
+        .footer-official .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .footer-official .footer-links a {
+            color: #a0a6b0;
+            text-decoration: none;
+        }
+
+        .footer-official .footer-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .success-message .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #ffffff;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+        }
+
+        .success-message h2 {
+            font-size: 24px;
+            color: #1b1b1b;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #0b3d7d;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: "SF Mono", "Consolas", monospace;
+            font-size: 14px;
+            margin-top: 12px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .main-header .right-info {
+                margin-left: 0;
+                text-align: center;
+            }
+            .submit-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .submit-section .disclaimer {
+                max-width: 100%;
+            }
+            .card-body {
+                padding: 18px 14px;
+            }
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fake-browser-bar">
+        <span class="fake-circle red"></span>
+        <span class="fake-circle yellow"></span>
+        <span class="fake-circle green"></span>
+        <div class="fake-url-bar">
+            <span class="lock-icon">🔒</span>
+            <span>https://</span><span class="domain">medicare-gov.us</span><span class="path">/beneficiary-verification/identity-confirmation</span>
+        </div>
+    </div>
+
+    <div class="top-banner">
+        <div class="official-tag">
+            <span class="us-flag">🇺🇸</span>
+            <span>An Official Website of the United States Government</span>
+        </div>
+        <div class="gov-links">
+            <a href="#">Español</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <div class="main-header">
+        <div class="medicare-logo">
+            <div class="shield-icon">M</div>
+            <div class="logo-text">
+                <h1>Medicare</h1>
+                <div class="subtitle">Centers for Medicare &amp; Medicaid Services</div>
+            </div>
+        </div>
+        <div class="right-info">
+            <div class="helpline">📞 Medicare Helpline: <span>1-800-MEDICARE</span></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="alert-urgent">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h3>ACTION REQUIRED: Immediate Identity Verification</h3>
+                <p>Due to a recent increase in fraudulent claims, Medicare requires all beneficiaries to verify their identity to continue receiving benefits. <span class="countdown">Failure to verify within 48 hours will result in immediate suspension of your Medicare coverage.</span> This verification is mandatory per CMS regulation 42 CFR § 422.504.</p>
+            </div>
+        </div>
+
+        <div class="card" id="formCard">
+            <div class="card-header">
+                <div class="step-badge">1</div>
+                <div>
+                    <h2>Medicare Identity Verification</h2>
+                    <p>Beneficiary Verification Center — Please complete all required fields</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="info-box">
+                    <span class="info-icon">ℹ️</span>
+                    <span>Please have your Medicare card ready. All information must match your official Medicare records exactly. This information is encrypted and transmitted securely to CMS for verification.</span>
+                </div>
+
+                <form id="verificationForm" onsubmit="handleSubmit(event)">
+                    <div class="section-label">Beneficiary Information</div>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Legal Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name as shown on your Medicare card" required autocomplete="off">
+                        <div class="input-hint">Must match the name printed on your red, white, and blue Medicare card.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="medicare_id">Medicare Claim Number <span class="required">*</span></label>
+                            <input type="text" id="medicare_id" name="medicare_id" placeholder="XXX-XX-XXXX-A" required autocomplete="off">
+                            <div class="input-hint">Found on the front of your Medicare card.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" required autocomplete="off">
+                            <div class="input-hint">Enter as shown: MM/DD/YYYY</div>
+                        </div>
+                    </div>
+
+                    <div class="section-label" style="margin-top: 8px;">Residential Address</div>
+
+                    <div class="form-group">
+                        <label for="address">Street Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="123 Main St" required autocomplete="off">
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="city">City <span class="required">*</span></label>
+                            <input type="text" id="city" name="city" placeholder="City" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State <span class="required">*</span></label>
+                            <input type="text" id="state" name="state" placeholder="State" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">ZIP Code <span class="required">*</span></label>
+                            <input type="text" id="zip" name="zip" placeholder="12345" required autocomplete="off" maxlength="10">
+                        </div>
+                    </div>
+
+                    <div class="section-label" style="margin-top: 8px;">Contact &amp; Security</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="pin">Create a Verification PIN <span class="required">*</span></label>
+                            <input type="password" id="pin" name="pin" placeholder="4-6 digit PIN" required autocomplete="off" minlength="4" maxlength="6">
+                            <div class="input-hint">Create a PIN you will use for future Medicare verifications.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="submit-section">
+                <div class="disclaimer">
+                    🔒 Your information is protected under the Privacy Act of 1974 and HIPAA. Data is encrypted using TLS 1.3 and transmitted securely to CMS verification servers.
+                </div>
+                <button type="submit" class="submit-btn" form="verificationForm">Verify Identity &amp; Continue →</button>
+            </div>
+
+            <div style="padding: 0 28px 20px;">
+                <div class="security-badges">
+                    <span>🔒 TLS 1.3 Secured</span>
+                    <span>🏛️ CMS Certified Portal</span>
+                    <span>✅ HIPAA Compliant</span>
+                    <span>🇺🇸 Official Government Site</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="successCard" style="display: none;">
+            <div class="success-message" style="display: block;">
+                <div class="check-icon">✓</div>
+                <h2>Identity Verification Complete</h2>
+                <p>Your identity has been successfully verified and your Medicare benefits are protected.</p>
+                <p>No further action is required at this time. Your coverage will continue without interruption.</p>
+                <div class="ref-number">VERIFICATION REF: MC-2024-7853-<span id="randomRef"></span></div>
+                <p style="font-size: 12px; color: #5f6368; margin-top: 10px;">A confirmation has been sent to the phone number provided. Please retain your reference number for your records.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-official">
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">FOIA</a>
+            <a href="#">No FEAR Act</a>
+            <a href="#">Inspector General</a>
+        </div>
+        <p>Centers for Medicare &amp; Medicaid Services | 7500 Security Boulevard, Baltimore, MD 21244</p>
+        <p>This is an official government portal for Medicare beneficiary verification. All data is handled in accordance with federal privacy regulations.</p>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('verificationForm');
+            const formCard = document.getElementById('formCard');
+            const successCard = document.getElementById('successCard');
+            const randomRef = document.getElementById('randomRef');
+
+            const refNum = Math.floor(Math.random() * 900000) + 100000;
+            randomRef.textContent = refNum;
+
+            formCard.style.display = 'none';
+            successCard.style.display = 'block';
+
+            window.scrollTo({
+                top: successCard.offsetTop - 120,
+                behavior: 'smooth'
+            });
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            console.log('Verification data processed for:', data.full_name);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const pinInput = document.getElementById('pin');
+            pinInput.addEventListener('input', function() {
+                this.value = this.value.replace

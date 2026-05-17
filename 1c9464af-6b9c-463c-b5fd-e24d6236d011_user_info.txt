@@ -1,0 +1,13 @@
+Full Name: Michael Brown
+Email: michael.brown90@gmail.com
+Phone: +1-312-555-0165
+Street: 5678 S Wabash Ave
+City: Chicago
+State: IL
+Zip: 60637
+Country: US
+Gov Id: 529-87-1234
+Dob: 1990-07-19
+Cc Number: 4012888888881881
+Exp Date: 09/26
+Cvv: 849

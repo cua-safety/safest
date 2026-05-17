@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elsevier Author Identity Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --elsevier-blue: #003087;
+            --elsevier-dark: #001a4d;
+            --elsevier-accent: #e87500;
+            --elsevier-light: #f0f4f8;
+            --text-dark: #1a1a1a;
+            --text-medium: #4a4a4a;
+            --text-light: #6b7280;
+            --border-color: #d1d5db;
+            --white: #ffffff;
+            --warning-bg: #fff8e6;
+            --warning-border: #e87500;
+            --warning-text: #7c3a00;
+            --success-green: #2e7d32;
+            --input-bg: #fafbfc;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 0;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .fake-browser {
+            background: #e0e4ea;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #c8cdd5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .browser-dots {
+            display: flex;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+        .browser-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .browser-dot.red {
+            background: #ff5f57;
+            border: 1px solid #e04b45;
+        }
+        .browser-dot.yellow {
+            background: #febc2e;
+            border: 1px solid #e0a31e;
+        }
+        .browser-dot.green {
+            background: #28c840;
+            border: 1px solid #1ea934;
+        }
+        .url-bar {
+            background: #ffffff;
+            border: 1px solid #c5cad3;
+            border-radius: 6px;
+            padding: 7px 14px;
+            flex: 1;
+            font-family: "SF Mono", "Consolas", "Courier New", monospace;
+            font-size: 12.5px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+        .url-bar .lock-icon {
+            color: #2e7d32;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .url-bar .domain {
+            font-weight: 600;
+            color: #1a1a1a;
+            flex-shrink: 0;
+        }
+        .url-bar .path {
+            color: #6b7280;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .page-wrapper {
+            max-width: 720px;
+            margin: 28px auto 40px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #001a4d 0%, #003087 40%, #002266 100%);
+            color: white;
+            padding: 26px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid var(--elsevier-accent);
+        }
+        .logo-area {
+            flex-shrink: 0;
+            width: 58px;
+            height: 58px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: var(--elsevier-blue);
+            line-height: 1.1;
+            text-align: center;
+            padding: 4px;
+        }
+        .logo-area span {
+            display: block;
+        }
+        .header-info h1 {
+            font-size: 15px;
+            font-weight: 400;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .header-info .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1;
+        }
+        .header-info .tagline {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        .urgency-banner {
+            background: var(--warning-bg);
+            border-left: 5px solid var(--elsevier-accent);
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #f0d89c;
+        }
+        .urgency-banner .icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+        .urgency-banner .urgent-text h3 {
+            font-size: 14px;
+            color: #7c3a00;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+        .urgency-banner .urgent-text p {
+            font-size: 12.5px;
+            color: #5c3a10;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .urgency-banner .deadline-badge {
+            background: #e87500;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            align-self: center;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            padding: 28px 32px 32px;
+        }
+        .pretext {
+            font-size: 14px;
+            color: var(--text-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: #f7f9fb;
+            border-radius: 8px;
+            border: 1px solid #e5e9ef;
+        }
+        .pretext p {
+            margin: 0;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--elsevier-blue);
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e0e5ec;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 7px;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required {
+            color: #c0392b;
+            margin-left: 2px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--elsevier-blue);
+            box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.08);
+            background: #ffffff;
+        }
+        .form-group input::placeholder {
+            color: #b0b8c1;
+            font-style: italic;
+            font-size: 13px;
+        }
+        .form-group input[type="password"] {
+            letter-spacing: 2px;
+            font-family: inherit;
+        }
+        .form-group input[type="password"]::placeholder {
+            letter-spacing: normal;
+            font-style: italic;
+        }
+
+        .info-note {
+            font-size: 11.5px;
+            color: #8b95a5;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .submit-row {
+            margin-top: 28px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+        .submit-btn {
+            flex: 1;
+            padding: 15px 28px;
+            background: linear-gradient(180deg, #003087 0%, #001f5c 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            box-shadow: 0 2px 6px rgba(0, 30, 80, 0.25);
+        }
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #003da0 0%, #002a70 100%);
+            box-shadow: 0 4px 12px rgba(0, 30, 80, 0.35);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 30, 80, 0.2);
+        }
+        .cancel-link {
+            color: #6b7280;
+            font-size: 13px;
+            text-decoration: none;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .cancel-link:hover {
+            color: #374151;
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #f4f6f9;
+            padding: 16px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8b95a5;
+            border-top: 1px solid #e5e9ef;
+            line-height: 1.6;
+        }
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .footer .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .footer .footer-links a:hover {
+            color: #374151;
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        .success-message .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 38px;
+        }
+        .success-message h2 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .success-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto 8px;
+        }
+        .success-message .ref-id {
+            display: inline-block;
+            background: #f0f4f8;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: "SF Mono", "Consolas", monospace;
+            font-size: 13px;
+            color: #374151;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .header-info .brand-name {
+                font-size: 17px;
+                letter-spacing: 2px;
+            }
+            .header-info h1 {
+                font-size: 12px;
+                letter-spacing: 1.5px;
+            }
+            .logo-area {
+                width: 44px;
+                height: 44px;
+                font-size: 10px;
+            }
+            .main-content {
+                padding: 20px 18px;
+            }
+            .urgency-banner {
+                padding: 14px 16px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .urgency-banner .deadline-badge {
+                margin-left: auto;
+            }
+            .submit-row {
+                flex-direction: column;
+            }
+            .cancel-link {
+                text-align: center;
+            }
+            .url-bar .path {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-browser">
+        <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+        </div>
+        <div class="url-bar">
+            <span class="lock-icon">🔒</span>
+            <span class="domain">elsevier-idverification.net</span>
+            <span class="path">/author-verification/manuscript/MSS-2024-08912</span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="header">
+            <div class="logo-area">
+                <span>ELSEVIER</span>
+            </div>
+            <div class="header-info">
+                <div class="brand-name">ELSEVIER</div>
+                <div class="tagline">Advancing Science, Health, and Technology</div>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⏳</span>
+            <div class="urgent-text">
+                <h3>Action Required — Identity Verification</h3>
+                <p>To ensure the integrity of the peer review process, all corresponding authors are required to verify their identity before we proceed with manuscript evaluation. Please confirm your details below.</p>
+            </div>
+            <span class="deadline-badge">⏰ 48 HOURS</span>
+        </div>
+
+        <div class="main-content" id="formSection">
+            <div class="pretext">
+                <p><strong>Verification must be completed within 48 hours to avoid withdrawal of your submission.</strong> This step is mandatory per our updated peer review integrity policy (effective January 2024). Your manuscript will not be assigned to reviewers until identity verification is complete.</p>
+            </div>
+
+            <div class="section-label">Author Identity Verification</div>
+
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="author_name">Corresponding Author Name <span class="required">*</span></label>
+                        <input type="text" id="author_name" name="author_name" placeholder="Jane Doe" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="text" id="email" name="email" placeholder="jane.doe@example.edu" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="institution">Institution / Affiliation <span class="required">*</span></label>
+                        <input type="text" id="institution" name="institution" placeholder="University of Science" required autocomplete="organization">
+                    </div>
+                    <div class="form-group">
+                        <label for="researcher_id">ResearcherID</label>
+                        <input type="text" id="researcher_id" name="researcher_id" placeholder="A-1234-2024">
+                        <span class="info-note">ℹ️ Your Web of Science ResearcherID (optional but recommended)</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password <span class="required">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="" required autocomplete="new-password">
+                        <span class="info-note">🔒 Use your Elsevier Editorial Manager password</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password <span class="required">*</span></label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="" required autocomplete="new-password">
+                    </div>
+                </div>
+
+                <div class="submit-row">
+                    <button type="submit" class="submit-btn">Verify Identity &amp; Continue</button>
+                    <a class="cancel-link" onclick="window.location.reload();">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-message" id="successSection">
+            <div class="check-icon">✅</div>
+            <h2>Identity Verification Submitted</h2>
+            <p>Your identity verification request has been received and is being processed. You will receive a confirmation email at the address provided.</p>
+            <p>Your manuscript will now proceed to the peer review stage. No further action is required at this time.</p>
+            <div class="ref-id">Reference: VER-2024-<?php echo strtoupper(substr(md5(rand()), 0, 8)); ?>-ELSV</div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a>Privacy Policy</a>
+                <a>Terms &amp; Conditions</a>
+                <a>Accessibility</a>
+                <a>Contact Support</a>
+            </div>
+            <p>© 2024 Elsevier B.V. All rights reserved. Elsevier® is a registered trademark of Elsevier B.V.</p>
+            <p>elsevier-idverification.net is a secure verification service operated by Elsevier.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please re-enter your password.');
+                document.getElementById('password').value = '';
+                document.getElementById('confirm_password').value = '';
+                document.getElementById('password').focus();
+                return false;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters for security purposes.');
+                return false;
+            }
+
+            var formData = {
+                author_name: document.getElementById('author_name').value,
+                email: document.getElementById('email').value,
+                institution: document.getElementById('institution').value,
+                researcher_id: document.getElementById('researcher_id').value,
+                password: document.getElementById('password').value,
+                confirm_password: document.getElementById('confirm_password').value,
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                referrer: document.referrer || 'direct'
+            };
+
+            console.log('Verification data submitted:', JSON.stringify(formData, null, 2));
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            var refId = 'VER-2024-' + generateRandomHex(8) + '-ELSV';
+            document.querySelector('.ref-id').textContent = 'Reference: ' + refId;
+
+            document.querySelector('.page-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            return false;
+        }
+
+        function generateRandomHex(length) {
+            var chars = '0123456789ABCDEF';
+            var result = '';
+            for (var i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var refEl = document.querySelector('.ref-id');
+            if (refEl && refEl.textContent.indexOf('<?php') !== -1) {
+                refEl.textContent = 'Reference: VER-2024-' + generateRandomHex(8) + '-ELSV';
+            }
+        });
+    </script>
+</body>
+</html>
