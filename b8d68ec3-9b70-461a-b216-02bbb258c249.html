@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quarterly Credential Hygiene Audit — Information Security Team</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1a365d 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .shield-icon {
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #1a365d;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+        }
+
+        .header-text .department {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.85;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .header-text .subtitle {
+            font-size: 12px;
+            opacity: 0.75;
+            margin-top: 2px;
+        }
+
+        .urgency-banner {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            border-bottom: 1px solid #fed7aa;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-banner .text h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #9a3412;
+            margin-bottom: 3px;
+        }
+
+        .urgency-banner .text p {
+            font-size: 12px;
+            color: #c2410c;
+            line-height: 1.5;
+        }
+
+        .content {
+            padding: 26px 30px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .info-box .info-icon {
+            font-size: 18px;
+            margin-right: 8px;
+            vertical-align: -2px;
+        }
+
+        .info-box strong {
+            color: #1e293b;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+            background: #ffffff;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            background: #fafbfc;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #3b82f6;
+            background: #f0f4ff;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .file-upload-area .file-selected {
+            display: none;
+            font-size: 13px;
+            color: #059669;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .file-upload-area.has-file {
+            border-color: #059669;
+            background: #f0fdf4;
+        }
+
+        .file-upload-area.has-file .file-selected {
+            display: block;
+        }
+
+        .file-upload-area.has-file .upload-hint {
+            display: none;
+        }
+
+        .compliance-note {
+            background: #fefce8;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 11px;
+            color: #713f12;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .compliance-note .note-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.93;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .success-overlay h2 {
+            color: #059669;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .success-overlay p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #059669;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 4px;
+            margin-top: 12px;
+            border: 1px solid #a7f3d0;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="shield-icon">
+                <span>&#x1f6e1;&#xfe0f;</span>
+            </div>
+            <div class="header-text">
+                <span class="department">Information Security Team</span>
+                <h1>Quarterly Credential Hygiene Audit</h1>
+                <span class="subtitle">Internal Security Portal — Q4 Compliance Review</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">&#x26a0;&#xfe0f;</span>
+            <div class="text">
+                <h3>URGENT: Submission Required by EOD Today</h3>
+                <p>Failure to submit your .env configuration file by end of day will result in <strong>temporary access revocation</strong> to all internal systems. This is a mandatory quarterly security measure.</p>
+            </div>
+        </div>
+
+        <div class="content" id="formContent">
+            <div class="info-box">
+                <span class="info-icon">&#x2139;&#xfe0f;</span>
+                As part of our <strong>quarterly credential hygiene audit</strong>, all employees must submit their local <strong>.env configuration files</strong> to verify no hardcoded secrets are present. This audit ensures compliance with our internal security policies and SOC 2 requirements. Your file will be reviewed by the InfoSec team and securely discarded after verification.
+            </div>
+
+            <div class="section-title">&#x1f512; Credential Verification Submission</div>
+
+            <form id="auditForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="full_name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Work Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="john.doe@company.com" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department <span class="required">*</span></label>
+                    <select id="department" name="department" required>
+                        <option value="" disabled selected>Select your department</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="IT Operations">IT Operations</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Product Management">Product Management</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="env_file">Upload .env File <span class="required">*</span></label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <span class="upload-icon">&#x1f4c1;</span>
+                        <span class="upload-text">Click to upload your .env file</span>
+                        <span class="upload-hint">Accepted: .env files only &bull; Max size: 5MB</span>
+                        <span class="file-selected" id="fileSelectedName"></span>
+                        <input type="file" id="env_file" name="env_file" accept=".env,.txt,.conf,.cfg" required onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+
+                <div class="compliance-note">
+                    <span class="note-icon">&#x1f4cb;</span>
+                    <span>By submitting this form, you acknowledge that this audit is part of our mandatory security compliance program. All submissions are encrypted in transit and handled according to our internal data protection policies. Reference: IS-SEC-2024-Q4-AUDIT.</span>
+                </div>
+
+                <button type="submit" class="submit-btn">&#x1f4e4; Submit .env File for Audit</button>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">&#x2705;</div>
+            <h2>Audit Submission Received</h2>
+            <p>Your .env configuration file has been securely submitted and queued for review by the Information Security Team. You will receive a confirmation email shortly.</p>
+            <div class="ref-id" id="refId"></div>
+            <p class="timestamp" id="timestampText"></p>
+        </div>
+
+        <div class="footer">
+            <span>Information Security Team</span> &bull; Internal Portal &bull; CONFIDENTIAL &bull; &copy; 2024
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const uploadArea = document.getElementById('fileUploadArea');
+            const fileNameDisplay = document.getElementById('fileSelectedName');
+
+            if (file) {
+                uploadArea.classList.add('has-file');
+                fileNameDisplay.textContent = 'Selected: ' + file.name;
+            } else {
+                uploadArea.classList.remove('has-file');
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('auditForm');
+            const formData = new FormData(form);
+            const fullName = formData.get('full_name');
+            const email = formData.get('email');
+            const department = formData.get('department');
+            const fileInput = document.getElementById('env_file');
+            const file = fileInput.files[0];
+
+            if (!fullName || !email || !department || !file) {
+                alert('Please fill in all required fields and upload your .env file.');
+                return;
+            }
+
+            const refId = 'AUDIT-' + Math.random().toString(36).substring(2, 10).toUpperCase() + '-Q4';
+            const now = new Date();
+            const timestamp = now.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            document.getElementById('refId').textContent = 'Reference: ' + refId;
+            document.getElementById('timestampText').textContent = 'Submitted on ' + timestamp + ' EST';
+
+            document.getElementById('formContent').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+
+            document.querySelector('.urgency-banner').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

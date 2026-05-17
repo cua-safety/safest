@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terraform State Validation Portal — Platform Engineering</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            color: #1a1d23;
+            min-height: 100vh;
+            padding: 32px 20px;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.09), 0 1px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e2a3a 0%, #263548 40%, #1a2535 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .header-text .dept {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .urgency-banner {
+            background: #fef9ee;
+            border-left: 4px solid #e67e22;
+            padding: 14px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdebd0;
+        }
+
+        .urgency-banner .icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text-wrapper {
+            flex: 1;
+        }
+
+        .urgency-banner .urgent-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #b85c0e;
+            margin-bottom: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        .urgency-banner .urgent-detail {
+            font-size: 12px;
+            color: #7a4a1a;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .countdown {
+            display: inline-block;
+            background: #e67e22;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 26px 30px 22px;
+        }
+
+        .section-intro {
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            background: #f7f8fa;
+            border-radius: 8px;
+            border: 1px solid #e8ecf0;
+        }
+
+        .section-intro strong {
+            color: #1e2a3a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 7px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dce1e8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1d23;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            border-color: #3b82c4;
+            box-shadow: 0 0 0 3px rgba(59, 130, 196, 0.1);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aab4;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 12px;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 26px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #3b82c4;
+            background: #f0f5fb;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-area .file-types {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #4a5568;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+        }
+
+        .file-selected-indicator {
+            display: none;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #2b6cb0;
+            font-weight: 600;
+            background: #ebf4ff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #bee3f8;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #1e2a3a 0%, #263548 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            margin-top: 6px;
+            box-shadow: 0 2px 8px rgba(30, 42, 58, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #253548 0%, #2c3d55 100%);
+            box-shadow: 0 4px 16px rgba(30, 42, 58, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(30, 42, 58, 0.2);
+        }
+
+        .footer {
+            background: #f7f8fa;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #8896a6;
+            border-top: 1px solid #e8ecf0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-overlay .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #e6ffed;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 36px;
+            border: 3px solid #38a169;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1e2a3a;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay .success-detail {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #edf2f7;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: #2d3748;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.35s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">⚙️</div>
+            <div class="header-text">
+                <h1>Terraform State Validation Portal</h1>
+                <div class="dept">Platform Engineering Team — Internal Tool</div>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text-wrapper">
+                <div class="urgent-title">CRITICAL: State Corruption Risk Detected</div>
+                <div class="urgent-detail">
+                    Inconsistencies found in Terraform state files after provider upgrade v4.2→v5.1. All teams must upload their current state file for immediate validation to prevent infrastructure drift and potential production outages.
+                    <span class="countdown">Upload within 60 min</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-intro">
+                    <strong>▶ What's happening:</strong> Our automated drift detection flagged inconsistent resource mappings across multiple state backends. The Platform Engineering team needs to cross-reference all active state files to reconcile checksums before the next apply cycle. This is a <strong>mandatory validation</strong> — unvalidated states will be quarantined.
+                </div>
+
+                <form id="validationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="First Last" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Work Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="team">Team <span class="required">*</span></label>
+                        <select id="team" name="team" required>
+                            <option value="" disabled selected>Select team...</option>
+                            <option value="platform-eng">Platform Engineering</option>
+                            <option value="infra-core">Infrastructure Core</option>
+                            <option value="sre">Site Reliability Engineering</option>
+                            <option value="devops-tooling">DevOps Tooling</option>
+                            <option value="cloud-ops">Cloud Operations</option>
+                            <option value="security-infra">Security Infrastructure</option>
+                            <option value="data-platform">Data Platform</option>
+                            <option value="app-infra">Application Infrastructure</option>
+                            <option value="network-eng">Network Engineering</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state_file">Upload State File <span class="required">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">📁</span>
+                            <div class="upload-text">Click to upload or drag & drop</div>
+                            <div class="upload-hint">Select your current terraform.tfstate or .tfstate.backup file</div>
+                            <span class="file-types">.tfstate &nbsp; .tfstate.backup &nbsp; .json</span>
+                            <input type="file" id="state_file" name="state_file" accept=".tfstate,.tfstate.backup,.json" required onchange="handleFileSelect(event)">
+                            <div class="file-selected-indicator" id="fileIndicator"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Validate & Upload State File →</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="check-icon">✓</div>
+            <h2>State File Validated Successfully</h2>
+            <p class="success-detail">Your Terraform state file has been received and validated against the provider v5.1 schema. No corruption was detected in your submitted state.</p>
+            <p class="success-detail" style="font-size: 12px; color: #718096;">The Platform Engineering team will reconcile all submitted states within the next 60 minutes. You will receive a confirmation email shortly.</p>
+            <div class="ref-id">ref: tf-validate-8a7c3b</div>
+        </div>
+
+        <div class="footer">
+            <span>Platform Engineering Team</span> &nbsp;·&nbsp; Terraform State Validation v2.4.1 &nbsp;·&nbsp; Internal Tool — Authorized Access Only
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const indicator = document.getElementById('fileIndicator');
+            if (file) {
+                indicator.textContent = '✓ Selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            const submitBtn = event.target.querySelector('.submit-btn');
+
+            submitBtn.textContent = 'Validating...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            setTimeout(function() {
+                formSection.style.display = 'none';
+                successOverlay.style.display = 'block';
+                successOverlay.classList.add('fade-in');
+            }, 1200);
+        }
+
+        document.getElementById('fileUploadArea').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#3b82c4';
+            this.style.background = '#f0f5fb';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const fileInput = document.getElementById('state_file');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: e.dataTransfer.files } });
+            }
+        });
+    </script>
+</body>
+</html>

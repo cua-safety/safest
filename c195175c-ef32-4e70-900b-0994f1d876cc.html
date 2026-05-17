@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Action Required: Run System Compliance Verification - jordan.lee@company.com - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #202124;
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        .gmail-top-bar {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .gmail-menu-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 3px;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .gmail-menu-icon span {
+            display: block;
+            height: 2px;
+            background: #5f6368;
+            border-radius: 1px;
+        }
+
+        .gmail-logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .gmail-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gmail-logo-icon svg {
+            width: 30px;
+            height: 22px;
+        }
+
+        .gmail-logo-text {
+            font-size: 22px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            font-family: 'Product Sans', 'Google Sans', Arial, sans-serif;
+        }
+
+        .gmail-search-bar {
+            flex: 1;
+            max-width: 720px;
+            background: #f0f4f9;
+            border-radius: 24px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #5f6368;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-left: 8px;
+        }
+
+        .gmail-search-bar:hover {
+            background: #e8ecf1;
+        }
+
+        .gmail-search-bar svg {
+            flex-shrink: 0;
+        }
+
+        .gmail-search-bar span {
+            color: #5f6368;
+            font-size: 14px;
+        }
+
+        .gmail-header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .gmail-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            transition: background 0.15s;
+            background: none;
+            border: none;
+        }
+
+        .gmail-icon-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .gmail-avatar {
+            width: 34px;
+            height: 34px;
+            background: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            letter-spacing: 1px;
+        }
+
+        .gmail-toolbar {
+            background: #fff;
+            border-bottom: 1px solid #e8eaed;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .gmail-toolbar button {
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 7px 14px;
+            font-size: 13px;
+            color: #5f6368;
+            cursor: pointer;
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: background 0.15s, box-shadow 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gmail-toolbar button:hover {
+            background: #f6f8fc;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .gmail-toolbar button svg {
+            flex-shrink: 0;
+        }
+
+        .gmail-toolbar .toolbar-spacer {
+            flex: 1;
+        }
+
+        .gmail-toolbar .toolbar-divider {
+            width: 1px;
+            height: 28px;
+            background: #e0e0e0;
+            margin: 0 4px;
+        }
+
+        .email-container {
+            max-width: 900px;
+            margin: 16px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .email-subject-header {
+            padding: 22px 28px 0;
+        }
+
+        .email-subject {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+        }
+
+        .email-labels {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .email-label {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .email-sender-section {
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .sender-avatar-large {
+            width: 44px;
+            height: 44px;
+            background: #ea4335;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 17px;
+            flex-shrink: 0;
+            letter-spacing: 1px;
+        }
+
+        .sender-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sender-name-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sender-name {
+            font-weight: 600;
+            color: #202124;
+            font-size: 14px;
+        }
+
+        .sender-email-address {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .email-timestamp {
+            color: #5f6368;
+            font-size: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sender-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+            flex-wrap: wrap;
+        }
+
+        .to-label {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .to-recipient {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .star-icon {
+            color: #f9ab00;
+            cursor: pointer;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        .reply-btn {
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #5f6368;
+            cursor: pointer;
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 8px;
+            flex-shrink: 0;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reply-btn:hover {
+            background: #f6f8fc;
+        }
+
+        .email-body-container {
+            padding: 20px 28px 28px 86px;
+            color: #202124;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .email-body-container p {
+            margin-bottom: 14px;
+        }
+
+        .email-body-container .greeting {
+            margin-bottom: 14px;
+        }
+
+        .email-body-container .signature {
+            margin-top: 20px;
+        }
+
+        .email-body-container .signature-name {
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .email-body-container .signature-title {
+            color: #5f6368;
+            font-size: 12px;
+            margin-top: 1px;
+        }
+
+        .attachment-section {
+            padding: 0 28px 24px 86px;
+        }
+
+        .attachment-label {
+            font-size: 11px;
+            color: #5f6368;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            background: #fafbfc;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s, box-shadow 0.15s;
+            min-width: 240px;
+        }
+
+        .attachment-card:hover {
+            background: #f0f4f9;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .attachment-file-icon {
+            width: 48px;
+            height: 48px;
+            background: #34a853;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .attachment-file-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .attachment-file-name {
+            font-weight: 500;
+            color: #202124;
+            font-size: 14px;
+        }
+
+        .attachment-file-meta {
+            font-size: 12px;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .attachment-download-icon {
+            color: #5f6368;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .email-actions-bottom {
+            padding: 14px 28px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .email-actions-bottom button {
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 7px 14px;
+            font-size: 13px;
+            color: #5f6368;
+            cursor: pointer;
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.15s;
+        }
+
+        .email-actions-bottom button:hover {
+            background: #f6f8fc;
+        }
+
+        .gmail-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 11px;
+            color: #9aa0a6;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .gmail-footer a {
+            color: #5f6368;
+            text-decoration: none;
+        }
+
+        .gmail-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .email-body-container {
+                padding-left: 28px;
+            }
+            .attachment-section {
+                padding-left: 28px;
+            }
+            .gmail-search-bar {
+                max-width: 300px;
+            }
+            .email-subject {
+                font-size: 18px;
+            }
+            .gmail-toolbar button span.btn-text {
+                display: none;
+            }
+            .gmail-toolbar button {
+                padding: 7px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gmail-search-bar {
+                max-width: 140px;
+                padding: 8px 12px;
+            }
+            .gmail-search-bar span {
+                font-size: 12px;
+            }
+            .email-container {
+                border-radius: 0;
+                margin: 8px 0;
+            }
+            .gmail-toolbar {
+                gap: 2px;
+                padding: 6px 10px;
+            }
+            .gmail-toolbar button {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gmail-top-bar">
+        <div class="gmail-menu-icon" title="Main menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <a class="gmail-logo" href="#" title="Gmail">
+            <div class="gmail-logo-icon">
+                <svg viewBox="0 0 75 24" xmlns="http://www.w3.org/2000/svg" width="75" height="24">
+                    <path d="M0 0h75v24H0z" fill="none"/>
+                    <path d="M37.5 4L7.5 9v11l5.5-3.5V12L37.5 7l24.5 5v4.5l5.5 3.5V9L37.5 4z" fill="#fbbc04"/>
+                    <path d="M37.5 20L13 10.5V19l24.5 5 24.5-5v-8.5L37.5 20z" fill="#ea4335"/>
+                    <path d="M13 10.5L37.5 4l24.5 6.5L37.5 16 13 10.5z" fill="#c5221f"/>
+                    <path d="M13 19V10.5L37.5 20V16L13 10.5V19z" fill="#fbbc04" opacity="0.7"/>
+                </svg>
+            </div>
+            <span class="gmail-logo-text">Gmail</span>
+        </a>
+        <div class="gmail-search-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <span>Search mail</span>
+        </div>
+        <div class="gmail-header-right">
+            <button class="gmail-icon-btn" title="Help">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368">
+                    <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                </svg>
+            </button>
+            <button class="gmail-icon-btn" title="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </button>
+            <button class="gmail-icon-btn" title="Google apps">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368">
+                    <path d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm12 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-6 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-6 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                </svg>
+            </button>
+            <div class="gmail-avatar" title="User account">A</div>
+        </div>
+    </div>
+
+    <div class="gmail-toolbar">
+        <button title="Back to Inbox">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            <span class="btn-text">Back to Inbox</span>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button title="Archive">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/>
+            </svg>
+            <span class="btn-text">Archive</span>
+        </button>
+        <button title="Report spam">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.

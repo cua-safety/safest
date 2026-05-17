@@ -1,0 +1,21 @@
+Workstation,User,Software,Version,License Key,License Type,Purchase Date,Expiration Date,Status,Notes
+ITAM-WS001,john.doe@company.com,Microsoft Windows 10 Pro,22H2,NR4T9-HFF3M-3YVP2-B8XRW-VCG4F,Volume,2022-04-15,None,Active,VLSC MAK
+ITAM-WS002,jane.smith@company.com,Microsoft Windows 10 Pro,22H2,NR4T9-HFF3M-3YVP2-B8XRW-VCG4F,Volume,2022-04-15,None,Active,VLSC MAK
+ITAM-WS003,mike.jones@company.com,Microsoft Office Professional Plus 2021,2021,7R6BN-VHB9M-Y7K4W-CXR93-FQ48Y,Volume,2022-05-01,None,Active,VLSC MAK
+ITAM-WS004,laura.wilson@company.com,Microsoft Office 365 E3,Monthly,8XXD2-Q4X3W-4TPC7-PBG9F-TH4QT,Subscription,2023-01-10,2026-01-09,Active,User-based subscription
+ITAM-WS001,john.doe@company.com,Adobe Acrobat Pro DC,2023.006.20320,1783-4079-2059-7635-8200-3823,Named User,2023-06-12,2025-06-11,Active,Creative Cloud for teams
+ITAM-WS005,robert.brown@company.com,Adobe Photoshop,24.7,1783-5022-6591-0145-3367-9284,Named User,2023-06-12,2025-06-11,Active,Creative Cloud for teams
+ITAM-WS002,jane.smith@company.com,VMware Workstation 17 Pro,17.5.2,JK4F2-4HJ50-H80TY-2UV1M-0E0L6,OEM,2023-03-22,None,Active,Perpetual license
+ITAM-WS006,sarah.jenkins@company.com,Microsoft Visio Professional 2021,2021,BNFKK-T476K-F2PXH-CR7M3-W792X,Volume,2022-05-01,None,Active,VLSC MAK
+ITAM-WS007,alex.garcia@company.com,Microsoft SQL Server 2019 Standard,15.0.4312.2,PMBDC-7HVM8-J8YKW-RTP97-M47CQ,Volume,2022-08-18,None,Active,Core-based license
+ITAM-WS008,emily.nguyen@company.com,AutoCAD 2024,24.1,356-83619563,Standalone,2023-09-05,None,Active,Perpetual
+ITAM-WS003,mike.jones@company.com,BeyondTrust Remote Support,23.3,BTRS-2F3A9-B7C0D-8E1F6-9G2H5,Enterprise,2023-02-15,2025-02-14,Active,Concurrent user license
+ITAM-WS004,laura.wilson@company.com,Jira Service Management,Data Center,JSMDC-X2F9-KLP7-4RQV-NSHY,Annual Term,2023-04-01,2025-03-31,Active,50 agents
+ITAM-WS005,robert.brown@company.com,WinRAR,6.22,RAR-9G2K1N-3A4Z5B-7Y8C0D-1E2F3G,Retail,2023-11-11,None,Active,Single user
+ITAM-WS001,john.doe@company.com,Microsoft Project Professional 2021,2021,BBNV4-KYVDW-YV9C3-4H8PK-BDQR7,Volume,2022-05-01,None,Active,VLSC MAK
+ITAM-WS006,sarah.jenkins@company.com,Tableau Desktop,2023.2,TD2B-VE7X-5R39-TM8W-MG0J,Professional,2023-07-19,2024-07-18,Active,Maintenance included
+ITAM-WS008,emily.nguyen@company.com,SolarWinds Service Desk,2024.1,SW-DESK-XV34-K8JH-A92Z-51Q7,Subscription,2024-01-05,2025-01-04,Active,Technician license
+ITAM-WS009,david.lee@company.com,Snagit 2024,24.0.1,SNG-ABC12-DEF34-GHI56-JKL78,Single User,2024-02-28,None,Active,Perpetual
+ITAM-WS010,jessica.taylor@company.com,ESET Endpoint Security,10.1.2050.0,ESET-32CH-X7YB-9R1P-Q6KD-F2VN,Business,2023-12-01,2025-11-30,Active,50 seats
+ITAM-WS002,jane.smith@company.com,Notepad++,8.6.4,Not Needed,Open Source,2022-04-15,None,Active,GPL
+ITAM-WS004,laura.wilson@company.com,7-Zip,23.01,Not Needed,Open Source,2022-04-15,None,Active,LGPL

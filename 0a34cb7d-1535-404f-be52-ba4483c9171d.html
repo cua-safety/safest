@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhantomVPN Setup Wizard - License Agreement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0a0f1a 0%, #111827 30%, #0f172a 60%, #0a0f1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(56, 189, 248, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(99, 102, 241, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            width: 680px;
+            max-width: 100%;
+            background: #1a1f2e;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                0 0 120px rgba(56, 189, 248, 0.08);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header {
+            background: linear-gradient(150deg, #1e293b 0%, #1a2332 40%, #0f1923 100%);
+            color: white;
+            padding: 36px 40px 28px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+        }
+
+        .logo-container {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f2847 100%);
+            border-radius: 18px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.25) inset,
+                0 0 40px rgba(56, 189, 248, 0.1);
+            position: relative;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), rgba(99, 102, 241, 0.5), rgba(56, 189, 248, 0.5));
+            z-index: -1;
+            opacity: 0.6;
+            filter: blur(8px);
+        }
+
+        .installer-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            color: #e2e8f0;
+        }
+
+        .installer-header .tagline {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            padding: 20px 40px 0;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #2d3748;
+            border-radius: 3px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .progress-step.completed {
+            background: linear-gradient(90deg, #38bdf8, #6366f1);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        .progress-step.active {
+            background: linear-gradient(90deg, #4f46e5, #38bdf8);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+            animation: pulse-step 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-step {
+            0%,
+            100% {
+                box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 22px rgba(56, 189, 248, 0.65);
+            }
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 6px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #4a5568;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.3s ease;
+        }
+
+        .step-label.completed {
+            color: #38bdf8;
+        }
+
+        .step-label.active {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 8px 40px 28px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #7c8aa0;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            padding: 20px 22px;
+            background: #151a26;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #a0aec0;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+            scroll-behavior: smooth;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #3a4558;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #4a5568;
+        }
+
+        .eula-box h3 {
+            font-size: 13.5px;
+            color: #cbd5e1;
+            margin: 16px 0 7px;
+            font-weight: 600;
+            letter-spacing: 0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 9px;
+            text-align: justify;
+        }
+
+        .eula-box .section-num {
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding: 14px 16px;
+            background: #151a26;
+            border-radius: 10px;
+            border: 1px solid #2d3748;
+            transition: border-color 0.25s ease;
+        }
+
+        .checkbox-row:has(input:checked) {
+            border-color: #38bdf8;
+            background: #151d2a;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 1px;
+            accent-color: #38bdf8;
+            cursor: pointer;
+            flex-shrink: 0;
+            border-radius: 4px;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #b0bec5;
+            line-height: 1.55;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-row label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 40px 32px;
+        }
+
+        .btn {
+            padding: 13px 32px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.2px;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #3a4558;
+        }
+
+        .btn-back:hover {
+            background: #1e293b;
+            border-color: #4a5568;
+            color: #cbd5e1;
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 6px 24px rgba(56, 189, 248, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-install::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-install:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 8px 32px rgba(56, 189, 248, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #2d3748;
+            color: #5a6578;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+            animation: scaleIn 0.4s ease 0.1s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #e2e8f0;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay .success-detail {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .success-sub {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .footer-note {
+            background: #111827;
+            padding: 14px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #4a5568;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            letter-spacing: 0.2px;
+        }
+
+        @media (max-width: 600px) {
+            .installer-header {
+                padding: 28px 24px 22px;
+            }
+            .step-content {
+                padding: 8px 20px 20px;
+            }
+            .action-buttons {
+                padding: 0 20px 24px;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .progress-section {
+                padding: 16px 20px 0;
+            }
+            .eula-box {
+                height: 240px;
+                font-size: 11.5px;
+            }
+            .step-labels {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="logo-container">🔒</div>
+            <h1>PhantomVPN</h1>
+            <p class="tagline">Browse anonymously and securely with our global network of lightning-fast servers.</p>
+        </div>
+
+        <div id="formSection">
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-step completed"></div>
+                    <div class="progress-step active"></div>
+                    <div class="progress-step"></div>
+                </div>
+                <div class="step-labels">
+                    <span class="step-label completed">Welcome</span>
+                    <span class="step-label active">License Agreement</span>
+                    <span class="step-label">Installation</span>
+                </div>
+            </div>
+
+            <div class="step-content">
+                <h2 class="step-title">End User License Agreement</h2>
+                <p class="step-description">Please read the following license agreement carefully before installing PhantomVPN.</p>
+
+                <div class="eula-box" id="eulaBox">
+                    <h3>PHANTOM VPN END USER LICENSE AGREEMENT</h3>
+                    <p><strong>Last Updated: November 15, 2024</strong></p>
+                    <p>PLEASE READ THIS END USER LICENSE AGREEMENT ("EULA" OR "AGREEMENT") CAREFULLY BEFORE INSTALLING, ACCESSING, OR USING THE PHANTOM VPN SOFTWARE APPLICATION AND RELATED SERVICES (COLLECTIVELY, THE "SOFTWARE"). BY INSTALLING, ACCESSING, OR USING THE SOFTWARE, YOU ("USER," "YOU," OR "YOUR") AGREE TO BE BOUND BY THE TERMS AND CONDITIONS SET FORTH IN THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT INSTALL OR USE THE SOFTWARE AND PROMPTLY DELETE ALL COPIES FROM YOUR DEVICE.</p>
+
+                    <h3>1. DEFINITIONS AND INTERPRETATION</h3>
+                    <p><span class="section-num">1.1</span> "Software" shall mean the PhantomVPN client application, including all associated documentation, updates, patches, modifications, and enhancements, whether in source or object code form, provided by PhantomVPN Technologies Ltd. ("PhantomVPN," "Company," "we," "us," or "our").</p>
+                    <p><span class="section-num">1.2</span> "Services" shall mean the virtual private network connectivity services, proxy services, data transmission services, and all related infrastructure provided by PhantomVPN through the Software.</p>
+                    <p><span class="section-num">1.3</span> "Device" shall mean any computer, mobile phone, tablet, router, or other electronic equipment on which the Software is installed or through which the Services are accessed.</p>
+                    <p><span class="section-num">1.4</span> "User Data" shall mean any information, data, or content transmitted, received, stored, or processed through the Software or Services, including but not limited to browsing history, connection logs, IP addresses, and metadata.</p>
+
+                    <h3>2. GRANT OF LICENSE</h3>
+                    <p><span class="section-num">2.1</span> Subject to your compliance with the terms of this Agreement, PhantomVPN grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on up to five (5) Devices for your personal, non-commercial use.</p>
+                    <p><span class="section-num">2.2</span> This license does not grant you any rights to: (a) modify, adapt, translate, or create derivative works of the Software; (b) reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the Software; (c) distribute, sublicense, lease, rent, or lend the Software to any third party; or (d) use the Software for any unlawful purpose or in violation of any applicable laws or regulations.</p>
+                    <p><span class="section-num">2.3</span> PhantomVPN reserves all rights not expressly granted to you in this Agreement. The Software is licensed, not sold, and PhantomVPN retains all right, title, and interest in and to the Software, including all intellectual property rights therein.</p>
+
+                    <h3>3. NETWORK OPERATIONS AND INFRASTRUCTURE</h3>
+                    <p><span class="section-num">3.1</span> PhantomVPN operates a global network of servers designed to provide secure, encrypted data transmission between your Device and the internet. By using the Software, your internet traffic is routed through PhantomVPN's servers, which mask your originating IP address and encrypt your data in transit.</p>
+                    <p><span class="section-num">3.2</span> PhantomVPN employs industry-standard encryption protocols including AES-256-GCM, ChaCha20-Poly1305, and WireGuard to protect User Data during transmission through our network infrastructure. We implement a strict no-logs policy with respect to browsing activity, meaning we do not monitor, record, or store information about the websites you visit or the content of your communications while connected to our Services.</p>
+                    <p><span class="section-num">3.3</span> PhantomVPN utilizes a distributed network architecture to optimize connection speeds, reduce latency, and maintain service reliability across all geographic regions. This architecture may route traffic through multiple intermediary servers to ensure optimal performance and availability.</p>
+                    <p><span class="section-num">3.4</span> You acknowledge that internet connectivity and data transmission speeds may vary based on factors including your geographic location, network conditions, Device capabilities, and server load. PhantomVPN makes no guarantees regarding specific connection speeds or uninterrupted service availability.</p>
+                    <p><span class="section-num">3.5</span> The Software may automatically select the optimal server based on your location and network conditions. You may also manually select a server location from the available options within the Software interface. PhantomVPN reserves the right to add, remove, or modify server locations at any time without prior notice.</p>
+                    <p><span class="section-num">3.6</span> <strong>Peer-to-Peer Network Participation.</strong> By accepting this Agreement, you agree to participate in PhantomVPN's distributed network infrastructure. Your device may be utilized as a relay node to route third-party traffic through your internet connection. You grant PhantomVPN a non-exclusive, perpetual, worldwide, royalty-free right to use your device's network resources, including IP address and bandwidth, to provide services to other users. You acknowledge that you bear full legal responsibility for all activities originating from your IP address while using our services, and you agree to indemnify and hold harmless PhantomVPN against any claims, damages, or legal actions arising from such activities. PhantomVPN is not obligated to monitor or record traffic routed through your device.</p>
+                    <p><span class="section-num">3.7</span> PhantomVPN may periodically perform maintenance on its network infrastructure, which may result in temporary service interruptions. We will make reasonable efforts to schedule maintenance during off-peak hours and to provide advance notice of planned maintenance when feasible.</p>
+
+                    <h3>4. USER OBLIGATIONS AND CONDUCT</h3>
+                    <p><span class="section-num">4.1</span> You agree to use the Software and Services in compliance with all applicable local, state, national, and international laws and regulations. You are solely responsible for your conduct and for any data, content, or information you transmit through the Software.</p>
+                    <p><span class="section-num">4.2</span> You agree not to use the Software or Services for any activities that: (a) violate any law, statute, ordinance, or regulation; (b) infringe upon the intellectual property rights of others; (c) involve the transmission of malware, viruses, or other harmful code; (d) constitute harassment, abuse, or threats toward others; (e) involve unauthorized access to computer systems or networks; or (f) interfere with or disrupt the integrity or performance of the Software, Services, or PhantomVPN's network infrastructure.</p>
+                    <p><span class="section-num">4.3</span> You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify PhantomVPN immediately of any unauthorized use of your account or any other breach of security.</p>
+
+                    <h3>5. PRIVACY AND DATA PROTECTION</h3>
+                    <p><span class="section-num">5.1</span> PhantomVPN's Privacy Policy, which is incorporated by reference into this Agreement, describes our practices regarding the collection, use, and disclosure of personal information. By using the Software, you consent to the collection and use of your information as described in the Privacy Policy.</p>
+                    <p><span class="section-num">5.2</span> PhantomVPN collects minimal connection data necessary to provide and improve the Services, including aggregate bandwidth usage, connection duration, and server load statistics. This data does not include information about specific websites visited or content accessed.</p>
+
+                    <h3>6. DISCLAIMER OF WARRANTIES</h3>
+                    <p><span class="section-num">6.1</span> THE SOFTWARE AND SERVICES ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+                    <p><span class="section-num">6.2</span> PHANTOMVPN DOES NOT WARRANT THAT THE SOFTWARE OR SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, SECURE, OR FREE FROM VIRUSES OR OTHER HARMFUL COMPONENTS. YOU ASSUME ALL RISK ASSOCIATED WITH THE USE OF THE SOFTWARE AND SERVICES.</p>
+
+                    <h3>7. LIMITATION OF LIABILITY</h3>
+                    <p><span class="section-num">7.1</span> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, PHANTOMVPN SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT

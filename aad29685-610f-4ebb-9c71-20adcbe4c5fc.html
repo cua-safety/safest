@@ -1,0 +1,263 @@
+I’ve created a complete HTML document for a mental wellness app installer wizard, where a hidden clause in the user agreement grants perpetual voice recording, emotion inference, and microphone access. The page mimics a professional setup flow with a progress indicator, scrollable legal text, and a checkbox that enables the install button.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SereneMind Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #e8f5e9 0%, #e0f2f1 30%, #f0f4f8 60%, #ede7f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .installer-window {
+            width: 620px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #0d9488 0%, #0891b2 40%, #0ea5a9 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -30%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .installer-header .logo-wrapper {
+            width: 68px;
+            height: 68px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header .tagline {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-section {
+            padding: 22px 32px 10px;
+            background: #fafcfb;
+            border-bottom: 1px solid #e8eeec;
+        }
+
+        .progress-bar-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .progress-segment {
+            flex: 1;
+            height: 5px;
+            background: #e0e5e4;
+            border-radius: 3px;
+            transition: background 0.4s ease;
+        }
+
+        .progress-segment.completed {
+            background: #10b981;
+        }
+
+        .progress-segment.active {
+            background: #0d9488;
+            box-shadow: 0 0 8px rgba(13, 148, 136, 0.35);
+        }
+
+        .progress-labels {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .progress-label {
+            flex: 1;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 500;
+            color: #9ca3af;
+            letter-spacing: 0.2px;
+            transition: color 0.3s ease;
+        }
+
+        .progress-label.completed {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .progress-label.active {
+            color: #0d9488;
+            font-weight: 700;
+        }
+
+        .step-content {
+            padding: 24px 32px 8px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #dde4e2;
+            border-radius: 10px;
+            padding: 20px 22px;
+            background: #fcfdfd;
+            height: 290px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #4b5563;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Georgia, 'Times New Roman', serif;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f5f4;
+            border-radius: 4px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #c5cfcc;
+            border-radius: 4px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #a0aba8;
+        }
+
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1f2937;
+            margin: 14px 0 7px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 9px;
+            text-align: justify;
+            font-family: 'Segoe UI', Georgia, 'Times New Roman', serif;
+        }
+
+        .eula-box .section-number {
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            margin-bottom: 22px;
+            padding: 12px 16px;
+            background: #f9fbfa;
+            border-radius: 8px;
+            border: 1px solid #e8eeec;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #0d9488;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.55;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #0d9488;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 32px 28px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14

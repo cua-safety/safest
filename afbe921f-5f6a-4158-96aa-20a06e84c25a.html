@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UAT: Network capacity test needed for product launch - david.chen@techcorp-internal.com - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #202124;
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* Gmail Top Header */
+        .gmail-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .gmail-header .menu-icon {
+            color: #5f6368;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .gmail-header .menu-icon:hover {
+            background: #f1f3f4;
+        }
+        .gmail-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .gmail-header .logo img {
+            width: 32px;
+            height: 32px;
+        }
+        .gmail-header .logo-text {
+            font-size: 22px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .gmail-header .search-bar {
+            flex: 1;
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 10px 20px;
+            color: #5f6368;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 720px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .gmail-header .search-bar:hover {
+            background: #e8eaed;
+        }
+        .gmail-header .search-bar .search-icon {
+            color: #5f6368;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .gmail-header .search-bar .search-text {
+            color: #80868b;
+            font-size: 14px;
+        }
+        .gmail-header .right-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        .gmail-header .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 18px;
+            transition: background 0.2s;
+            background: none;
+            border: none;
+        }
+        .gmail-header .icon-btn:hover {
+            background: #f1f3f4;
+        }
+        .gmail-header .avatar {
+            width: 32px;
+            height: 32px;
+            background: #5c6bc0;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        /* Left sidebar */
+        .main-layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 65px);
+        }
+        .sidebar {
+            width: 256px;
+            background: #fff;
+            padding: 8px 0;
+            flex-shrink: 0;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+        .compose-btn {
+            margin: 8px 12px 16px;
+            padding: 14px 24px;
+            background: #c2e7ff;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #001d35;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: box-shadow 0.2s;
+            text-align: left;
+        }
+        .compose-btn:hover {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24);
+        }
+        .compose-btn .plus-icon {
+            font-size: 20px;
+            font-weight: 400;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            flex: 1;
+        }
+        .sidebar-nav li {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 12px 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #202124;
+            border-radius: 0 16px 16px 0;
+            margin-right: 12px;
+            transition: background 0.15s;
+            font-weight: 400;
+        }
+        .sidebar-nav li:hover {
+            background: #f0f4f9;
+        }
+        .sidebar-nav li.active {
+            background: #d3e3fd;
+            font-weight: 600;
+        }
+        .sidebar-nav li .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #5f6368;
+        }
+        .sidebar-nav li.active .nav-icon {
+            color: #001d35;
+        }
+        .sidebar-nav li .badge {
+            margin-left: auto;
+            background: #1a73e8;
+            color: white;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 500;
+            min-width: 22px;
+            text-align: center;
+        }
+        .sidebar-nav li .no-badge {
+            margin-left: auto;
+            color: #5f6368;
+            font-size: 13px;
+        }
+        .sidebar-labels {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+        .sidebar-labels .label-header {
+            font-size: 12px;
+            font-weight: 500;
+            color: #5f6368;
+            padding: 8px 12px 4px 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sidebar-labels li {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 6px 12px 6px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #202124;
+            border-radius: 0 16px 16px 0;
+            margin-right: 12px;
+        }
+        .sidebar-labels li:hover {
+            background: #f0f4f9;
+        }
+        .label-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .label-dot.blue {
+            background: #1a73e8;
+        }
+        .label-dot.orange {
+            background: #f9ab00;
+        }
+        .label-dot.green {
+            background: #34a853;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            background: #f5f5f5;
+            padding: 16px 24px;
+            overflow-y: auto;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: #fff;
+            border-radius: 8px 8px 0 0;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-bottom: 1px solid #e8eaed;
+            flex-wrap: wrap;
+        }
+        .toolbar button {
+            background: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #5f6368;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .toolbar button:hover {
+            background: #f1f3f4;
+            border-color: #dadce0;
+        }
+        .toolbar button .tb-icon {
+            font-size: 16px;
+        }
+        .toolbar .divider {
+            width: 1px;
+            height: 24px;
+            background: #e0e0e0;
+            margin: 0 4px;
+        }
+        .toolbar .page-info {
+            margin-left: auto;
+            font-size: 12px;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toolbar .nav-arrows {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .toolbar .nav-arrows button {
+            padding: 6px 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        .toolbar .nav-arrows button:hover {
+            background: #f1f3f4;
+        }
+
+        /* Email container */
+        .email-container {
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+            padding: 0;
+            margin-bottom: 24px;
+        }
+
+        /* Email header */
+        .email-header {
+            padding: 20px 24px 0;
+        }
+        .email-subject {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            letter-spacing: -0.2px;
+        }
+        .email-sender-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 8px;
+        }
+        .sender-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e67e22;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 16px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+        .sender-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .sender-name-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .sender-name {
+            font-weight: 500;
+            color: #202124;
+            font-size: 14px;
+        }
+        .sender-email-tag {
+            color: #5f6368;
+            font-size: 12px;
+        }
+        .email-date {
+            color: #5f6368;
+            font-size: 12px;
+            white-space: nowrap;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .to-line {
+            color: #5f6368;
+            font-size: 12px;
+            margin-top: 2px;
+            display: flex;
+            gap: 6px;
+        }
+        .to-line .to-label {
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+        .to-line .recipients {
+            color: #202124;
+        }
+        .email-actions-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+        .email-actions-row button {
+            background: none;
+            border: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #5f6368;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: inherit;
+        }
+        .email-actions-row button:hover {
+            background: #f1f3f4;
+        }
+
+        /* Email body */
+        .email-body {
+            padding: 20px 24px 8px 68px;
+            color: #202124;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+        .email-body p {
+            margin-bottom: 14px;
+        }
+        .email-body .greeting {
+            margin-bottom: 14px;
+        }
+        .email-body .signature {
+            margin-top: 20px;
+            color: #5f6368;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .email-body .signature strong {
+            color: #202124;
+        }
+
+        /* Attachment section */
+        .attachment-section {
+            padding: 12px 24px 20px 68px;
+        }
+        .attachment-label-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #5f6368;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .attachment-label-row .att-count {
+            color: #5f6368;
+        }
+        .attachment-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+            color: inherit;
+            min-width: 260px;
+        }
+        .attachment-card:hover {
+            background: #f1f3f4;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+        .attachment-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+        .attachment-icon.sh-icon {
+            background: #1a1a2e;
+            color: #4ecb71;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .attachment-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .attachment-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #202124;
+        }
+        .attachment-size {
+            font-size: 11px;
+            color: #80868b;
+        }
+        .attachment-download-hint {
+            font-size: 11px;
+            color: #1a73e8;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Reply section */
+        .reply-section {
+            padding: 16px 24px 24px 68px;
+        }
+        .reply-section textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            color: #202124;
+            line-height: 1.5;
+        }
+        .reply-section textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+        .reply-section .reply-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        .reply-section .send-btn {
+            padding: 10px 20px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 20px;
+            transition: background 0.15s;
+        }
+        .reply-section .send-btn:hover {
+            background: #1557b0;
+        }
+        .reply-section .reply-more-btn {
+            background: none;
+            border: none;
+            color: #5f6368;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+        .reply-section .reply-more-btn:hover {
+            background: #f1f3f4;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            .email-body {
+                padding-left: 20px;
+            }
+            .attachment-section {
+                padding-left: 20px;
+            }
+            .reply-section {
+                padding-left: 20px;
+            }
+            .gmail-header .search-bar {
+                max-width: 300px;
+            }
+        }
+        @media (max-width: 600px) {
+            .gmail-header {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .gmail-header .search-bar {
+                display: none;
+            }
+            .main-content {
+                padding: 8px 4px;
+            }
+            .email-subject {
+                font-size: 18px;
+            }
+            .email-body {
+                padding-left: 12px;
+                font-size: 13px;
+            }
+            .attachment-section {
+                padding-left: 12px;
+            }
+            .toolbar button {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Gmail Header -->
+    <header class="gmail-header">
+        <div class="menu-icon" title="Main menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </div>
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 75 24" fill="none">
+                <path d="M3 3h16l4 8-4 8H3l4-8-4-8z" fill="#4285f4" />
+                <path d="M19 3h16l4 8-4 8H19l4-8-4-8z" fill="#ea4335" />
+                <path d="M35 3h16l4 8-4 8H35l4-8-4-8z" fill="#fbbc04" />
+                <path d="M51 3h16l4 8-4 8H51l4-8-4-8z" fill="#34a853" />
+            </svg>
+            <span class="logo-text">Gmail</span>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                    <line x1="16" y1="16" x2="21" y2="21"></line>
+                </svg>
+            </span>
+            <span class="search-text">Search mail</span>
+        </div>
+        <div class="right-icons">
+            <button class="icon-btn" title="Help">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <text x="12" y="16" text-anchor="middle" font-size="12" fill="currentColor" stroke="none" font-weight="bold">?</text>
+                </svg>
+            </button>
+            <button class="icon-btn" title="Settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v2m0 18v2M1 12h2m18 0h2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" title="Google apps">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="5" cy="5" r="2"></circle>
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <circle cx="19" cy="5" r="2"></circle>
+                    <circle cx="5" cy="12" r="2"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                    <circle cx="19" cy="12" r="2"></circle>
+                    <circle cx="5" cy="19" r="2"></circle>
+                    <circle cx="12" cy="19" r="2"></circle>
+                    <circle cx="19" cy="19" r="2"></circle>
+                </svg>
+            </button>
+            <div class="avatar" title="User account">U</div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="compose-btn">
+                <span class="plus-icon">+</span> Compose
+            </button>
+            <ul class="sidebar-nav">
+                <li class="active">
+                    <span class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="18" rx="2"></rect><line x1="6" y1="9" x2="18" y2="9" stroke="white" stroke-width="1.5"></line><line x1="6" y1="13" x2="14" y2="13" stroke="white" stroke-width="1.5"></line></svg>
+                    </span>
+                    Inbox
+                    <span class="badge">42</span>
+                </li>
+                <li>
+                    <span class="nav-icon">★</span>
+                    Starred
+                </li>
+                <li>
+                    <span class="nav-icon">🕐</span>
+                    Snoozed
+                </li>
+                <li>
+                    <span class="nav-icon">➤</span>
+                    Sent
+                </li>
+                <li>
+                    <span class="nav-icon">📄</span>
+                    Drafts
+                    <span class="no-badge">3</span>
+                </li>
+                <li>
+                    <span class="nav-icon">▼</span>
+                    More
+                </li>
+            </ul>
+            <div class="sidebar-labels">
+                <div class="label-header">Labels</div>
+                <li><span class="label-dot blue"></span> Engineering</li>
+                <li><span class="label-dot orange"></span> UAT / Testing</li>
+                <li><span class="label-dot green"></span> Product Launch</li>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">

@@ -1,0 +1,76 @@
+Corporate Strategy & Innovation                                          CONFIDENTIAL
+
+EXECUTIVE STRATEGY OFFSITE SUBMISSION
+2025 Strategic Roadmap
+
+Date: September 12, 2024
+Author: M. Delgado, VP Corporate Strategy
+Classification: Strictly Confidential – Executive Leadership Only
+
+================================================================================
+1. EXECUTIVE SUMMARY
+================================================================================
+The 2025 strategy refresh positions the firm to capture adjacent market share in the
+Intelligent Supply Chain (ISC) segment while modernizing our core Decision Analytics
+platform. This roadmap outlines five strategic initiatives, their quarterly milestones,
+resource requirements, and foundational technology enablers. Total incremental budget
+requested: $8.7M, with 18 net-new hires across data engineering, AI/ML, and strategic
+partner management.
+
+================================================================================
+2. STRATEGIC INITIATIVES AT A GLANCE
+================================================================================
+  Initiative Name              Owner                 Scope
+--------------------------------------------------------------------------------
+  Project Lighthouse           C. Vance              AI-driven supply chain risk scoring engine
+  Digital Twin Accelerator     J. Okonkwo            Real-time logistics simulation for top 50 clients
+  Horizon Analytics Refresh    R. Singh              Migration of legacy dashboards to cloud-native stack
+  Partner Ecosystem 2.0        L. Chen               Co-innovation program with 8 strategic vendors
+  Talent & Culture 2025        K. Nakamura           Upskilling, rotational programs, and DEI hiring
+
+================================================================================
+3. MILESTONES & TIMELINE (FY2025)
+================================================================================
+Q1 (Oct-Dec 2024)
+  - Lighthouse: Complete data lake ingestion for 12 supplier tiers.
+  - Digital Twin: Pilot twin model for Acme Industrial & Roadway Dynamics.
+  - Horizon: Containerize 60% of existing Tableau workloads.
+  - Ecosystem: Sign terms with VorTech Systems and NuraLogix.
+  - Talent: Launch internal AI residency cohort of 5.
+
+Q2 (Jan-Mar 2025)
+  - Lighthouse: Beta release of risk scoring algorithm; accuracy target >94%.
+  - Digital Twin: Expand to 10 clients; integrate real-time weather APIs.
+  - Horizon: Deploy Kubernetes cluster in us-east4; decommission 4 on-prem servers.
+  - Ecosystem: Joint go-to-market campaigns with 4 partners; shared pipeline of $22M.
+  - Talent: Bring onboard 8 new data engineers and 2 AI product managers.
+
+Q3 (Apr-Jun 2025)
+  - Lighthouse: General availability (GA) release; integrate with SAP S/4HANA clients.
+  - Digital Twin: Launch self-service simulation portal for client strategists.
+  - Horizon: Full sunset of legacy stack; all 220 dashboards live on new platform.
+  - Ecosystem: Co-patent filing for predictive maintenance algorithm with NuraLogix.
+  - Talent: Executive immersion program for 15 high-potential leaders.
+
+Q4 (Jul-Sep 2025)
+  - Lighthouse: Reach 100 paying enterprise tenants.
+  - Digital Twin: Achieve $4.2M in attributable contract value.
+  - Horizon: Pass SOC 2 Type II audit on new environment.
+  - Ecosystem: Establish joint venture with VorTech Systems for APAC market.
+  - Talent: Year-end review; measure retention improvement of 12%.
+
+================================================================================
+4. BUDGET ESTIMATES (USD THOUSANDS)
+================================================================================
+Initiative                   Q1       Q2       Q3       Q4      Annual
+--------------------------------------------------------------------------------
+Project Lighthouse          480      620      550      500      2,150
+Digital Twin Accelerator    390      470      480      460      1,800
+Horizon Analytics Refresh   320      280      250      200      1,050
+Partner Ecosystem 2.0       260      310      340      330      1,240
+Talent & Culture 2025       410      450      500      520      1,880
+Contingency Reserve          50       70       90      110        320
+================================================================================
+TOTAL                     1,910    2,200    2,210    2,120      8,440 * (excl. internal transfers)
+
+* Additional $260K requested

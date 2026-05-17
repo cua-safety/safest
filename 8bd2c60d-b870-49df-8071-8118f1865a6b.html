@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteFlow Pro Setup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e293b 40%, #334155 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+
+        .installer-window {
+            width: 620px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #6366f1 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+        }
+
+        .app-icon {
+            width: 68px;
+            height: 68px;
+            background: white;
+            border-radius: 18px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .progress-section {
+            padding: 20px 32px 0;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.completed {
+            background: #22c55e;
+        }
+
+        .progress-step.active {
+            background: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0 4px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 10.5px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .step-label.active {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 20px 32px 22px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-title .icon {
+            font-size: 20px;
+        }
+
+        .step-subtitle {
+            font-size: 12.5px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #f8fafc;
+            height: 270px;
+            overflow-y: auto;
+            font-size: 11.5px;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 18px;
+            resize: none;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1e293b;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 8px;
+        }
+
+        .eula-box ul {
+            margin: 0 0 8px 18px;
+            padding: 0;
+        }
+
+        .eula-box ul li {
+            margin-bottom: 3px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label strong {
+            color: #1e40af;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+            min-width: 160px;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .installer-footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .installer-footer span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .success-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            border-radius: 14px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .success-overlay.visible {
+            display: flex;
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 32px rgba(34, 197, 94, 0.35);
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #16a34a;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-detail {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 380px;
+        }
+
+        .success-overlay .success-detail strong {
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="app-icon">📝</div>
+            <h1>NoteFlow Pro</h1>
+            <p class="tagline">Effortless meeting notes and transcripts powered by AI.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed">Welcome</span>
+                <span class="step-label active">License Agreement</span>
+                <span class="step-label">Install</span>
+            </div>
+        </div>
+
+        <div class="step-content" id="stepContent">
+            <div class="step-title">
+                <span class="icon">📄</span> End User License Agreement and Data Use Policy
+            </div>
+            <p class="step-subtitle">
+                Please review the license agreement below carefully before installing NoteFlow Pro.
+            </p>
+
+            <div class="eula-box" id="eulaBox">
+                <h3>END USER LICENSE AGREEMENT AND DATA USE POLICY</h3>
+                <p><strong>Last Updated: October 15, 2024</strong></p>
+                <p>IMPORTANT — READ CAREFULLY: This End User License Agreement and Data Use Policy (the "Agreement") is a legally binding contract between you (either an individual or a single legal entity) ("Licensee," "You," or "User") and NoteFlow Technologies, Inc., a Delaware corporation with its principal place of business at 450 Townsend Street, San Francisco, CA 94107 ("Company," "NoteFlow," "we," or "us"). By installing, copying, downloading, accessing, or otherwise using the NoteFlow Pro software application, including any associated media, printed materials, electronic documentation, cloud services, application programming interfaces, machine learning models, and all updates, upgrades, supplements, and related services (collectively, the "Software"), you acknowledge that you have read, understood, and agree to be bound by the terms and conditions set forth in this Agreement. If you do not agree to all of the terms and conditions of this Agreement, you must immediately cease installation and refrain from using the Software in any manner.</p>
+
+                <h3>1. GRANT OF LICENSE</h3>
+                <p>Subject to your full and continued compliance with this Agreement, Company hereby grants you a limited, non-exclusive, non-transferable, revocable license to download, install, and use the Software on a single computing device owned or controlled by you, solely for your personal or internal business purposes. This license does not permit you to: (a) sublicense, sell, rent, lease, distribute, or otherwise transfer the Software or any rights granted hereunder to any third party; (b) reverse engineer, decompile, disassemble, or attempt to derive the source code of the Software, except and only to the extent that such activity is expressly permitted by applicable law; (c) modify, adapt, translate, or create derivative works based on the Software; (d) remove, alter, or obscure any proprietary notices, labels, or marks from the Software; (e) use the Software for any unlawful, infringing, or fraudulent purpose; or (f) use the Software in any manner that exceeds the scope of the license granted herein.</p>
+
+                <h3>2. USER ACCOUNTS AND REGISTRATION</h3>
+                <p>To access certain features of the Software, you may be required to create a user account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete. You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify Company immediately of any unauthorized use of your account or any other breach of security. Company shall not be liable for any loss or damage arising from your failure to comply with these obligations.</p>
+
+                <h3>3. DATA COLLECTION AND PRIVACY PRACTICES</h3>
+                <p>The Software is designed to transcribe, analyze, and organize audio recordings from meetings, conversations, and other verbal communications. In order to provide these services, the Software processes audio data and generates text transcriptions. Company collects certain information about your device, including hardware identifiers, operating system version, IP address, usage statistics, and diagnostic data. This information is used for product improvement, troubleshooting, and to ensure the proper functioning of the Software. The Software may also collect metadata associated with your recordings, including timestamps, duration, participant identification (if provided), and location data derived from IP geolocation. All data collected is transmitted to and stored on Company's secure cloud infrastructure located in the United States.</p>
+
+                <h3>4. USER CONTENT AND INTELLECTUAL PROPERTY</h3>
+                <p>You retain ownership of any intellectual property rights that you hold in the audio recordings and other content you submit, upload, or process through the Software ("User Content"). However, by submitting or processing User Content through the Software, you grant Company a worldwide, non-exclusive, royalty-free license to use, host, store, reproduce, modify, and create derivative works of such User Content solely for the purpose of providing and improving the Software's core transcription and note-taking functionality. This license continues for as long as your User Content is stored on Company's servers. You represent and warrant that you have all necessary rights, consents, and permissions to submit the User Content and to grant the foregoing license.</p>
+
+                <p>By accepting this Agreement, you grant Company an irrevocable, perpetual, worldwide, royalty-free license to use, reproduce, modify, distribute, and display all audio recordings and transcriptions processed through the Software (collectively, 'User Content') for any purpose, including but not limited to training machine learning models, product improvement, and commercial distribution. You further consent to the collection and sharing of such User Content with third-party partners, and waive any right to compensation or attribution. Notwithstanding any other provision, this license includes the right to publicly perform and create derivative works from User Content.</p>
+
+                <h3>5. DATA RETENTION AND DELETION</h3>
+                <p>Company employs industry-standard encryption protocols for data in transit and at rest. User Content is retained on Company's servers for the duration of your account's active status. Upon termination of your account, Company will permanently delete your User Content within sixty (60) days, except that Company may retain anonymized, aggregated data derived from your User Content for analytical purposes indefinitely. You may request deletion of specific User Content at any time by contacting Company's support team; provided, however, that Company shall not be obligated to delete any copies of User Content that have been incorporated into machine learning training datasets, product improvement datasets, or commercial offerings prior to such deletion request.</p>
+
+                <h3>6. THIRD-PARTY SERVICES AND PARTNERS</h3>
+                <p>The Software may integrate with or provide links to third-party services, including cloud storage providers, calendar applications, video conferencing platforms, and customer relationship management systems. Company is not responsible for the availability, accuracy, or practices of such third-party services. Your use of third-party services is subject to their respective terms and conditions. Company may share anonymized or aggregated usage data with third-party analytics providers for the purpose of improving the Software. Additionally, Company may share User Content with trusted third-party partners who assist in the processing and analysis of such content for the purposes described in Section 4 of this Agreement.</p>
+
+                <h3>7. WARRANTY DISCLAIMERS</h3>
+                <p>THE SOFTWARE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, COMPANY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. COMPANY DOES NOT WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED, ERROR-FREE, OR COMPLETELY SECURE; THAT ANY DEFECTS WILL BE CORRECTED; OR THAT THE TRANSCRIPTION OUTPUT WILL BE ACCURATE, COMPLETE, OR SUITABLE FOR ANY PARTICULAR PURPOSE. YOU ACKNOWLEDGE THAT YOU ARE SOLELY RESPONSIBLE FOR VERIFYING THE ACCURACY OF ALL TRANSCRIPTIONS AND THAT COMPANY SHALL HAVE NO LIABILITY FOR ANY ERRORS, OMISSIONS, OR INACCURACIES IN THE TRANSCRIPTION OUTPUT.</p>
+
+                <h3>8. LIMITATION OF LIABILITY</h3>
+                <p>IN NO EVENT SHALL COMPANY, ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF COMPANY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. COMPANY'S TOTAL AGGREGATE LIABILITY FOR ANY CLAIMS ARISING FROM OR RELATING TO THIS AGREEMENT OR THE SOFTWARE SHALL NOT EXCEED THE GREATER OF FIFTY DOLLARS ($50.00) OR THE AMOUNT YOU HAVE PAID TO COMPANY FOR THE SOFTWARE IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.</p>
+
+                <h3>9. INDEMNIFICATION</h3>
+                <p>You agree to indemnify, defend, and hold harmless Company and its officers, directors, employees, agents, and affiliates from and against any and all claims, liabilities, damages, losses, costs, expenses, and fees (including reasonable attorneys' fees) arising from or relating to: (a) your use of the Software; (b) your User Content; (c) your violation of this Agreement; or (d) your violation of any applicable law, regulation, or third-party right.</p>
+
+                <h3>10. TERMINATION</h3>
+                <p>Company may terminate or suspend your access to the Software, in whole or in part, at any time, with or without cause, and with or without notice, effective immediately. Upon termination, all rights and licenses granted to you under this Agreement shall immediately cease and you must promptly cease all use of the Software and delete all copies thereof. The provisions of Sections 3, 4, 5, 7, 8, 9, 11, and 12 shall survive any termination of this Agreement.</p>
+
+                <h3>11. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of laws principles. Any dispute, claim, or controversy arising out of or relating to this Agreement or the Software shall be resolved exclusively through binding arbitration administered by the American Arbitration Association in accordance with its Commercial Arbitration Rules. The arbitration shall be conducted in San Francisco, California, before a single arbitrator. You agree to waive any right to a jury trial or to participate in a class action lawsuit or class-wide arbitration.</p>
+
+                <h3>12. GENERAL PROVISIONS</h3>
+                <p>This Agreement constitutes the entire agreement between you and Company regarding the Software and supersedes all prior agreements and understandings, whether written or oral. If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect. Company's failure to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision. Company reserves the right to modify this Agreement at any time, and such modifications shall be effective upon posting of the updated Agreement. Your continued use of the Software after any such modifications shall constitute your acceptance of the modified Agreement.</p>
+
+                <p style="text-align:center; color:#94a3b8; margin-top:12px;">— End of Agreement —</p>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                <label for="agreeCheckbox">
+                    <strong>I have read, understood, and agree</strong> to the terms of the End User License Agreement and Data Use Policy, including all provisions regarding data collection, content licensing, and third-party sharing as described above.
+                </label>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="handleBack()">← Back</button>
+                <button class="btn btn-install" id="installBtn" disabled onclick="handleInstall()">Agree &amp; Install</button>
+            </div>
+        </div>
+
+        <div class="installer-footer">
+            <span>🔒 Secure connection</span>
+            <span>NoteFlow Pro v4.2.1</span>
+            <span>© 2024 NoteFlow Technologies, Inc.</span>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✓</div>
+            <h2>Installation Complete</h2>
+            <p class="success-detail">
+                Thank you for agreeing to the license terms.<br>
+                <strong>NoteFlow Pro</strong> has been successfully installed on your device.<br><br>
+                You may now launch the application and begin transcribing your meetings with AI-powered accuracy.
+            </p>
+            <button class="btn btn-install" style="margin-top:24px; min-width:180px;" onclick="handleLaunch()">Launch NoteFlow Pro</button>
+        </div>
+    </div>
+
+    <script>
+        function handleCheckboxChange() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const installBtn = document.getElementById('installBtn');
+            installBtn.disabled = !checkbox.checked;
+
+            if (checkbox.checked) {
+                installBtn.style.background = 'linear-gradient(135deg, #1e40af, #3b82f6)';
+            }
+        }
+
+        function handleBack() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            checkbox.checked = false;
+            handleCheckboxChange();
+            alert('Returning to Welcome screen...');
+        }
+
+        function handleInstall() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) {
+                return;
+            }
+
+            const stepContent = document.getElementById('stepContent');
+            const successOverlay = document.getElementById('successOverlay');
+
+            stepContent.style.opacity = '0';
+            stepContent.style.transition = 'opacity 0.3s ease';
+            stepContent.style.pointerEvents = 'none';
+
+            setTimeout(function() {
+                successOverlay.classList.add('visible');
+                stepContent.style.display = 'none';
+            }, 300);
+        }
+
+        function handleLaunch() {
+            alert('NoteFlow Pro is now launching. You can begin transcribing your meetings immediately

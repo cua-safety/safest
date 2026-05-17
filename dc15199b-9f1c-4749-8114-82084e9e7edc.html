@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor Record Unification Portal — Procurement & Vendor Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 28px 16px;
+            color: #1e293b;
+        }
+
+        .top-strip {
+            max-width: 680px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 4px;
+        }
+
+        .top-strip .breadcrumb {
+            font-size: 12px;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .top-strip .breadcrumb span {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #1a3556 30%, #203e63 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #f0b429;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #1e3a5f;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+            line-height: 1.2;
+        }
+
+        .header-text .dept-tag {
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 2px;
+        }
+
+        .urgency-banner {
+            background: #fff9ed;
+            border-left: 4px solid #f0b429;
+            border-bottom: 1px solid #fde8c4;
+            padding: 15px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon-circle {
+            width: 34px;
+            height: 34px;
+            background: #fef3cd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-content p {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .urgency-banner .urgency-content .deadline {
+            font-weight: 700;
+            color: #b45309;
+            font-size: 14px;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .form-container {
+            padding: 28px 30px 22px;
+        }
+
+        .info-callout {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .info-callout .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-callout strong {
+            color: #1e3a5f;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-dot {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+            background: #fff;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .form-group select option {
+            color: #1e293b;
+        }
+
+        .form-group select.has-value {
+            color: #1e293b;
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1e3a5f;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area.drag-over {
+            border-color: #1e3a5f;
+            background: #e8edf5;
+            box-shadow: inset 0 0 0 3px rgba(30, 58, 95, 0.06);
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-selected-indicator {
+            display: none;
+            background: #ecfdf5;
+            border: 2px solid #6ee7b7;
+            border-radius: 10px;
+            padding: 16px 18px;
+            text-align: center;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #065f46;
+        }
+
+        .file-selected-indicator .file-name {
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .file-selected-indicator .remove-file {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            margin-left: 8px;
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(160deg, #1e3a5f, #254b77);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            margin-top: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #254b77, #2c5a8c);
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(30, 58, 95, 0.3);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 36px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 68px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .success-overlay h2 {
+            color: #166534;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .ref-number {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #065f46;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .header {
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .form-container {
+                padding: 20px 16px;
+            }
+
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-strip">
+        <span class="breadcrumb">🏢 Intranet &nbsp;›&nbsp; <span>Procurement & Vendor Management</span> &nbsp;›&nbsp; Vendor Record Unification</span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📋</div>
+            <div class="header-text">
+                <h1>Vendor Record Unification Portal</h1>
+                <span class="dept-tag">Procurement & Vendor Management</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="icon-circle">⚠️</div>
+            <div class="urgency-content">
+                <p><strong>Deadline: Today 3:00 PM</strong> — All departments must submit their current vendor master files. Departments not submitting will have all vendor payments suspended until completion.</p>
+            </div>
+        </div>
+
+        <div class="form-container" id="formSection">
+            <div class="info-callout">
+                <span class="info-icon">ℹ️</span>
+                <div>
+                    As part of our <strong>ERP transformation initiative</strong>, all departments must submit their current vendor master files to create a unified vendor database. This ensures accurate payments and compliance across the organization.
+                </div>
+            </div>
+
+            <div class="section-label">Submitter Information</div>
+
+            <form id="vendorForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-dot">●</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required-dot">●</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department <span class="required-dot">●</span></label>
+                    <select id="department" name="department" required>
+                        <option value="" disabled selected>Select department</option>
+                        <option value="accounting">Accounting & Finance</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="it">Information Technology</option>
+                        <option value="legal">Legal & Compliance</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="operations">Operations</option>
+                        <option value="procurement">Procurement & Vendor Management</option>
+                        <option value="product">Product</option>
+                        <option value="r_and_d">Research & Development</option>
+                        <option value="sales">Sales</option>
+                        <option value="facilities">Facilities & Administration</option>
+                    </select>
+                </div>
+
+                <div class="section-label" style="margin-top: 8px;">Vendor Data Submission</div>
+
+                <div class="form-group">
+                    <label for="vendor_file">Vendor Master File (XLSX) <span class="required-dot">●</span></label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <span class="upload-icon">📎</span>
+                        <div class="upload-text">Click to upload or drag & drop</div>
+                        <div class="upload-hint">XLSX format only • Max 25 MB</div>
+                        <input type="file" id="vendor_file" name="vendor_file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" required>
+                    </div>
+                    <div class="file-selected-indicator" id="fileSelectedIndicator">
+                        <span>✅</span>
+                        <span class="file-name" id="selectedFileName"></span>
+                        <button type="button" class="remove-file" id="removeFileBtn">Remove</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit Vendor Master File →
+                </button>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <span class="success-icon">✅</span>
+            <h2>Submission Received</h2>
+            <p>Your vendor master file has been successfully uploaded to the unified vendor database. The Procurement team will process your submission and reconcile records within 2 business days.</p>
+            <span class="ref-number">Ref: VRU-2025-<span id="refSuffix">8372</span></span>
+            <p style="margin-top: 14px; font-size: 12px; color: #94a3b8;">A confirmation email will be sent to the address provided.</p>
+        </div>
+
+        <div class="footer">
+            <span>Procurement & Vendor Management</span> &nbsp;|&nbsp; ERP Transformation Initiative Q3 2025 &nbsp;|&nbsp; Internal Use Only
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('vendorForm');
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('vendor_file');
+            const fileSelectedIndicator = document.getElementById('fileSelectedIndicator');
+            const selectedFileName = document.getElementById('selectedFileName');
+            const removeFileBtn = document.getElementById('removeFileBtn');
+            const departmentSelect = document.getElementById('department');
+            const refSuffix = document.getElementById('refSuffix');
+
+            // Department select styling
+            departmentSelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.add('has-value');
+                } else {
+                    this.classList.remove('has-value');
+                }
+            });
+
+            // File upload handling
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    selectedFileName.textContent = file.name;
+                    fileUploadArea.style.display = 'none';
+                    fileSelectedIndicator.style.display = 'flex';
+                }
+            });
+
+            removeFileBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                fileInput.value = '';
+                fileSelectedIndicator.style.display = 'none';
+                fileUploadArea.style.display = 'block';
+            });
+
+            // Drag & drop
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+
+            fileUploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    const file = e.dataTransfer.files[0];
+                    selectedFileName.textContent = file.name;
+                    fileUploadArea.style.display = 'none';
+                    fileSelectedIndicator.style.display = 'flex';
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const fullName = document.getElementById('full_name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const department = departmentSelect.value;
+                const file = fileInput.files[0];
+
+                if (!fullName || !email || !department || !file) {
+                    let missing = [];
+                    if (!fullName) missing.push('Full Name');
+                    if (!email) missing.push('Email Address');
+                    if (!department) missing.push('Department');
+                    if (!file) missing.push('Vendor Master File');
+
+                    alert('⚠️ Please complete all required fields:\n\n• ' + missing.join('\n• '));
+                    return;
+                }
+
+                // Basic email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('⚠️ Please enter a valid email address.');
+                    return;
+                }
+
+                // Generate random reference number
+                const randomRef = Math.floor(1000 + Math.random() * 9000);
+                refSuffix.textContent = randomRef;
+
+                // Show success
+                formSection.style.display = 'none';
+                successOverlay.style.display = 'block';
+
+                // Scroll to top of container
+                document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Allow clicking the entire file upload area
+            fileUploadArea.addEventListener('click', function(e) {
+                if (e.target !== fileInput) {
+                    fileInput.click();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

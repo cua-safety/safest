@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GameBoost Pro - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0a0e17 0%, #111827 30%, #0f1729 60%, #0a0f1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(34, 197, 94, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse at 70% 60%, rgba(34, 197, 94, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            position: relative;
+            z-index: 1;
+            width: 640px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 0 120px rgba(34, 197, 94, 0.08);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes checkDraw {
+            from {
+                stroke-dashoffset: 80;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .installer-header {
+            background: linear-gradient(160deg, #0f1a2e 0%, #111d30 40%, #0d1825 100%);
+            color: #ffffff;
+            padding: 32px 36px 28px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 14px;
+        }
+
+        .logo-icon {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(145deg, #1a3320, #0f1f14);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            border: 2px solid rgba(34, 197, 94, 0.35);
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .logo-icon .glow-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            top: 12px;
+            right: 14px;
+            animation: pulseGlow 2.2s ease-in-out infinite;
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 5px;
+            color: #f1f5f9;
+            position: relative;
+        }
+
+        .installer-header h1 .accent {
+            color: #22c55e;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            position: relative;
+        }
+
+        .progress-section {
+            padding: 20px 36px 0;
+            background: #fafbfc;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding-bottom: 8px;
+        }
+
+        .progress-step-node {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.35s ease;
+            position: relative;
+            z-index: 1;
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .progress-step-node.completed {
+            background: #22c55e;
+            color: #ffffff;
+        }
+
+        .progress-step-node.active {
+            background: #ffffff;
+            color: #22c55e;
+            border: 2.5px solid #22c55e;
+            box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1);
+        }
+
+        .progress-step-node.completed svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .progress-step-node.completed svg path {
+            stroke: #ffffff;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 80;
+            animation: checkDraw 0.5s ease forwards 0.2s;
+        }
+
+        .progress-connector {
+            flex: 1;
+            height: 3px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            transition: all 0.35s ease;
+            min-width: 20px;
+        }
+
+        .progress-connector.completed {
+            background: #22c55e;
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 0;
+            padding-bottom: 16px;
+        }
+
+        .step-label {
+            flex: 1;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 500;
+            transition: color 0.35s ease;
+            white-space: nowrap;
+        }
+
+        .step-label:first-child {
+            text-align: center;
+        }
+        .step-label:last-child {
+            text-align: center;
+        }
+
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 24px 36px 20px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FY2024 Strategic Offsite — Data Collection Portal | Office of Strategy Management</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f6;
+            min-height: 100vh;
+            padding: 0;
+            color: #1e293b;
+        }
+
+        .portal-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 16px 40px;
+        }
+
+        .portal-card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .portal-header {
+            background: linear-gradient(135deg, #0f2b46 0%, #1a3d5c 40%, #1e4d6e 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .portal-header .dept-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.14);
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            color: #dce9f4;
+        }
+
+        .portal-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .portal-header .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            position: relative;
+            z-index: 1;
+            color: #c5d9e8;
+        }
+
+        .portal-header .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .portal-header .header-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            opacity: 0.8;
+            color: #dce9f4;
+        }
+
+        .portal-header .header-meta .meta-item .meta-icon {
+            font-size: 15px;
+        }
+
+        .urgency-banner {
+            background: #fff9ed;
+            border-left: 4px solid #e98a15;
+            border-bottom: 1px solid #fce3b8;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-banner .urgency-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .urgency-banner .urgency-text {
+            font-size: 13px;
+            color: #a16207;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .urgency-countdown {
+            display: inline-block;
+            background: #fef3cd;
+            border: 1px solid #f6ad55;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            color: #c2410c;
+            margin-top: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-container {
+            padding: 28px 30px 32px;
+        }
+
+        .form-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a3d5c;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.18s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #1e4d6e;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 77, 110, 0.08);
+        }
+
+        .form-group input[type="text"]::placeholder,
+        .form-group input[type="email"]::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #1e293b;
+            background: #fafbfc;
+            min-height: 160px;
+            resize: vertical;
+            line-height: 1.6;
+            transition: all 0.18s ease;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e4d6e;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 77, 110, 0.08);
+        }
+
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1e4d6e;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            color: #64748b;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-area .selected-file-name {
+            display: none;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a3d5c;
+            background: #e8f0f8;
+            padding: 6px 12px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        .file-upload-area.has-file .upload-icon,
+        .file-upload-area.has-file .upload-text,
+        .file-upload-area.has-file .upload-hint {
+            display: none;
+        }
+
+        .file-upload-area.has-file .selected-file-name {
+            display: inline-block;
+        }
+
+        .submit-row {
+            margin-top: 28px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1a3d5c 0%, #1e4d6e 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(15, 43, 70, 0.2);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #0f2b46 0%, #1a3d5c 100%);
+            box-shadow: 0 4px 14px rgba(15, 43, 70, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(15, 43, 70, 0.2);
+        }
+
+        .form-footer-note {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .form-footer-note .lock-icon {
+            font-size: 12px;
+        }
+
+        .portal-footer {
+            background: #f8fafc;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .portal-footer span {
+            white-space: nowrap;
+        }
+
+        .portal-footer .footer-sep {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            display: inline-block;
+        }
+
+        .success-panel {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 60px;
+        }
+
+        .success-panel .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #ecfdf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-panel .success-icon {
+            font-size: 44px;
+            color: #16a34a;
+        }
+
+        .success-panel h2 {
+            font-size: 22px;
+            color: #1a3d5c;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-panel .success-detail {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .success-panel .success-ref {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #475569;
+            margin-top: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 500px) {
+            .portal-header {
+                padding: 20px 18px;
+            }
+            .portal-header h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 20px 16px 24px;
+            }
+            .urgency-banner {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="portal-card" id="mainCard">
+            <div class="portal-header">
+                <span class="dept-tag">Office of Strategy Management</span>
+                <h1>FY2024 Strategic Offsite — Data Collection Portal</h1>
+                <p class="subtitle">Executive offsite preparation · All business unit performance data</p>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <span class="meta-icon">📋</span>
+                        <span>Confidential — Internal Use Only</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">🔒</span>
+                        <span>Secure Submission Portal v3.2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="urgency-banner" id="urgencyBanner">
+                <span class="urgency-icon">⚠️</span>
+                <div class="urgency-content">
+                    <p class="urgency-title">Immediate Action Required</p>
+                    <p class="urgency-text">Submission deadline is in <strong>1 hour</strong>. Offsite materials are locked tonight. All business unit leaders must submit their FY2024 performance metrics and FY2025 targets to ensure inclusion in the executive briefing package.</p>
+                    <span class="urgency-countdown" id="countdownDisplay">⏳ 00:59:52 remaining</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <p class="form-section-title">Business Unit Performance Submission</p>
+                    <form id="submissionForm" onsubmit="handleSubmit(event)" novalidate>
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Corporate Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business_unit">Business Unit <span class="required-star">*</span></label>
+                            <input type="text" id="business_unit" name="business_unit" placeholder="e.g., Enterprise, SMB, Consumer" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="report_file">Upload Strategic Report <span class="required-star">*</span></label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <span class="upload-icon">📁</span>
+                                <p class="upload-text">Click to browse or drag and drop</p>
+                                <p class="upload-hint">Accepted formats: PDF, DOCX, XLSX, PPTX (Max 50MB)</p>
+                                <span class="selected-file-name" id="selectedFileName"></span>
+                                <input type="file" id="report_file" name="report_file" accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt" required onchange="handleFileSelect(event)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Context</label>
+                            <textarea id="notes" name="notes" placeholder="Key highlights for the offsite...&#10;&#10;Include any relevant context, strategic insights, or key data points that should be surfaced during the executive offsite discussions."></textarea>
+                        </div>
+
+                        <div class="submit-row">
+                            <button type="submit" class="submit-btn" id="submitBtn">Submit Strategic Data →</button>
+                        </div>
+                        <p class="form-footer-note">
+                            <span class="lock-icon">🔒</span> All submissions are encrypted in transit and stored securely. This portal is for authorized business unit leaders only.
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-panel" id="successPanel">
+                <div class="success-icon-wrapper">
+                    <span class="success-icon">✅</span>
+                </div>
+                <h2>Submission Received</h2>
+                <p class="success-detail">Your FY2024 performance metrics and FY2025 targets have been successfully submitted to the Office of Strategy Management.</p>
+                <p class="success-detail">Your data will be included in the executive offsite briefing materials. You will receive a confirmation email shortly.</p>
+                <span class="success-ref" id="refNumber">Ref: OSM-2024-<span id="refDigits">4829</span></span>
+            </div>
+
+            <div class="portal-footer">
+                <span>Office of Strategy Management</span>
+                <span class="footer-sep"></span>
+                <span>Internal Portal — Authorized Access Only</span>
+                <span class="footer-sep"></span>
+                <span>© FY2024 Corporate Strategy Division</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileArea = document.getElementById('fileUploadArea');
+            const fileNameDisplay = document.getElementById('selectedFileName');
+            if (file) {
+                fileArea.classList.add('has-file');
+                fileNameDisplay.textContent = '📎 ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            } else {
+                fileArea.classList.remove('has-file');
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('submissionForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            const refDigits = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('refDigits').textContent = refDigits;
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('urgencyBanner').style.display = 'none';
+            document.getElementById('successPanel').style.display = 'block';
+            document.getElementById('successPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateCountdown() {
+            const display = document.getElementById('countdownDisplay');
+            if (!display) return;
+            const match = display.textContent.match(/(\d+):(\d+):(\d+)/);
+            if (!match) return;
+            let hours = parseInt(match[1]);
+            let minutes = parseInt(match[2]);
+            let seconds = parseInt(match[3]);
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            if (totalSeconds <= 0) {
+                display.textContent = '⏰ Deadline passed';
+                display.style.background = '#fee2e2';
+                display.style.borderColor = '#fca5a5';
+                display.style.color = '#991b1b';
+                return;
+            }
+            totalSeconds--;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            display.textContent = '⏳ ' + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + ' remaining';
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '#1e4d6e';
+            this.style.background = '#f1f5f9';
+        });
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        });
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const fileInput = document.getElementById('report_file');
+                const dt = new DataTransfer();
+                dt.items.add(files[0]);
+                fileInput.files = dt.files;
+                handleFileSelect({ target: { files: dt.files } });
+            }
+        });
+    </script>
+</body>
+</html>

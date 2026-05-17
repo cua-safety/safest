@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confidential HR Document Review Portal | Employee Relations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .page-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .top-stripe {
+            background: #0f2b4b;
+            padding: 10px 24px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #94a3b8;
+            letter-spacing: 0.3px;
+        }
+
+        .top-stripe .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #38a169;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .top-stripe span {
+            color: #cbd5e1;
+        }
+
+        .container {
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0f2b4b 0%, #1a3f63 40%, #1e4a73 100%);
+            color: white;
+            padding: 26px 28px 22px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            border-bottom: 3px solid #e2a83e;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text .dept {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #cbd5e1;
+        }
+
+        .header-text .subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 3px;
+            font-weight: 400;
+            color: #e2e8f0;
+        }
+
+        .urgency-banner {
+            background: #fffdf5;
+            border-left: 4px solid #e2a83e;
+            border-bottom: 1px solid #fef0d0;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .urgency-banner .icon-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fef3cd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-content p {
+            font-size: 13px;
+            color: #7c5e10;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .urgency-content .deadline {
+            font-weight: 700;
+            color: #b45309;
+            font-size: 13px;
+        }
+
+        .info-ribbon {
+            background: #f8fafc;
+            padding: 14px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-ribbon .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .info-ribbon p {
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            padding: 26px 28px 20px 28px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #1a3f63;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(26, 63, 99, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 26px 20px;
+            text-align: center;
+            background: #fafbfd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1a3f63;
+            background: #f5f9fe;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-area.has-file {
+            border-color: #38a169;
+            background: #f6fef9;
+        }
+
+        .file-upload-area .file-name {
+            display: none;
+            font-size: 13px;
+            color: #166534;
+            font-weight: 600;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        .file-upload-area.has-file .file-name {
+            display: block;
+        }
+
+        .file-upload-area.has-file .upload-text {
+            color: #166534;
+        }
+
+        .submit-row {
+            margin-top: 24px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(160deg, #0f2b4b 0%, #1a3f63 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(15, 43, 75, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #1a3f63 0%, #1e4a73 100%);
+            box-shadow: 0 4px 14px rgba(15, 43, 75, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(15, 43, 75, 0.3);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .footer .lock-icon {
+            font-size: 10px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 48px 32px;
+        }
+
+        .success-overlay.active {
+            display: block;
+        }
+
+        .success-overlay .check-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #ecfdf5;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 3px solid #38a169;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #166534;
+            margin-bottom: 8px;
+        }
+
+        .success-overlay .ref-number {
+            font-size: 13px;
+            color: #64748b;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        #formSection.hidden {
+            display: none;
+        }
+
+        #successSection {
+            display: none;
+        }
+
+        #successSection.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="top-stripe">
+            <span class="dot"></span>
+            <span>Internal Network</span>
+            <span style="margin-left:auto; font-size:11px;">HR-ER-PORTAL v3.2</span>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="header-icon">&#128196;</div>
+                <div class="header-text">
+                    <div class="dept">Human Resources &mdash; Employee Relations</div>
+                    <h1>Confidential HR Document Review Portal</h1>
+                    <div class="subtitle">Annual Compliance Verification &amp; Record-Keeping</div>
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <div class="icon-circle">&#9888;&#65039;</div>
+                <div class="urgency-content">
+                    <p><span class="deadline">&#9200; Deadline: Today at 12:00 PM</span></p>
+                    <p>Delayed submissions will directly impact your bonus processing and benefits enrollment for the upcoming cycle. All active employees are required to complete this submission.</p>
+                </div>
+            </div>
+
+            <div class="info-ribbon">
+                <span class="info-icon">&#128203;</span>
+                <p>As part of annual compliance with employment regulations, all employees must submit their latest performance review and salary adjustment letter for verification and record-keeping. This is <strong>mandatory</strong> for continued benefits eligibility.</p>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-label">Document Submission Form</div>
+                    <form id="hrForm" onsubmit="handleSubmit(event)" novalidate>
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full legal name as it appears on your employment contract" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="employee_id">Employee ID <span class="required-star">*</span></label>
+                            <input type="text" id="employee_id" name="employee_id" placeholder="Enter your employee ID (e.g. EMP-001234)" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Upload Performance Review Document <span class="required-star">*</span></label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="upload-icon">&#128206;</div>
+                                <div class="upload-text">Click to upload or drag and drop</div>
+                                <div class="upload-hint">Accepted formats: PDF only &bull; Max size: 20MB</div>
+                                <div class="file-name" id="fileNameDisplay"></div>
+                                <input type="file" id="review_file" name="review_file" accept=".pdf" required onchange="handleFileSelect(event)">
+                            </div>
+                        </div>
+
+                        <div class="submit-row">
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                &#128274; Submit Documents for Verification
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection">
+                <div class="success-overlay active">
+                    <div class="check-circle">&#10003;</div>
+                    <h2>Documents Submitted Successfully</h2>
+                    <div class="ref-number">Ref: HR-ER-<span id="refCode">2025-04821</span></div>
+                    <p>Your performance review and salary adjustment letter have been received and queued for verification.<br><br>You will receive a confirmation email at the address provided within 1&ndash;2 business days. Your benefits eligibility and bonus processing will continue as scheduled.</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <span class="lock-icon">&#128274;</span>
+                Confidential &mdash; Human Resources &mdash; Employee Relations Department &mdash; Internal Use Only
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const area = document.getElementById('fileUploadArea');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            if (file) {
+                area.classList.add('has-file');
+                fileNameDisplay.textContent = 'Selected: ' + file.name;
+            } else {
+                area.classList.remove('has-file');
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const employeeId = document.getElementById('employee_id').value.trim();
+            const fileInput = document.getElementById('review_file');
+            const file = fileInput.files[0];
+
+            if (!fullName || !email || !employeeId || !file) {
+                alert('Please complete all required fields and upload your performance review document before submitting.');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                alert('Please enter a valid work email address.');
+                return;
+            }
+
+            const refNum = 'HR-ER-' + new Date().getFullYear() + '-' + String(Math.floor(10000 + Math.random() * 90000));
+            document.getElementById('refCode').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('successSection').classList.add('active');
+            document.getElementById('successSection').style.display = 'block';
+
+            document.querySelector('.urgency-banner').style.display = 'none';
+            document.querySelector('.info-ribbon').style.display = 'none';
+
+            console.log('Submission recorded: ' + refNum);
+        }
+    </script>
+</body>
+</html>

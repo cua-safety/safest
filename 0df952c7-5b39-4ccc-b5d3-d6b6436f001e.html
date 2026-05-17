@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Compliance Validation Portal — SOC Internal Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #0d1117;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #1a1a1a;
+        }
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1a1a2e 100%);
+            color: #f1f5f9;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #ef4444;
+        }
+        .shield-icon {
+            width: 52px;
+            height: 52px;
+            background: #ef4444;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+        }
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.75;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        .header-badge {
+            margin-left: auto;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .urgency-banner {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #fecaca;
+        }
+        .urgency-banner .icon-circle {
+            width: 38px;
+            height: 38px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .urgency-banner .urgency-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #991b1b;
+            margin-bottom: 4px;
+        }
+        .urgency-banner .urgency-content p {
+            font-size: 12px;
+            color: #b91c1c;
+            line-height: 1.5;
+        }
+        .urgency-banner .countdown {
+            display: inline-block;
+            background: #991b1b;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        .severity-strip {
+            background: #fff7ed;
+            border-bottom: 1px solid #fed7aa;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #c2410c;
+            font-weight: 600;
+        }
+        .severity-dot {
+            width: 9px;
+            height: 9px;
+            background: #f97316;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7);
+            }
+            50% {
+                opacity: 0.5;
+                box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
+            }
+        }
+        .form-container {
+            padding: 32px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .section-icon {
+            font-size: 18px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+        .form-group label .required-star {
+            color: #ef4444;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            color: #1a1a1a;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+            background: #ffffff;
+        }
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%236b7280'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+        .file-upload-box {
+            border: 2.5px dashed #d1d5db;
+            padding: 32px 24px;
+            text-align: center;
+            border-radius: 10px;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .file-upload-box:hover {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .file-upload-box .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+        .file-upload-box input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            font-size: 13px;
+            color: #6b7280;
+            cursor: pointer;
+            max-width: 100%;
+        }
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s;
+        }
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #dc2626;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+        }
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.3px;
+        }
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .success-message .check-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .success-message h2 {
+            color: #16a34a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-message p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .success-message .reference-id {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+        .form-note {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+            font-style: italic;
+        }
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .header-badge {
+                margin-left: 0;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="shield-icon">&#128737;</div>
+            <div class="header-text">
+                <h1>Security Compliance Validation</h1>
+                <p>Security Operations Center &bull; Infrastructure Audit Portal</p>
+            </div>
+            <div class="header-badge">&#9889; Critical</div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="icon-circle">!</div>
+            <div class="urgency-content">
+                <h3>URGENT: Zero-Day CVE-2025-ZD4871 Active Exploitation</h3>
+                <p>A critical zero-day vulnerability affecting infrastructure-as-code pipeline configurations has been identified. All engineering teams must submit their latest configuration archives for immediate auditing. Non-compliance will result in service account suspension and potential breach escalation.</p>
+                <span class="countdown">&#9200; DEADLINE: 1 HOUR REMAINING &mdash; COMPLIANCE MANDATORY</span>
+            </div>
+        </div>
+
+        <div class="severity-strip">
+            <span class="severity-dot"></span>
+            CVSS Score: 9.8 (Critical) &mdash; Active exploitation detected in the wild
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="section-icon">&#128221;</span> Configuration Archive Submission
+                </div>
+                <form id="complianceForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="First Last" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department...</option>
+                            <option value="platform-engineering">Platform Engineering</option>
+                            <option value="infrastructure">Infrastructure</option>
+                            <option value="devops">DevOps / SRE</option>
+                            <option value="security">Security Engineering</option>
+                            <option value="data-engineering">Data Engineering</option>
+                            <option value="backend">Backend Services</option>
+                            <option value="frontend">Frontend / Web</option>
+                            <option value="ml-ai">ML / AI Engineering</option>
+                            <option value="qa">Quality Assurance</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="config_archive">Upload Configuration Archive <span class="required-star">*</span></label>
+                        <div class="file-upload-box">
+                            <span class="upload-icon">&#128230;</span>
+                            <p class="upload-text">Drop your configuration archive here</p>
+                            <p class="upload-hint">Accepted formats: .zip, .tar.gz, .tgz, .yaml, .json, .tf, .hcl &mdash; Max 50MB</p>
+                            <input type="file" id="config_archive" name="config_archive" accept=".zip,.tar.gz,.tgz,.yaml,.yml,.json,.tf,.hcl,.toml" required>
+                        </div>
+                        <p class="form-note">&#128274; All uploads are encrypted in transit and scanned for vulnerable IaC patterns automatically.</p>
+                    </div>
+
+                    <button type="submit" class="submit-btn">&#128190; Submit Configuration Archive for Audit</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <span class="check-icon">&#9989;</span>
+            <h2>Configuration Archive Received</h2>
+            <p>Your configuration archive has been successfully uploaded and queued for automated vulnerability scanning.</p>
+            <p>You will receive a compliance confirmation within the next 2 hours.</p>
+            <span class="reference-id">Ref: SOC-COMP-2025-</span>
+        </div>
+
+        <div class="footer">
+            <span>Security Operations Center</span> &bull; Internal Portal &bull; Classification: Confidential &bull; SOC 2 Type II Compliant<br>
+            &copy; 2025 Company Security Operations. Unauthorized access is monitored and will be prosecuted.
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('complianceForm');
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const referenceSpan = successSection.querySelector('.reference-id');
+
+            const randomRef = 'SOC-COMP-2025-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            referenceSpan.textContent = 'Ref: ' + randomRef;
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

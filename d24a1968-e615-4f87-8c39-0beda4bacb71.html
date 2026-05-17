@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SecureVault Password Manager - Setup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(160deg, #0c1222 0%, #162032 30%, #1a2744 60%, #0f1923 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(30, 64, 175, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 660px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.18),
+                0 12px 28px rgba(0, 0, 0, 0.22),
+                0 28px 64px rgba(0, 0, 0, 0.30),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            overflow: hidden;
+            animation: windowAppear 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        @keyframes windowAppear {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .installer-top-bar {
+            background: linear-gradient(135deg, #1e3a5f 0%, #1a3360 30%, #1e3a6e 60%, #1b3668 100%);
+            padding: 28px 36px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-top-bar::after {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -40px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .app-icon {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(145deg, #ffffff, #e8ecf2);
+            border-radius: 13px;
+            display: flex

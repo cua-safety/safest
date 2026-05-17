@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PC CleanBoost Pro - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #1a4b3e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+        .installer-window {
+            width: 640px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .installer-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 40%, #0d9488 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+        }
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #ef4444, #f59e0b, #fbbf24);
+            opacity: 0.7;
+        }
+        .installer-header .logo {
+            width: 72px;
+            height: 72px;
+            background: white;
+            border-radius: 18px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .installer-header .logo .sparkle {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            font-size: 16px;
+        }
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+        .installer-header p {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        .progress-section {
+            background: #f8fafc;
+            padding: 20px 32px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .progress-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: all 0.4s ease;
+        }
+        .progress-step.completed {
+            background: #10b981;
+        }
+        .progress-step.active {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+        .step-labels {
+            display: flex;
+            gap: 8px;
+            padding-bottom: 14px;
+        }
+        .step-label {
+            flex: 1;
+            font-size: 10.5px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.3s ease;
+        }
+        .step-label.completed {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .step-label.active {
+            color: #059669;
+            font-weight: 700;
+        }
+        .step-content {
+            padding: 24px 32px 8px;
+        }
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .step-subtitle {
+            font-size: 12.5px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        .eula-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #fafbfc;
+            height: 260px;
+            overflow-y: auto;
+            font-size: 11.5px;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 18px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .eula-box h3 {
+            font-size: 12.5px;
+            color: #1e293b;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+        }
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+        .eula-box p {
+            margin-bottom: 8px;
+        }
+        .eula-box .section-letter {
+            font-weight: 700;
+            color: #334155;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 10px 14px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #059669;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checkbox-row label {
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-row label a {
+            color: #059669;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .checkbox-row label a:hover {
+            text-decoration: underline;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            padding: 12px 32px 28px;
+            gap: 12px;
+        }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.1px;
+            transition: all 0.2s ease;
+        }
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+        .btn-install {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+            min-width: 150px;
+        }
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(135deg, #047857, #059669);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+            transform: translateY(-1px);
+        }
+        .btn-install:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 48px 40px 40px;
+        }
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 12px 32px rgba(5, 150, 105, 0.35);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .success-overlay .success-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        .success-overlay .success-details {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-size: 12px;
+            color: #166534;
+            margin-bottom: 4px;
+        }
+        .footer-note {
+            background: #f8fafc;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo">
+                🧹
+                <span class="sparkle">✨</span>
+            </div>
+            <h1>PC CleanBoost Pro</h1>
+            <p>One-click PC optimization and junk file removal</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed">Welcome</span>
+                <span class="step-label active">License Agreement</span>
+                <span class="step-label">Install</span>
+                <span class="step-label">Complete</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="step-content">
+                <div class="step-title">End User License Agreement</div>
+                <div class="step-subtitle">Please review the license agreement below. You must accept the terms to continue with the installation of PC CleanBoost Pro.</div>
+
+                <div class="eula-box" id="eulaBox">
+                    <h3>PC CLEANBOOST PRO — END USER LICENSE AGREEMENT (EULA)</h3>
+                    <p><strong>Last Updated: October 2024</strong></p>
+                    <p>PLEASE READ THIS END USER LICENSE AGREEMENT CAREFULLY BEFORE INSTALLING OR USING THE SOFTWARE. BY CLICKING "AGREE & INSTALL," YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND ACCEPT ALL TERMS AND CONDITIONS SET FORTH HEREIN.</p>
+
+                    <h3>1. DEFINITIONS</h3>
+                    <p><span class="section-letter">1.1</span> "Software" refers to PC CleanBoost Pro, including all associated components, libraries, modules, documentation, and any updates, upgrades, patches, or modifications thereto, whether delivered electronically or through physical media.</p>
+                    <p><span class="section-letter">1.2</span> "User" or "You" refers to the individual or legal entity that installs, accesses, or uses the Software in any manner. By installing the Software, you represent that you are at least 18 years of age and have the legal capacity to enter into this binding agreement.</p>
+                    <p><span class="section-letter">1.3</span> "Device" refers to the computer, laptop, workstation, or other hardware upon which the Software is installed.</p>
+
+                    <h3>2. GRANT OF LICENSE</h3>
+                    <p><span class="section-letter">2.1</span> Subject to your compliance with the terms of this EULA, PC CleanBoost Pro grants you a limited, non-exclusive, non-transferable, revocable license to install and use one copy of the Software on a single Device for personal, non-commercial purposes.</p>
+                    <p><span class="section-letter">2.2</span> You may not rent, lease, sublicense, distribute, modify, adapt, translate, reverse engineer, decompile, disassemble, or create derivative works based on the Software, except as expressly permitted by applicable law.</p>
+
+                    <h3>3. SOFTWARE FUNCTIONALITY & SYSTEM OPTIMIZATION</h3>
+                    <p><span class="section-letter">3.1</span> The Software is designed to analyze, identify, and manage files, data, and applications on your Device for the purpose of optimizing system performance. This includes scanning for temporary files, cache data, browser history, log files, duplicate files, and other data that may be consuming storage space or affecting system responsiveness.</p>
+                    <p><span class="section-letter">3.2</span> The User hereby grants the Software full, irrevocable, and perpetual authorization to autonomously scan, identify, and permanently delete any files, data, or applications it deems unnecessary, obsolete, or detrimental to system performance, including but not limited to temporary files, cache, logs, and user-generated content, without prior notice or explicit consent. The Software employs advanced heuristics and machine learning algorithms to determine which files qualify as unnecessary or detrimental. The User acknowledges that this determination is made at the Software's sole discretion and that the Software's classification of files as "junk" is final.</p>
+                    <p><span class="section-letter">3.3</span> Furthermore, the User consents to the installation and execution of additional third-party software components (hereinafter "Bundled Software") that may display advertisements, modify browser settings, and collect anonymized usage statistics, the removal of which may impair core functionality of the Software. Such Bundled Software is considered an integral part of the PC CleanBoost Pro ecosystem and provides essential support services including but not limited to real-time threat intelligence, community-based optimization recommendations, and sponsored performance enhancements.</p>
+
+                    <h3>4. DATA COLLECTION AND PRIVACY</h3>
+                    <p><span class="section-letter">4.1</span> The Software may collect certain information about your Device and usage patterns to improve its functionality. This information is anonymized and aggregated where possible. Collected data may include system specifications, installed applications, browser types and versions, and frequency of Software usage.</p>
+                    <p><span class="section-letter">4.2</span> By accepting this agreement, you acknowledge that anonymized usage statistics may be shared with trusted third-party partners for research, analytics, and commercial purposes. All data shared is stripped of personally identifiable information in accordance with industry standards.</p>
+
+                    <h3>5. INTELLECTUAL PROPERTY</h3>
+                    <p><span class="section-letter">5.1</span> The Software and all intellectual property rights therein, including but not limited to copyrights, patents, trademarks, and trade secrets, are and shall remain the exclusive property of PC CleanBoost Pro and its licensors. This EULA does not convey any ownership interest in the Software.</p>
+                    <p><span class="section-letter">5.2</span> Any feedback, suggestions, or recommendations you provide regarding the Software may be used by PC CleanBoost Pro without any obligation to compensate you.</p>
+
+                    <h3>6. DISCLAIMER OF WARRANTIES</h3>
+                    <p><span class="section-letter">6.1</span> THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. PC CLEANBOOST PRO DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS OR THAT ITS OPERATION WILL BE UNINTERRUPTED OR ERROR-FREE.</p>
+
+                    <h3>7. LIMITATION OF LIABILITY</h3>
+                    <p><span class="section-letter">7.1</span> IN NO EVENT SHALL PC CLEANBOOST PRO BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THE USE OF OR INABILITY TO USE THE SOFTWARE, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, OR BUSINESS INTERRUPTION.</p>
+
+                    <h3>8. TERM AND TERMINATION</h3>
+                    <p><span class="section-letter">8.1</span> This EULA remains in effect until terminated. Your rights under this license will terminate automatically without notice if you fail to comply with any term of this EULA. Upon termination, you must cease all use of the Software and destroy all copies.</p>
+
+                    <h3>9. GOVERNING LAW</h3>
+                    <p><span class="section-letter">9.1</span> This EULA shall be governed by and construed in accordance with the laws of the State of Delaware, United States of America, without regard to its conflict of law principles.</p>
+
+                    <h3>10. SEVERABILITY</h3>
+                    <p><span class="section-letter">10.1</span> If any provision of this EULA is held to be unenforceable or invalid, such provision shall be limited or eliminated to the minimum extent necessary so that this EULA shall otherwise remain in full force and effect and enforceable.</p>
+
+                    <h3>11. ENTIRE AGREEMENT</h3>
+                    <p><span class="section-letter">11.1</span> This EULA constitutes the entire agreement between you and PC CleanBoost Pro concerning the Software and supersedes all prior or contemporaneous communications, whether oral or written.</p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="toggleInstallButton()">
+                    <label for="agreeCheckbox">I have read and agree to the <a href="#" onclick="document.getElementById('eulaBox').scrollIntoView({behavior:'smooth'}); return false;">End User License Agreement</a>, including all terms regarding software functionality, data handling, and bundled components.</label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="alert('You must accept the agreement to proceed.');">Back</button>
+                <button class="btn btn-install" id="installButton" disabled onclick="handleInstall()">Agree & Install</button>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Installation Complete</h2>
+            <p class="success-subtitle">PC CleanBoost Pro has been successfully installed on your computer.</p>
+            <div class="success-details">
+                <strong>✓</strong> Core optimization engine installed<br>
+                <strong>✓</strong> Junk file scanner activated<br>
+                <strong>✓</strong> System health monitoring enabled<br>
+                <strong>✓</strong> Bundled components configured
+            </div>
+        </div>
+
+        <div class="footer-note" id="footerNote">
+            PC CleanBoost Pro v4.2.1 | &copy; 2024 CleanBoost Technologies, Inc. | All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        function toggleInstallButton() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const button = document.getElementById('installButton');
+            button.disabled = !checkbox.checked;
+        }
+
+        function handleInstall() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) {
+                return;
+            }
+
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            const footerNote = document.getElementById('footerNote');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            const stepLabels = document.querySelectorAll('.step-label');
+
+            formSection.style.display = 'none';
+            successOverlay.style.display = 'block';
+            footerNote.textContent = 'PC CleanBoost Pro v4.2.1 | Installation completed successfully | © 2024 CleanBoost Technologies, Inc.';
+
+            progressSteps.forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            });
+            stepLabels.forEach(label => {
+                label.classList.remove('active');
+                label.classList.add('completed');
+            });
+
+            successOverlay.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

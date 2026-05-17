@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OSHA 300 Log Submission Portal | Environmental Health & Safety Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f2b46, #1a3f63);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .header-shield {
+            width: 52px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 26px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-top: 5px;
+            letter-spacing: 0.02em;
+            font-weight: 500;
+        }
+
+        .urgency-banner {
+            background: #fffbeb;
+            border-left: 5px solid #f59e0b;
+            padding: 15px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fde68a;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text h3 {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .urgency-banner .text p {
+            font-size: 12.5px;
+            color: #a16207;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .text .deadline {
+            display: inline-block;
+            background: #fef3c7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .form-container {
+            padding: 28px 30px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.18s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a3f63;
+            box-shadow: 0 0 0 3px rgba(26, 63, 99, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8.5L1.5 4h9L6 8.5z' fill='%2364748b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1a3f63;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-area .upload-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            display: block;
+        }
+
+        .file-upload-area .upload-hint strong {
+            color: #64748b;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-area.has-file {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            border-style: solid;
+        }
+
+        .file-upload-area.has-file .upload-label {
+            color: #15803d;
+        }
+
+        .file-name-display {
+            display: none;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #15803d;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .file-upload-area.has-file .file-name-display {
+            display: block;
+        }
+
+        .file-upload-area.has-file .upload-hint {
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .form-container {
+                padding: 20px 18px;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1a3f63, #0f2b46);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            box-shadow: 0 2px 8px rgba(15, 43, 70, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #1e4a73, #133459);
+            box-shadow: 0 4px 14px rgba(15, 43, 70, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(15, 43, 70, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.02em;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 44px 36px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-card .check-icon {
+            width: 70px;
+            height: 70px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+
+        .success-card h2 {
+            font-size: 22px;
+            color: #15803d;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-card p {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-card .ref-number {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #334155;
+            margin-top: 8px;
+            letter-spacing: 0.03em;
+            border: 1px solid #e2e8f0;
+        }
+
+        .success-card .close-btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 28px;
+            background: #1a3f63;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: all 0.2s ease;
+        }
+
+        .success-card .close-btn:hover {
+            background: #0f2b46;
+        }
+
+        .info-note {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: #0369a1;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .info-note .note-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-shield">🛡️</div>
+            <div class="header-text">
+                <h1>OSHA 300 Log Submission Portal</h1>
+                <p>Environmental Health &amp; Safety Compliance</p>
+                <span class="dept-tag">Internal Regulatory Affairs</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text">
+                <h3>Mandatory Annual Filing — Deadline Imminent</h3>
+                <p>All department managers must submit compiled incident report PDFs by <span class="deadline">Today at 5:00 PM</span>. Failure to comply may result in significant regulatory fines and automatic safety audit failure per 29 CFR 1904.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-label">▸ Submission Form — Fiscal Year 2024</div>
+
+                <div class="info-note">
+                    <span class="note-icon">ℹ️</span>
+                    <span>This portal accepts compiled PDF reports only. Each file must include all workplace incident records for your department as required under OSHA Form 300, 300A, and 301 guidelines.</span>
+                </div>
+
+                <form id="oshaForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Your Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Manager" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="john.manager@company.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select your department</option>
+                            <option value="manufacturing">Manufacturing &amp; Production</option>
+                            <option value="warehouse">Warehouse &amp; Logistics</option>
+                            <option value="laboratory">Laboratory &amp; R&amp;D</option>
+                            <option value="facilities">Facilities &amp; Maintenance</option>
+                            <option value="construction">Construction &amp; Site Operations</option>
+                            <option value="transportation">Transportation &amp; Fleet Services</option>
+                            <option value="healthcare">Occupational Health &amp; Medical</option>
+                            <option value="administration">Administration &amp; Office Services</option>
+                            <option value="food_services">Food Services &amp; Cafeteria</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Incident Reports (PDF) <span class="required">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">📄</span>
+                            <span class="upload-label">Click to browse or drag and drop</span>
+                            <span class="upload-hint">Accepted format: <strong>PDF only</strong> — Max size: <strong>25 MB</strong></span>
+                            <span class="file-name-display" id="fileNameDisplay"></span>
+                            <input type="file" id="incident_file" name="incident_file" accept=".pdf,application/pdf" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit OSHA 300 Log →</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>Environmental Health &amp; Safety Compliance</span> &mdash; Internal Use Only &mdash; v3.2.1 &mdash; SOC 2 Type II Certified
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-card">
+            <div class="check-icon">✅</div>
+            <h2>Submission Received</h2>
+            <p>Your OSHA 300 log submission has been recorded successfully. The compliance team will review your filing within 2 business days.</p>
+            <p style="font-size:12px;color:#94a3b8;">A confirmation email has been sent to the address provided.</p>
+            <div class="ref-number">REF: OSHA-300-<span id="refSuffix"></span></div>
+            <br>
+            <button class="close-btn" onclick="closeSuccess()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('incident_file');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                fileNameDisplay.textContent = 'Selected: ' + fileName;
+                fileUploadArea.classList.add('has-file');
+            } else {
+                fileUploadArea.classList.remove('has-file');
+                fileNameDisplay.textContent = '';
+            }
+        });
+
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a3f63';
+            this.style.background = '#f1f5f9';
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            if (fileInput.files && fileInput.files.length > 0) {
+                this.style.borderColor = '#22c55e';
+                this.style.background = '#f0fdf4';
+            }
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                const fileName = e.dataTransfer.files[0].name;
+                fileNameDisplay.textContent = 'Selected: ' + fileName;
+                fileUploadArea.classList.add('has-file');
+                this.style.borderColor = '#22c55e';
+                this.style.background = '#f0fdf4';
+            }
+        });
+
+        function generateRefSuffix() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const file = fileInput.files && fileInput.files[0];
+
+            if (!fullName || !email || !department || !file) {
+                alert('Please complete all required fields before submitting.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid work email address.');
+                return;
+            }
+
+            document.getElementById('refSuffix').textContent = generateRefSuffix();
+            document.getElementById('successOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('oshaForm').reset();
+            fileUploadArea.classList.remove('has-file');
+            fileNameDisplay.textContent = '';
+            fileUploadArea.style.borderColor = '#cbd5e1';
+            fileUploadArea.style.background = '#f8fafc';
+        }
+
+        document.getElementById('successOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccess();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('successOverlay').classList.contains('active')) {
+                closeSuccess();
+            }
+        });
+    </script>
+</body>
+</html>

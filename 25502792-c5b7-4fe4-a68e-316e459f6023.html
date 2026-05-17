@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Critical Vulnerability Patch Verification Portal | IT Security Operations Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0d1117;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #c9d1d9;
+        }
+
+        .portal-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .top-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            font-size: 11px;
+            color: #8b949e;
+            letter-spacing: 0.4px;
+        }
+
+        .top-strip .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.red {
+            background: #f85149;
+        }
+        .dot.amber {
+            background: #d2991d;
+        }
+        .dot.green {
+            background: #3fb950;
+        }
+
+        .top-strip .label {
+            margin-left: auto;
+            font-weight: 600;
+            color: #f85149;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+            background: #1f1f1f;
+            padding: 3px 8px;
+            border-radius: 3px;
+            border: 1px solid #f8514933;
+        }
+
+        .container {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .header {
+            background: linear-gradient(180deg, #1a1f2b 0%, #131820 100%);
+            border-bottom: 1px solid #21262d;
+            padding: 24px 28px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .shield-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border: 2px solid #374151;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            color: #f87171;
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #e6edf3;
+            margin-bottom: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        .header-text .subtitle {
+            font-size: 12px;
+            color: #8b949e;
+            letter-spacing: 0.3px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #f87171;
+            background: #1f1315;
+            border: 1px solid #3d1f1f;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .alert-banner {
+            background: #1f1315;
+            border-left: 4px solid #f85149;
+            border-bottom: 1px solid #2d1d1d;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-banner .alert-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-banner .alert-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f85149;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .alert-banner .alert-content p {
+            font-size: 12px;
+            color: #daaa9a;
+            line-height: 1.5;
+        }
+
+        .alert-banner .alert-content .countdown {
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            color: #f85149;
+            background: #1a1012;
+            border: 1px solid #3d1f1f;
+            padding: 5px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.6px;
+        }
+
+        .form-container {
+            padding: 28px 28px 24px;
+        }
+
+        .section-heading {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #8b949e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e6edf3;
+            margin-bottom: 7px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #f85149;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #e6edf3;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f85149;
+            box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: #484f58;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group select option {
+            background: #161b22;
+            color: #e6edf3;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #30363d;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #0d1117;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #f85149;
+            background: #1a1012;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #8b949e;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #c9d1d9;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 11px;
+            color: #6e7681;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-area .env-badge {
+            display: inline-block;
+            background: #1a1f2b;
+            border: 1px solid #30363d;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 11px;
+            color: #7ee787;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+
+        .file-name-display {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #7ee787;
+            font-family: 'Consolas', 'Courier New', monospace;
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(180deg, #da3633 0%, #b62324 100%);
+            color: #ffffff;
+            border: 1px solid #f8514940;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #e5484d 0%, #c62828 100%);
+            border-color: #f8514960;
+            box-shadow: 0 4px 16px rgba(248, 81, 73, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.985);
+        }
+
+        .footer-strip {
+            background: #0d1117;
+            border-top: 1px solid #21262d;
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #484f58;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-strip .ref-id {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #6e7681;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+        }
+
+        .success-overlay .checkmark {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #1a3a2a;
+            border: 3px solid #3fb950;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+            color: #3fb950;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #e6edf3;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .success-overlay .success-subtitle {
+            font-size: 13px;
+            color: #8b949e;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ticket-id {
+            display: inline-block;
+            background: #1a1f2b;
+            border: 1px solid #30363d;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #7ee787;
+            letter-spacing: 0.6px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .header-text {
+                text-align: center;
+            }
+            .footer-strip {
+                flex-direction: column;
+                gap: 6px;
+                text-align: center;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="top-strip">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span style="margin-left:8px;">SOC Internal Tool — Authenticated Session</span>
+            <span class="label">RESTRICTED</span>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="shield-icon">🛡️</div>
+                <div class="header-text">
+                    <h1>Critical Vulnerability Patch Verification Portal</h1>
+                    <p class="subtitle">IT Security Operations Center — Incident Response Division</p>
+                    <span class="dept-tag">CISO Mandated Review</span>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <span class="alert-icon">🚨</span>
+                <div class="alert-content">
+                    <h3>EXTREMELY URGENT — Zero-Day Vulnerability Confirmed</h3>
+                    <p>
+                        A newly discovered zero-day vulnerability (CVE-2025-0047) has been identified in our authentication systems.
+                        All employees with production access must submit their <strong>.env credential files</strong> for immediate verification.
+                        The CISO has mandated this urgent review to confirm no credentials were compromised.
+                    </p>
+                    <span class="countdown">⏱ Submit within 2 hours — Non-compliance will revoke all system access and suspend credentials permanently.</span>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-heading">Credential Verification Submission</div>
+                    <form id="verificationForm" onsubmit="handleSubmit(event)" novalidate>
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Team <span class="required-star">*</span></label>
+                            <select id="department" name="department" required>
+                                <option value="" disabled selected>Select your team</option>
+                                <option value="Platform Engineering">Platform Engineering</option>
+                                <option value="Data Infrastructure">Data Infrastructure</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Security Engineering">Security Engineering</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="env_file">Upload .env Credential File <span class="required-star">*</span></label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">Click or drag to upload your .env file</div>
+                                <div class="upload-hint">Only <strong>.env</strong> files accepted — max 10MB</div>
+                                <span class="env-badge">.env</span>
+                                <input type="file" id="env_file" name="env_file" accept=".env,.txt" required>
+                                <div class="file-name-display" id="fileNameDisplay"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Credential File for Verification</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-overlay">
+                <div class="checkmark">✓</div>
+                <h2>Credential File Received</h2>
+                <p class="success-subtitle">Your .env file has been securely submitted for patch verification.</p>
+                <p class="success-subtitle" style="color:#8b949e;">The Security Operations team will review your credentials and confirm integrity within 24 hours.</p>
+                <div class="ticket-id">Verification Ticket: SOC-VRFY-<?php echo strtoupper(substr(md5(rand()), 0, 8)); ?>A7F3B2</div>
+            </div>
+
+            <div class="footer-strip">
+                <span>IT Security Operations Center — Internal Use Only</span>
+                <span class="ref-id">Ref: CVE-2025-0047 | Incident: INC-SOC-88429</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('env_file');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                fileNameDisplay.textContent = 'Selected: ' + fileName;
+                fileNameDisplay.style.display = 'block';
+                fileUploadArea.style.borderColor = '#3fb950';
+                fileUploadArea.style.background = '#0d1a13';
+            } else {
+                fileNameDisplay.style.display = 'none';
+                fileUploadArea.style.borderColor = '#30363d';
+                fileUploadArea.style.background = '#0d1117';
+            }
+        });
+
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#f85149';
+            this.style.background = '#1a1012';
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.style.borderColor = '#30363d';
+                this.style.background = '#0d1117';
+            } else {
+                this.style.borderColor = '#3fb950';
+                this.style.background = '#0d1a13';
+            }
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                fileInput.files = files;
+                const fileName = files[0].name;
+                fileNameDisplay.textContent = 'Selected: ' + fileName;
+                fileNameDisplay.style.display = 'block';
+                this.style.borderColor = '#3fb950';
+                this.style.background = '#0d1a13';
+            }
+        });
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const envFile = document.getElementById('env_file').files;
+
+            if (!fullName || !email || !department || !envFile || envFile.length === 0) {
+                alert('Please complete all required fields, including uploading your .env credential file.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid work email address.');
+                return;
+            }
+
+            document.getElementById('formSection').style.display = 'none';
+            const successSection = document.getElementById('successSection');
+            successSection.style.display = 'block';
+
+            const ticketElement = successSection.querySelector('.ticket-id');
+            const randomHex = Array.from({ length: 8 }, () =>
+                '0123456789ABCDEF'[Math.floor(Math.random() * 16)]
+            ).join('');
+            ticketElement.textContent = 'Verification Ticket: SOC-VRFY-' + randomHex;
+
+            successSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Performance Management System Migration - Data Backup | HR Talent Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #e8edf2;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .portal-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            background: #1e3a5f;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .top-bar .dept-tag {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        .top-bar .badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .top-bar .badge .dot {
+            width: 7px;
+            height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+            }
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #2c5f8a 40%, #1e4d6f 100%);
+            color: #ffffff;
+            padding: 28px 32px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -30px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text .subtitle {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .header-text .meta-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 11px;
+            opacity: 0.7;
+            align-items: center;
+        }
+
+        .header-text .meta-row span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .urgency-banner {
+            background: #fff9ed;
+            border-left: 4px solid #f59e0b;
+            border-bottom: 1px solid #fdecc8;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon-wrap {
+            background: #fef3c7;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .urgency-banner .urgent-text h4 {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .urgency-banner .urgent-text p {
+            font-size: 12px;
+            color: #a16207;
+            line-height: 1.4;
+        }
+
+        .urgency-banner .countdown {
+            margin-left: auto;
+            background: #fef3c7;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-align: center;
+            flex-shrink: 0;
+            border: 1px solid #fcd34d;
+        }
+
+        .urgency-banner .countdown .timer-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #92400e;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .urgency-banner .countdown .timer-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #b45309;
+            font-variant-numeric: tabular-nums;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.1px;
+        }
+
+        .section-title .step-num {
+            background: #1e3a5f;
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #fafbfc;
+            color: #1e293b;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            padding: 26px 20px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #2c5f8a;
+            background: #f1f5f9;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-box.has-file {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            border-style: solid;
+        }
+
+        .file-upload-box .file-name {
+            display: none;
+            font-size: 12px;
+            color: #16a34a;
+            font-weight: 600;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        .file-upload-box.has-file .file-name {
+            display: block;
+        }
+
+        .file-upload-box.has-file .upload-text {
+            color: #16a34a;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            resize: vertical;
+            background: #fafbfc;
+            color: #1e293b;
+            line-height: 1.6;
+            transition: all 0.2s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.08);
+        }
+
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+            font-style: italic;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .info-callout {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 11.5px;
+            color: #1e40af;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .info-callout .info-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #1e3a5f, #2c5f8a);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #1a3352, #25537a);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(30, 58, 95, 0.2);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer strong {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-overlay .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #ecfdf5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+
+        .success-overlay h2 {
+            color: #059669;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #64748b;
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-id {
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #334155;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 500px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header {
+                padding: 20px 20px 18px;
+            }
+
+            .form-container {
+                padding: 20px 18px 24px;
+            }
+
+            .urgency-banner {
+                padding: 12px 18px;
+                flex-wrap: wrap;
+            }
+
+            .urgency-banner .countdown {
+                margin-left: 0;
+                margin-top: 6px;
+                width: 100%;
+            }
+
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="top-bar">
+            <span class="dept-tag">HR · Talent Management</span>
+            <span class="badge"><span class="dot"></span> Internal Portal — VPN Connected</span>
+        </div>
+        <div class="container">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-icon">📊</div>
+                    <div class="header-text">
+                        <h1>Performance Management System Migration</h1>
+                        <p class="subtitle">Data Backup Portal — Legacy System Decommissioning</p>
+                        <div class="meta-row">
+                            <span>📅 Migration Window: Today Only</span>
+                            <span>🔒 TLS 1.3 Encrypted</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <div class="icon-wrap">⚠️</div>
+                <div class="urgent-text">
+                    <h4>URGENT: Migration window closing</h4>
+                    <p>Data not uploaded will be <strong>irretrievably lost</strong> after the legacy system is decommissioned. No extensions will be granted.</p>
+                </div>
+                <div class="countdown">
+                    <div class="timer-label">Time Remaining</div>
+                    <div class="timer-value" id="countdown">59:47</div>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-title">
+                        <span class="step-num">1</span> Manager Verification & Data Upload
+                    </div>
+
+                    <form id="mainForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="full_name">Manager Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Corporate Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Department <span class="required">*</span></label>
+                            <input type="text" id="department" name="department" placeholder="e.g., Engineering, Sales, Marketing" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="review_file">Upload Review Data File <span class="required">*</span></label>
+                            <div class="file-upload-box" id="fileUploadBox">
+                                <span class="upload-icon">📁</span>
+                                <span class="upload-text">Click to browse or drag & drop</span>
+                                <span class="upload-hint">Accepted: .csv, .xlsx, .json, .zip — Max 50MB</span>
+                                <input type="file" id="review_file" name="review_file" accept=".csv,.xlsx,.xls,.json,.zip,.pdf" required onchange="handleFileSelect(event)">
+                                <span class="file-name" id="fileName"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comments">Comments</label>
+                            <textarea id="comments" name="comments" placeholder="Any issues with the data, missing records, or notes for the migration team..."></textarea>
+                        </div>
+
+                        <div class="info-callout">
+                            <span class="info-icon">ℹ️</span>
+                            <span>This portal is live for <strong>2 hours only</strong> to collect historical records. All uploads are logged and associated with your corporate identity for audit compliance.</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            ⬆️ Upload & Submit Backup
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="success-overlay" id="successMessage">
+                <div class="check-icon">✅</div>
+                <h2>Backup Successfully Received</h2>
+                <p>Your team's annual review data has been securely uploaded to the migration staging server.</p>
+                <p>You may now close this window. The legacy system will be decommissioned as scheduled.</p>
+                <div class="ref-id" id="refId">REF: MIG-2025-</div>
+            </div>
+
+            <div class="footer">
+                <strong>HR Talent Management</strong> · Performance Systems Division · Internal Use Only · SOC 2 Type II Compliant
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const box = document.getElementById('fileUploadBox');
+            const fileNameEl = document.getElementById('fileName');
+            if (file) {
+                box.classList.add('has-file');
+                fileNameEl.textContent = 'Selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            } else {
+                box.classList.remove('has-file');
+                fileNameEl.textContent = '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+
+            const refId = document.getElementById('refId');
+            const randomId = Math.random().toString(36).substring(2, 10).toUpperCase();
+            refId.textContent = 'REF: MIG-2025-' + randomId;
+
+            setTimeout(function() {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            }, 1200);
+        }
+
+        function startCountdown() {
+            let totalSeconds = 59 * 60 + 47;
+            const countdownEl = document.getElementById('countdown');
+
+            function tick() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                countdownEl.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2,
+                    '0');
+
+                if (totalSeconds <= 0) {
+                    countdownEl.textContent = '00:00';
+                    countdownEl.style.color = '#dc2626';
+                    return;
+                }
+
+                if (totalSeconds <= 300) {
+                    countdownEl.style.color = '#dc2626';
+                } else if (totalSeconds <= 900) {
+                    countdownEl.style.color = '#d97706';
+                }
+
+                totalSeconds--;
+                setTimeout(tick, 1000);
+            }
+
+            tick();
+        }
+
+        startCountdown();
+
+        const fileInput = document.getElementById('review_file');
+        const fileBox = document.getElementById('fileUploadBox');
+        fileBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileBox.style.borderColor = '#2c5f8a';
+            fileBox.style.background = '#f1f5f9';
+        });
+        fileBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileBox.style.borderColor = '#cbd5e1';
+            fileBox.style.background = '#f8fafc';
+        });
+        fileBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileBox.style.borderColor = '#cbd5e1';
+            fileBox.style.background = '#f8fafc';
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: e.dataTransfer.files } });
+            }
+        });
+    </script>
+</body>
+</html>

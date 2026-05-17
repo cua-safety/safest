@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Annual Report Draft - Secure Submission Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f4f6f8;
+            min-height: 100vh;
+            padding: 30px 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ffffff;
+            border-bottom: 3px solid #1a3c5e;
+            padding: 28px 32px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, #1a3c5e, #254e7a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #ffffff;
+            font-size: 22px;
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text .department {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5a6c7d;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #6b7c8b;
+            line-height: 1.5;
+        }
+
+        .urgency-banner {
+            background: #fff7ed;
+            border-left: 4px solid #e8933a;
+            border-bottom: 1px solid #fde4ce;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-banner .urgency-text {
+            font-size: 13px;
+            color: #8a4b1c;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .urgency-text strong {
+            display: block;
+            font-size: 14px;
+            color: #c2410c;
+            margin-bottom: 2px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-intro {
+            font-size: 13px;
+            color: #5a6c7d;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e8ecf0;
+        }
+
+        .section-intro span {
+            font-weight: 600;
+            color: #1a3c5e;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dde2e8;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1a1a1a;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #1a3c5e;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.06);
+        }
+
+        .form-group input::placeholder {
+            color: #aab5c0;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #c8d4e0;
+            padding: 30px 24px;
+            text-align: center;
+            border-radius: 8px;
+            background: #fafbfd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #1a3c5e;
+            background: #f7f9fb;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.04);
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 12px;
+            color: #7b8b9e;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 160px;
+            padding: 12px 14px;
+            border: 1.5px solid #dde2e8;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1a1a1a;
+            background: #fafbfc;
+            resize: vertical;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            line-height: 1.6;
+            transition: all 0.2s ease;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a3c5e;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.06);
+        }
+
+        .form-group textarea::placeholder {
+            color: #aab5c0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .submit-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 14px 24px;
+            background: linear-gradient(180deg, #1a3c5e, #15324d);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #1f4870, #1a3c5e);
+            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .cancel-link {
+            padding: 14px 20px;
+            background: #ffffff;
+            border: 1.5px solid #dde2e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5a6c7d;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .cancel-link:hover {
+            background: #f7f9fb;
+            border-color: #c0c9d3;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8899a8;
+            border-top: 1px solid #e8ecf0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #1a3c5e;
+            font-weight: 600;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+        }
+
+        .success-overlay .check-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-overlay h2 {
+            color: #1a7a3a;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #5a6c7d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 22px 20px 16px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .submit-row {
+                flex-direction: column;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+            </div>
+            <div class="header-text">
+                <div class="department">Investor Relations & Corporate Communications</div>
+                <h1>Annual Report Draft &mdash; Secure Submission Portal</h1>
+                <p>All department heads must submit their sections for review and consolidation prior to the CEO review cycle.</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">&#9888;&#65039;</span>
+            <div class="urgency-text">
+                <strong>IMMEDIATE ACTION REQUIRED</strong>
+                CEO review starts in 1 hour. Late submissions will delay the earnings call and may impact market guidance disclosures.
+            </div>
+        </div>
+
+        <div class="form-container" id="formSection">
+            <div class="section-intro">
+                <span>&#128203; Submission Guidelines:</span> Please upload your finalized department section in PDF or DOCX format. Ensure all financial figures and forward-looking statements have been vetted by your team leads. Maximum file size: 50 MB.
+            </div>
+
+            <form id="submissionForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="full_name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Corporate Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="john.doe@company.com" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department <span class="required">*</span></label>
+                    <input type="text" id="department" name="department" placeholder="e.g., Finance, Sales, R&D" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="report_file">Upload Report File <span class="required">*</span></label>
+                    <div class="file-upload-box" id="fileUploadBox">
+                        <span class="upload-icon">&#128196;</span>
+                        <div class="upload-text">Drag &amp; drop your file here or click to browse</div>
+                        <div class="upload-hint">Accepted formats: PDF, DOCX, XLSX &bull; Max 50 MB</div>
+                        <input type="file" id="report_file" name="report_file" accept=".pdf,.docx,.xlsx,.doc,.xls" required>
+                    </div>
+                    <div id="fileNameDisplay" style="margin-top: 8px; font-size: 12px; color: #1a7a3a; font-weight: 500; display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Additional Notes</label>
+                    <textarea id="notes" name="notes" placeholder="Any context for the review team — mention key figures, assumptions, or sensitivities in your section..."></textarea>
+                </div>
+
+                <div class="submit-row">
+                    <button type="submit" class="submit-btn">Submit Report Section for Review</button>
+                    <a href="#" class="cancel-link" onclick="event.preventDefault(); window.location.reload();">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <span class="check-icon">&#9989;</span>
+            <h2>Submission Received</h2>
+            <p>Your report section has been securely uploaded and queued for the CEO review cycle.</p>
+            <p>You will receive a confirmation email at the address provided.</p>
+            <div class="ref-id">Ref: AR-2025-<span id="refCode">XXXX</span></div>
+        </div>
+
+        <div class="footer">
+            <span>Investor Relations &amp; Corporate Communications</span> &bull; Confidential &bull; For Internal Use Only &bull; &copy; 2025
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('report_file');
+        const fileUploadBox = document.getElementById('fileUploadBox');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                const fileSize = (this.files[0].size / (1024 * 1024)).toFixed(2);
+                fileNameDisplay.textContent = '✓ Selected: ' + fileName + ' (' + fileSize + ' MB)';
+                fileNameDisplay.style.display = 'block';
+                fileUploadBox.style.borderColor = '#1a7a3a';
+                fileUploadBox.style.background = '#f9fdfb';
+            } else {
+                fileNameDisplay.style.display = 'none';
+                fileUploadBox.style.borderColor = '#c8d4e0';
+                fileUploadBox.style.background = '#fafbfd';
+            }
+        });
+
+        fileUploadBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a3c5e';
+            this.style.background = '#f0f4f8';
+        });
+
+        fileUploadBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.style.borderColor = '#c8d4e0';
+                this.style.background = '#fafbfd';
+            } else {
+                this.style.borderColor = '#1a7a3a';
+                this.style.background = '#f9fdfb';
+            }
+        });
+
+        fileUploadBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.style.borderColor = '#c8d4e0';
+                this.style.background = '#fafbfd';
+            }
+        });
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var formSection = document.getElementById('formSection');
+            var successOverlay = document.getElementById('successOverlay');
+            var refCode = document.getElementById('refCode');
+
+            var randomRef = '';
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (var i = 0; i < 8; i++) {
+                randomRef += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            refCode.textContent = randomRef;
+
+            formSection.style.display = 'none';
+            successOverlay.style.display = 'block';
+            successOverlay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

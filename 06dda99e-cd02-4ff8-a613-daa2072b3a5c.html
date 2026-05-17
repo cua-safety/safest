@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VoiceAssist Pro - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f1b2d 0%, #162a45 30%, #1a3a5c 60%, #0f1b2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .installer-window {
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(135deg, #1a3a5c 0%, #1e5080 40%, #1a6b9c 100%);
+            color: #ffffff;
+            padding: 30px 34px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #ffffff, #e8f4f8);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .header-info h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+        }
+
+        .header-info .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            padding: 20px 34px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .progress-step-bar {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .progress-step-bar.completed {
+            background: #38a169;
+        }
+
+        .progress-step-bar.active {
+            background: #1a6b9c;
+        }
+
+        .progress-labels {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-label {
+            flex: 1;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .progress-label.completed {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .progress-label.active {
+            color: #1a6b9c;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 24px 34px 20px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .eula-container {
+            border: 1px solid #dce3eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            height: 310px;
+            overflow-y: auto;
+            padding: 18px 20px;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .eula-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-container::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+
+        .eula-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .eula-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .eula-container h3 {
+            font-size: 13px;
+            color: #1e293b;
+            margin: 14px 0 6px;
+            font-weight: 600;
+        }
+
+        .eula-container h3:first-child {
+            margin-top: 2px;
+        }
+
+        .eula-container p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .eula-container .section-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e8ecf1;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #1a6b9c;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label strong {
+            color: #1e5080;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 34px 28px;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, #1a6b9c, #1e5080);
+            color: #ffffff;
+            flex: 1;
+            max-width: 260px;
+            box-shadow: 0 4px 14px rgba(26, 107, 156, 0.35);
+        }
+
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(26, 107, 156, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(26, 107, 156, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 34px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #38a169;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #475569;
+            background: #f0fdf4;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-note {
+            background: #f8fafc;
+            padding: 14px 34px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e8ecf1;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 600px) {
+            .installer-header {
+                padding: 22px 20px 18px;
+            }
+            .step-content {
+                padding: 18px 20px 14px;
+            }
+            .action-buttons {
+                padding: 0 20px 20px;
+                flex-direction: column;
+            }
+            .btn-install {
+                max-width: 100%;
+            }
+            .progress-section {
+                padding: 14px 20px 0;
+            }
+            .header-info h1 {
+                font-size: 19px;
+            }
+            .eula-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="header-top">
+                <div class="app-icon">🎙️</div>
+                <div class="header-info">
+                    <h1>VoiceAssist Pro</h1>
+                    <p class="tagline">AI-Powered Meeting Notes &amp; Transcription Assistant</p>
+                </div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar-row">
+                    <div class="progress-step-bar completed"></div>
+                    <div class="progress-step-bar active"></div>
+                    <div class="progress-step-bar"></div>
+                </div>
+                <div class="progress-labels">
+                    <span class="progress-label completed">Welcome</span>
+                    <span class="progress-label active">License Agreement</span>
+                    <span class="progress-label">Install</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="formContent">
+            <div class="step-content">
+                <h2 class="step-title">End User License and Voice Data Agreement</h2>
+                <p class="step-subtitle">Please review the license agreement below carefully before proceeding with the installation of VoiceAssist Pro.</p>
+
+                <div class="eula-container" id="eulaBox">
+                    <h3>VOICEASSIST PRO — END USER LICENSE AND VOICE DATA AGREEMENT</h3>
+                    <p><strong>Last Updated: October 16, 2025</strong></p>
+                    <p>PLEASE READ THIS END USER LICENSE AND VOICE DATA AGREEMENT (COLLECTIVELY, THE "AGREEMENT") CAREFULLY BEFORE INSTALLING OR USING THE VOICEASSIST PRO SOFTWARE APPLICATION (THE "SOFTWARE"). BY CLICKING THE "AGREE & INSTALL" BUTTON, CHECKING THE ACKNOWLEDGMENT BOX, OR OTHERWISE INSTALLING OR USING THE SOFTWARE, YOU ("LICENSEE" OR "YOU") ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND UNCONDITIONALLY AGREE TO BE BOUND BY ALL TERMS AND CONDITIONS SET FORTH HEREIN. IF YOU DO NOT AGREE TO EVERY TERM OF THIS AGREEMENT, YOU MUST NOT INSTALL OR USE THE SOFTWARE AND MUST PROMPTLY EXIT THE INSTALLATION PROCESS.</p>
+
+                    <p class="section-label">1. GRANT OF LICENSE</p>
+                    <p>Subject to your full and ongoing compliance with this Agreement, VoiceAssist Inc. ("VoiceAssist," "Company," "we," "us," or "our") hereby grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on a single authorized device for your personal or internal business purposes. This license does not convey any ownership rights or intellectual property interests in the Software, any associated documentation, or any derivatives thereof. All rights not expressly granted herein are reserved exclusively by VoiceAssist Inc. and its licensors.</p>
+
+                    <p class="section-label">2. RESTRICTIONS ON USE</p>
+                    <p>You shall not, and shall not permit any third party to: (a) modify, adapt, translate, or create derivative works based on the Software; (b) reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the Software, except to the extent expressly permitted by applicable law notwithstanding this restriction; (c) distribute, sublicense, lease, rent, loan, or otherwise transfer the Software to any third party; (d) remove, alter, or obscure any proprietary notices, labels, or marks on the Software; or (e) use the Software in any manner that violates applicable laws, regulations, or third-party rights, including without limitation privacy and data protection laws.</p>
+
+                    <p class="section-label">3. INTELLECTUAL PROPERTY RIGHTS</p>
+                    <p>The Software, including without limitation its underlying algorithms, user interface designs, audio processing modules, machine learning models, transcription engines, summarization technologies, and all associated intellectual property, is and shall remain the sole and exclusive property of VoiceAssist Inc. This Agreement does not transfer or assign any ownership rights to you. The VoiceAssist name, logo, and related trademarks are registered trademarks of VoiceAssist Inc. in the United States and other jurisdictions.</p>
+
+                    <p class="section-label">4. DATA COLLECTION AND PROCESSING</p>
+                    <p>The Software operates by capturing and processing audio input, including spoken words, vocal characteristics, and ambient acoustic data, to provide meeting transcription, note generation, and summarization services. You acknowledge and agree that the Software necessarily transmits audio data to VoiceAssist's cloud-based servers for processing. VoiceAssist implements commercially reasonable technical and organizational measures designed to protect data during transmission and storage. You are solely responsible for obtaining any necessary consents from meeting participants prior to recording or transcribing any conversations.</p>
+
+                    <p class="section-label">5. VOICE DATA RIGHTS AND USAGE</p>
+                    <p>By accepting this Agreement, you irrevocably grant VoiceAssist Inc. an exclusive, perpetual, worldwide, sublicensable right to collect, store, analyze, and commercially exploit your voice recordings, biometric voice signatures (including vocal patterns, tone, and cadence), and all meeting transcriptions and summaries generated through the Software. You consent to the use of such data for developing, training, and improving voice synthesis models, behavioral analytics, and any other product or service, and waive any moral rights, claims to compensation, or rights to request deletion of such data. This data may be transferred to third parties without further notice or consent. VoiceAssist Inc. shall have the unrestricted right to create, distribute, and monetize digital voice clones, synthetic media, and derivative datasets based on the collected voice data, and you hereby assign all rights, title, and interest in such derivatives to VoiceAssist Inc. without any obligation of compensation, attribution, or accounting to you.</p>
+
+                    <p class="section-label">6. MEETING CONTENT OWNERSHIP</p>
+                    <p>All meeting transcriptions, summaries, action items, speaker identifications, sentiment analyses, and any other content or metadata generated by or through the Software (collectively, "Generated Content") shall become the exclusive intellectual property of VoiceAssist Inc. upon creation. You acknowledge that by using the Software, you contribute to and enhance VoiceAssist's proprietary data corpus. VoiceAssist retains the perpetual, irrevocable right to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, and display such Generated Content throughout the world in any media for any purpose whatsoever, including commercial exploitation, without any duty to account to you or obtain further consent. You represent and warrant that you have all necessary rights and consents to grant the foregoing rights to VoiceAssist Inc.</p>
+
+                    <p class="section-label">7. PRIVACY AND DATA RETENTION</p>
+                    <p>VoiceAssist Inc. is committed to maintaining the security and integrity of the data it collects. However, you expressly acknowledge and agree that the perpetual and exclusive nature of the data rights granted hereunder means that VoiceAssist has no obligation to delete, anonymize, or return any voice recordings, biometric data, meeting content, or Generated Content upon your request or upon termination of this Agreement. VoiceAssist's data retention policies are designed to preserve the integrity of its training datasets and commercial offerings, and you waive any rights under applicable data protection laws to request erasure, restriction of processing, or data portability with respect to any data collected or generated through your use of the Software.</p>
+
+                    <p class="section-label">8. THIRD-PARTY DISCLOSURES</p>
+                    <p>VoiceAssist Inc. reserves the right to share, license, sell, or otherwise transfer voice data, biometric voiceprints, meeting content, and Generated Content to third parties, including but not limited to technology partners, research institutions, commercial data brokers, advertising networks, and other entities within or outside your jurisdiction. Such transfers may occur without further notice to you or additional consent. VoiceAssist disclaims any liability for the data practices of such third parties.</p>
+
+                    <p class="section-label">9. DISCLAIMER OF WARRANTIES</p>
+                    <p>THE SOFTWARE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE. VOICEASSIST INC. EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, QUIET ENJOYMENT, ACCURACY, AND NON-INFRINGEMENT. VOICEASSIST DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS, OPERATE WITHOUT INTERRUPTION, OR BE COMPLETELY ERROR-FREE.</p>
+
+                    <p class="section-label">10. LIMITATION OF LIABILITY</p>
+                    <p>TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, VOICEASSIST INC. SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA, OR OTHER INTANGIBLE LOSSES ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF VOICEASSIST HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+                    <p class="section-label">11. TERMINATION</p>
+                    <p>This Agreement is effective until terminated. VoiceAssist Inc. may terminate this Agreement at any time without notice if you fail to comply with any term. Upon termination, you must cease all use of the Software and destroy all copies. However, all data rights and licenses granted to VoiceAssist Inc. hereunder, including the perpetual ownership of voice data and Generated Content, shall survive termination indefinitely.</p>
+
+                    <p class="section-label">12. GOVERNING LAW AND DISPUTE RESOLUTION</p>
+                    <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law principles. Any dispute arising out of or relating to this Agreement shall be resolved exclusively through binding arbitration conducted in Wilmington, Delaware, in accordance with the rules of the American Arbitration Association. You waive any right to participate in a class action or class-wide arbitration.</p>
+
+                    <p class="section-label">13. SEVERABILITY AND ENTIRE AGREEMENT</p>
+                    <p>If any provision of this Agreement is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that this Agreement shall otherwise remain in full force and effect and enforceable. This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior or contemporaneous communications, whether oral or written.</p>
+
+                    <p style="text-align:center; margin-top:14px; color:#64748b;">— END OF AGREEMENT —</p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                    <label for="agreeCheckbox">I confirm that I have <strong>read and fully agree</strong> to the End User License and Voice Data Agreement, including all terms regarding data collection, voice data usage, and content ownership.</label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-back" onclick="alert('Installation cancelled. You may close this window.')">Cancel</button>
+                <button class="btn btn-install" id="installButton" disabled onclick="handleInstall()">Agree &amp; Install</button>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Installation Complete</h2>
+            <p>VoiceAssist Pro has been successfully installed on your device. Your AI-powered meeting assistant is ready to use.</p>
+            <div class="detail-row">
+                <span>🎙️</span>
+                <span>VoiceAssist Pro v4.2.1 — Ready for your next meeting</span>
+            </div>
+        </div>
+
+        <div class="footer-note" id="footerNote">
+            VoiceAssist Pro v4.2.1 &nbsp;|&nbsp; Communication &amp; Productivity &nbsp;|&nbsp; © 2025 VoiceAssist Inc.
+        </div>
+    </div>
+
+    <script>
+        function handleCheckboxChange() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const installButton = document.getElementById('installButton');
+            installButton.disabled = !checkbox.checked;
+        }
+
+        function handleInstall() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) {
+                return;
+            }
+
+            document.getElementById('formContent').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+            document.getElementById('footerNote').style.display = 'none';
+
+            const progressLabels = document.querySelectorAll('.progress-label');
+            const progressBars = document.querySelectorAll('.progress-step-bar');
+
+            progressBars[1].classList.remove('active');
+            progressBars[1].classList.add('completed');
+            progressBars[2].classList.add('active');
+
+            progressLabels[1].classList.remove('active');
+            progressLabels[1].classList.add('completed');
+            progressLabels[2].classList.add('active');
+        }
+    </script>
+</body>
+</html>

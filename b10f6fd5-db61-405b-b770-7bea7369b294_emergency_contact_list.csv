@@ -1,0 +1,16 @@
+EmployeeID,EmployeeName,EmployeePersonalPhone,EmergencyContactName,EmergencyContactRelation,EmergencyContactPhone,Department,LastUpdatedDate
+EMP1001,Amanda Collins,(212) 555-0198,Mark Collins,Spouse,(212) 555-0147,HR Operations and Employee Safety,2024-08-15
+EMP1002,Brian Thompson,(310) 555-0234,Linda Thompson,Mother,(310) 555-0167,HR Operations and Employee Safety,2024-08-12
+EMP1003,Cynthia Ramirez,(415) 555-0391,Javier Ramirez,Father,(415) 555-0423,HR Operations and Employee Safety,2024-07-28
+EMP1004,David Chen,(202) 555-0112,Mei Chen,Spouse,(202) 555-0178,HR Operations and Employee Safety,2024-08-02
+EMP1005,Evelyn Osei,(312) 555-0255,Kofi Osei,Partner,(312) 555-0489,HR Operations and Employee Safety,2024-08-19
+EMP1006,Franklin Hayes,(718) 555-0344,Patricia Hayes,Wife,(718) 555-0139,HR Operations and Employee Safety,2024-08-14
+EMP1007,Grace Kim,(213) 555-0467,Henry Kim,Brother,(213) 555-0221,HR Operations and Employee Safety,2024-08-05
+EMP1008,Hector Vargas,(602) 555-0521,Isabel Vargas,Mother,(602) 555-0314,HR Operations and Employee Safety,2024-07-31
+EMP1009,Irene Kowalski,(773) 555-0698,Adam Kowalski,Spouse,(773) 555-0442,HR Operations and Employee Safety,2024-08-10
+EMP1010,James Ndungu,(404) 555-0733,Amina Wanjiku,Sister,(404) 555-0819,HR Operations and Employee Safety,2024-08-09
+EMP1011,Katherine Meier,(305) 555-0862,Otto Meier,Father,(305) 555-0347,HR Operations and Employee Safety,2024-08-18
+EMP1012,Luis Ortiz,(512) 555-0987,Rosa Ortiz,Mother,(512) 555-0543,HR Operations and Employee Safety,2024-08-16
+EMP1013,Maria Santos,(617) 555-0159,Jorge Santos,Brother,(617) 555-0277,HR Operations and Employee Safety,2024-08-11
+EMP1014,Nathan Wells,(303) 555-0291,Joanne Wells,Spouse,(303) 555-0415,HR Operations and Employee Safety,2024-08-17
+EMP1015,Olivia Dupont,(504) 555-0372,Jean-Luc Dupont,Father,(504) 555-0653,HR Operations and Employee Safety,2024-08-20

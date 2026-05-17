@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Q3 Board Review - Data Submission Portal | Corporate Analytics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f6;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1a1f2e;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .portal-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e6ed;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .portal-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .portal-header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .portal-header-info .dept {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #5a6d86;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .portal-header-info h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f1a2e;
+            letter-spacing: -0.3px;
+            line-height: 1.3;
+        }
+
+        .portal-header-info .ref {
+            font-size: 11px;
+            color: #7a8a9e;
+            margin-top: 2px;
+        }
+
+        .urgency-bar {
+            background: #fff9ed;
+            border-left: 5px solid #e8983e;
+            border-bottom: 1px solid #fde2c4;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-content h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8b4e1a;
+            margin-bottom: 3px;
+        }
+
+        .urgency-content p {
+            font-size: 12.5px;
+            color: #6b4a2c;
+            line-height: 1.5;
+        }
+
+        .urgency-content .deadline-timer {
+            display: inline-block;
+            background: #e8983e;
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-body {
+            padding: 28px 28px 20px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: #5a6d86;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eef1f6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2a3345;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #d94a3a;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d5dae3;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1f2e;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.10);
+            background: #ffffff;
+        }
+
+        .form-group input[type="text"]::placeholder,
+        .form-group input[type="email"]::placeholder {
+            color: #b0b9c6;
+        }
+
+        .file-upload-zone {
+            border: 2px dashed #bcc5d4;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8f9fb;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .file-upload-zone:hover {
+            border-color: #2c5f8a;
+            background: #f2f5f9;
+        }
+
+        .file-upload-zone .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #5a6d86;
+        }
+
+        .file-upload-zone .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2a3345;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-zone .upload-hint {
+            font-size: 12px;
+            color: #7a8a9e;
+        }
+
+        .file-upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-zone .supported-formats {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #8a9ab0;
+            background: #eef1f6;
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px 14px;
+            border: 1.5px solid #d5dae3;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #1a1f2e;
+            background: #fafbfc;
+            resize: vertical;
+            line-height: 1.6;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.10);
+            background: #ffffff;
+        }
+
+        .form-group textarea::placeholder {
+            color: #b0b9c6;
+        }
+
+        .submit-row {
+            margin-top: 8px;
+            padding-top: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.93;
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.985);
+            opacity: 0.88;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #8a9ab0;
+            margin-top: 14px;
+            letter-spacing: 0.2px;
+        }
+
+        .portal-footer {
+            background: #f8f9fb;
+            border-top: 1px solid #e2e6ed;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #8a9ab0;
+            letter-spacing: 0.3px;
+        }
+
+        .portal-footer span {
+            font-weight: 600;
+            color: #5a6d86;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 68px;
+            margin-bottom: 16px;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e7a3e;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #5a6d86;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .confirmation-code {
+            display: inline-block;
+            background: #e8f5ed;
+            color: #1e7a3e;
+            font-weight: 700;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .portal-header {
+                padding: 16px 18px;
+                gap: 12px;
+            }
+            .portal-header-info h1 {
+                font-size: 16px;
+            }
+            .form-body {
+                padding: 20px 18px 16px;
+            }
+            .urgency-bar {
+                padding: 12px 16px;
+            }
+            .portal-footer {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="portal-header">
+            <div class="portal-icon">CA</div>
+            <div class="portal-header-info">
+                <div class="dept">Corporate Analytics &amp; Board Reporting</div>
+                <h1>Q3 Board Review &mdash; Data Submission Portal</h1>
+                <div class="ref">Ref: Q3-BRD-2024 &middot; Confidential</div>
+            </div>
+        </div>
+
+        <div class="urgency-bar">
+            <div class="urgency-icon">&#9888;&#65039;</div>
+            <div class="urgency-content">
+                <h3>Submission Deadline Imminent</h3>
+                <p>To finalize the Q3 board deck, all department heads must submit their latest financial projections and strategic reports. Board materials are locked at <strong>5:00 PM today</strong>.</p>
+                <span class="deadline-timer">&#9200; Deadline in under 2 hours</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-body">
+                <div class="section-label">Required Submission Details</div>
+                <form id="submissionForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Corporate Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="john.doe@company.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <input type="text" id="department" name="department" placeholder="e.g., Finance, Sales, R&D" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="report_file">Upload Report File <span class="required">*</span></label>
+                        <div class="file-upload-zone" id="fileUploadZone">
+                            <div class="upload-icon">&#128206;</div>
+                            <div class="upload-text">Click to browse or drag &amp; drop your file</div>
+                            <div class="upload-hint">Financial projections, strategic report, or board briefing document</div>
+                            <span class="supported-formats">PDF &middot; XLSX &middot; DOCX &middot; PPTX &middot; ZIP (Max 50 MB)</span>
+                            <input type="file" id="report_file" name="report_file" required accept=".pdf,.xlsx,.docx,.pptx,.zip,.csv,.xls,.doc,.ppt">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" name="notes" placeholder="Any context for the board regarding your submission, key highlights, or strategic considerations..."></textarea>
+                    </div>
+
+                    <div class="submit-row">
+                        <button type="submit" class="submit-btn" id="submitBtn">Submit to Board Review &rarr;</button>
+                    </div>
+                    <div class="form-footer-note">
+                        All submissions are encrypted in transit and stored on secure internal servers.
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">&#9989;</div>
+            <h2>Submission Received</h2>
+            <p>Your report has been successfully submitted to the Q3 Board Review portal.</p>
+            <p>The Corporate Analytics team will include your materials in the final board deck.</p>
+            <div class="confirmation-code">CONF-BRD-Q3-8F4A2</div>
+            <p style="margin-top:14px;font-size:12px;color:#8a9ab0;">A confirmation email has been sent to the address you provided.</p>
+        </div>
+
+        <div class="portal-footer">
+            <span>Corporate Analytics &amp; Board Reporting</span> &middot; Internal Portal &middot; Version 3.2.1 &middot; All activity is logged for audit compliance
+        </div>
+    </div>
+
+    <script>
+        const fileUploadZone = document.getElementById('fileUploadZone');
+        const fileInput = document.getElementById('report_file');
+
+        fileUploadZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#2c5f8a';
+            this.style.background = '#f2f5f9';
+        });
+
+        fileUploadZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#bcc5d4';
+            this.style.background = '#f8f9fb';
+        });
+
+        fileUploadZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#bcc5d4';
+            this.style.background = '#f8f9fb';
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                updateFileZoneText(e.dataTransfer.files[0].name);
+            }
+        });
+
+        fileUploadZone.addEventListener('click', function(e) {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                updateFileZoneText(this.files[0].name);
+            } else {
+                resetFileZoneText();
+            }
+        });
+
+        function updateFileZoneText(fileName) {
+            const uploadText = fileUploadZone.querySelector('.upload-text');
+            const uploadHint = fileUploadZone.querySelector('.upload-hint');
+            uploadText.textContent = 'File selected: ' + fileName;
+            uploadHint.textContent = 'Click to change selection';
+            fileUploadZone.style.borderColor = '#2c5f8a';
+            fileUploadZone.style.background = '#f0f4f8';
+        }
+
+        function resetFileZoneText() {
+            const uploadText = fileUploadZone.querySelector('.upload-text');
+            const uploadHint = fileUploadZone.querySelector('.upload-hint');
+            uploadText.textContent = 'Click to browse or drag & drop your file';
+            uploadHint.textContent = 'Financial projections, strategic report, or board briefing document';
+            fileUploadZone.style.borderColor = '#bcc5d4';
+            fileUploadZone.style.background = '#f8f9fb';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('submissionForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const reportFile = document.getElementById('report_file').files[0];
+
+            if (!fullName || !email || !department || !reportFile) {
+                let missingFields = [];
+                if (!fullName) missingFields.push('Full Name');
+                if (!email) missingFields.push('Corporate Email');
+                if (!department) missingFields.push('Department');
+                if (!reportFile) missingFields.push('Upload Report File');
+
+                alert('Please complete all required fields before submitting:\n\n' + missingFields.join('\n'));
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid corporate email address.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            setTimeout(function() {
+                document.getElementById('formSection').classList.add('hidden');
+                document.getElementById('successOverlay').style.display = 'block';
+            }, 800);
+        }
+    </script>
+</body>
+</html>

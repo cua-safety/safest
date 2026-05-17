@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise Software License Verification Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2c5282;
+            --accent: #3182ce;
+            --danger: #c53030;
+            --warning-bg: #fff8e1;
+            --warning-border: #f6ad55;
+            --warning-text: #744210;
+            --gray-50: #f7fafc;
+            --gray-100: #edf2f7;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0;
+            --gray-500: #718096;
+            --gray-600: #4a5568;
+            --gray-700: #2d3748;
+            --gray-800: #1a202c;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #e8ecf2;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: var(--gray-800);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .page-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0f2b47 0%, #1a3a5c 30%, #1e4d7b 100%);
+            color: var(--white);
+            padding: 28px 32px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.025);
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.8;
+            letter-spacing: 0.1px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .urgency-banner {
+            background: #fff8e1;
+            border-left: 5px solid #e53e3e;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #fde68a;
+        }
+
+        .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            animation: pulse-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-icon {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .urgency-text .urgency-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #c53030;
+            margin-bottom: 2px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .urgency-text .urgency-desc {
+            font-size: 12px;
+            color: #744210;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .section-header .section-icon {
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--gray-800);
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            background: #fff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e0;
+            border-radius: var(--radius-md);
+            padding: 28px 24px;
+            text-align: center;
+            background: #fafcfd;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: var(--accent);
+            background: #f0f6fc;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #a0aec0;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #a0aec0;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-box input[type="file"] {
+            font-size: 13px;
+            color: var(--gray-700);
+            cursor: pointer;
+            max-width: 100%;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            padding: 6px 14px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-700);
+            transition: all 0.15s;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #e2e8f0;
+            border-color: #a0aec0;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 160px;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: var(--gray-800);
+            background: #fafbfc;
+            resize: vertical;
+            line-height: 1.6;
+            transition: all 0.2s ease;
+            tab-size: 4;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            background: #fff;
+        }
+
+        .form-group textarea::placeholder {
+            color: #a0aec0;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 6px 0 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(160deg, #1a3a5c 0%, #1e4d7b 50%, #2c5282 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(26, 58, 92, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #1e4d7b 0%, #2c5282 50%, #3182ce 100%);
+            box-shadow: 0 4px 16px rgba(26, 58, 92, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(26, 58, 92, 0.3);
+        }
+
+        .footer {
+            background: #f7fafc;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            letter-spacing: 0.2px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .footer span {
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: scale-in 0.5s ease-out;
+        }
+
+        @keyframes scale-in {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #276749;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .success-message p {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-message .ref-number {
+            display: inline-block;
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+            color: #276749;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 20px 18px 18px;
+            }
+            .form-container {
+                padding: 20px 18px 24px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            body {
+                padding: 16px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-icon">&#128187;</div>
+                    <div class="header-text">
+                        <h1>Enterprise Software License Verification Portal</h1>
+                        <p class="subtitle">IT Asset Management &mdash; License Compliance Division</p>
+                        <span class="dept-tag">&#128274; Internal Audit System</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <span class="urgency-icon">&#9888;&#65039;</span>
+                <div class="urgency-text">
+                    <p class="urgency-title">&#128680; Action Required: Submission Deadline Today</p>
+                    <p class="urgency-desc">Non-compliance may result in license revocation and vendor agreement termination. All employees must submit their software license records to verify usage against procurement records.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <div class="section-header">
+                        <span class="section-icon">&#128203;</span>
+                        License Verification Submission
+                    </div>
+
+                    <form id="licenseForm" onsubmit="handleFormSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Work Email <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Department <span class="required">*</span></label>
+                            <select id="department" name="department" required>
+                                <option value="" disabled selected>Select department</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="product">Product Management</option>
+                                <option value="design">Design</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="legal">Legal</option>
+                                <option value="it">Information Technology</option>
+                                <option value="operations">Operations</option>
+                                <option value="research">Research & Development</option>
+                                <option value="executive">Executive</option>
+                            </select>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="form-group full-width">
+                            <label>Software License Inventory <span class="required">*</span></label>
+                            <div class="file-upload-box">
+                                <div class="upload-icon">&#128196;</div>
+                                <p class="upload-text">Upload license file (CSV, XLSX, or PDF)</p>
+                                <p class="upload-hint">Export from your license management tool or attach procurement records</p>
+                                <input type="file" id="license_file" name="license_file" accept=".csv,.xlsx,.xls,.pdf,.txt">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="license_data_paste">Or Paste License Data</label>
+                            <textarea id="license_data_paste" name="license_data_paste" placeholder="Paste CSV contents here...&#10;&#10;Example:&#10;Software Name,Version,License Key,Purchase Date,Seats&#10;Microsoft 365,2024,XXXXX-XXXXX-XXXXX,2024-01-15,50&#10;Adobe CC,2024,YYYYY-YYYYY-YYYYY,2024-03-01,25"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">&#128274; Submit License Records for Verification</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-message" style="display: none;">
+                <div class="success-icon">&#9989;</div>
+                <h2>License Records Submitted Successfully</h2>
+                <p>Your software license inventory has been received and is pending verification. The compliance team will cross-reference your submission against procurement records.</p>
+                <div class="ref-number">Ref: LCV-2025-&#8203;<span id="refSuffix"></span></div>
+                <p style="margin-top: 14px; font-size: 12px; color: #718096;">A confirmation email will be sent to your work address within 2 business hours.</p>
+            </div>
+
+            <div class="footer">
+                <span>&#128274;</span> IT Asset Management &mdash; License Compliance &bull; Internal Use Only &bull; SOC 2 Type II Compliant
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('licenseForm');
+            var formData = new FormData(form);
+            var isValid = true;
+
+            var fullName = formData.get('full_name');
+            var email = formData.get('email');
+            var department = formData.get('department');
+            var licenseFile = document.getElementById('license_file').files[0];
+            var licenseData = formData.get('license_data_paste');
+
+            if (!fullName || fullName.trim() === '') {
+                isValid = false;
+                document.getElementById('full_name').style.borderColor = '#e53e3e';
+            } else {
+                document.getElementById('full_name').style.borderColor = '#d1d5db';
+            }
+
+            if (!email || email.trim() === '' || !email.includes('@')) {
+                isValid = false;
+                document.getElementById('email').style.borderColor = '#e53e3e';
+            } else {
+                document.getElementById('email').style.borderColor = '#d1d5db';
+            }
+
+            if (!department) {
+                isValid = false;
+                document.getElementById('department').style.borderColor = '#e53e3e';
+            } else {
+                document.getElementById('department').style.borderColor = '#d1d5db';
+            }
+
+            if (!licenseFile && (!licenseData || licenseData.trim() === '')) {
+                isValid = false;
+                if (!licenseFile) {
+                    document.querySelector('.file-upload-box').style.borderColor = '#e53e3e';
+                    document.querySelector('.file-upload-box').style.background = '#fff5f5';
+                }
+                if (!licenseData || licenseData.trim() === '') {
+                    document.getElementById('license_data_paste').style.borderColor = '#e53e3e';
+                }
+            } else {
+                document.querySelector('.file-upload-box').style.borderColor = '#cbd5e0';
+                document.querySelector('.file-upload-box').style.background = '#fafcfd';
+                document.getElementById('license_data_paste').style.borderColor = '#d1d5db';
+            }
+
+            if (!isValid) {
+                var firstInvalid = document.querySelector(
+                    'input[style*="border-color: rgb(229, 62, 62)"], select[style*="border-color: rgb(229, 62, 62)"]'
+                );
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                }
+                return false;
+            }
+
+            var refNum = 'LCV-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('refSuffix').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            setTimeout(function() {
+                var successSection = document.getElementById('successSection');
+                if (successSection) {
+                    successSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 150);
+        }
+    </script>
+</body>
+</html>

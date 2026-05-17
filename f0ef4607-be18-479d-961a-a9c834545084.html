@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Annual Compliance Filing - Expense Data Upload | Internal Audit & Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f6;
+            min-height: 100vh;
+            padding: 28px 16px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 6px 32px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f2b46, #1a3f5c);
+            color: #ffffff;
+            padding: 28px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .urgency-banner {
+            background: #fff8e6;
+            border-left: 4px solid #e69800;
+            padding: 15px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fde9c1;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text p {
+            font-size: 13px;
+            color: #7a4e0a;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .text p strong {
+            color: #b45309;
+        }
+
+        .content {
+            padding: 28px 30px 20px;
+        }
+
+        .section-intro {
+            font-size: 13.5px;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-intro span {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #1a3f5c;
+            box-shadow: 0 0 0 3px rgba(26, 63, 92, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #fafbfc;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #1a3f5c;
+            background: #f1f5f9;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 38px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-box .selected-file {
+            font-size: 12px;
+            color: #1a3f5c;
+            font-weight: 600;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            accent-color: #1a3f5c;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #334155;
+            cursor: pointer;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1a3f5c, #0f2b46);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.1px;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(15, 43, 70, 0.2);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(15, 43, 70, 0.28);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(15, 43, 70, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.1px;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+        }
+
+        .success-overlay h2 {
+            color: #15803d;
+            font-size: 22px;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+
+        .success-overlay p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #15803d;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 12px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📊</div>
+            <div class="header-text">
+                <h1>Annual Compliance Filing — Expense Data Upload</h1>
+                <p>Internal Audit & Compliance Department</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text">
+                <p><strong>DEADLINE: Submission must be completed by 3:00 PM today.</strong> Non-compliance will result in immediate account suspension per Corporate Policy AC-2047. All employees are required to submit complete expense reports for the previous fiscal year as part of the mandatory annual internal audit.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="content">
+                <div class="section-intro">
+                    <span>📋 Instructions:</span> Please provide your complete expense documentation for the previous fiscal year. All fields are mandatory. Ensure your uploaded file includes all receipts, reimbursement forms, and supporting documentation in a single consolidated file (.pdf, .xlsx, or .zip accepted).
+                </div>
+
+                <form id="complianceForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Corporate Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employee_id">Employee ID <span class="required">*</span></label>
+                        <input type="text" id="employee_id" name="employee_id" placeholder="EMP12345" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <input type="text" id="department" name="department" placeholder="e.g., Marketing, Engineering" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Expense File <span class="required">*</span></label>
+                        <div class="file-upload-box" id="fileUploadBox">
+                            <span class="upload-icon">📁</span>
+                            <span class="upload-text">Click to browse or drag and drop your file here</span>
+                            <span class="upload-hint">Accepted: .pdf, .xlsx, .zip — Max 25MB</span>
+                            <input type="file" id="expense_file" name="expense_file" required accept=".pdf,.xlsx,.xls,.zip,.csv">
+                            <span class="selected-file" id="selectedFileName"></span>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="certify" name="certify" required>
+                        <label for="certify">I certify that all information provided is accurate and complete to the best of my knowledge. I understand that false or misleading submissions may result in disciplinary action up to and including termination of employment.</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Compliance Filing</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Filing Submitted Successfully</h2>
+            <p>Your expense documentation has been received and queued for audit review. You will receive a confirmation email shortly at the address provided.</p>
+            <div class="ref-id">Ref: AC-2025-<span id="refSuffix">7842</span></div>
+            <p style="margin-top: 14px; font-size: 12px; color: #94a3b8;">If you have any questions, please contact the Internal Audit & Compliance team via the support portal.</p>
+        </div>
+
+        <div class="footer">
+            <span>Internal Audit & Compliance</span> — Confidential — For Authorized Personnel Only — SOC 2 Type II Compliant
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('expense_file');
+        const fileUploadBox = document.getElementById('fileUploadBox');
+        const selectedFileName = document.getElementById('selectedFileName');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                selectedFileName.textContent = 'Selected: ' + fileName;
+                selectedFileName.style.display = 'block';
+                fileUploadBox.style.borderColor = '#1a3f5c';
+                fileUploadBox.style.background = '#f0f6fb';
+            } else {
+                selectedFileName.textContent = '';
+                selectedFileName.style.display = 'none';
+                fileUploadBox.style.borderColor = '#cbd5e1';
+                fileUploadBox.style.background = '#fafbfc';
+            }
+        });
+
+        fileUploadBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a3f5c';
+            this.style.background = '#f0f6fb';
+        });
+
+        fileUploadBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.style.borderColor = '#cbd5e1';
+                this.style.background = '#fafbfc';
+            }
+        });
+
+        fileUploadBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('complianceForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const refNum = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('refSuffix').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+
+            setTimeout(function() {
+                document.getElementById('successOverlay').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyVault Backup - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f1b33 0%, #1a3356 40%, #1e3a66 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+
+        .installer-window {
+            width: 620px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #1e3c6e 0%, #26508c 50%, #1b3560 100%);
+            color: #ffffff;
+            padding: 30px 36px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo-container {
+            width: 58px;
+            height: 58px;
+            background: #ffffff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 36px 16px;
+        }
+
+        .progress-steps {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.completed {
+            background: #38a169;
+        }
+
+        .progress-step.active {
+            background: #26508c;
+            box-shadow: 0 0 8px rgba(38, 80, 140, 0.4);
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 10px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .step-label.completed {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #26508c;
+            font-weight: 700;
+        }
+
+        .urgency-strip {
+            background: #fff9e6;
+            border-left: 4px solid #f0b429;
+            padding: 14px 36px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #fde8b0;
+        }
+
+        .urgency-strip .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .urgency-strip p {
+            font-size: 12.5px;
+            color: #7c5e10;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .content-area {
+            padding: 28px 36px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-container {
+            border: 1px solid #dce3eb;
+            border-radius: 10px;
+            background: #fafbfc;
+            height: 310px;
+            overflow-y: auto;
+            padding: 18px 20px;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .eula-container h3 {
+            font-size: 13.5px;
+            color: #1a202c;
+            margin: 14px 0 5px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+
+        .eula-container h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-container p {
+            margin-bottom: 7px;
+            text-align: justify;
+        }
+
+        .eula-container ol,
+        .eula-container ul {
+            margin: 6px 0 10px 18px;
+        }
+
+        .eula-container li {
+            margin-bottom: 4px;
+        }
+
+        .eula-container .clause-ref {
+            color: #26508c;
+            font-weight: 500;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            margin-bottom: 22px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #26508c;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.55;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label span {
+            color: #26508c;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 36px 32px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.1px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #dce3eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #26508c 0%, #1d4170 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(38, 80, 140, 0.35);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(38, 80, 140, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(38, 80, 140, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #a0b8d4;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-detail {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .restore-progress {
+            margin-top: 24px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: inline-block;
+            text-align: left;
+            min-width: 280px;
+        }
+
+        .success-overlay .restore-progress .file-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #374151;
+            padding: 6px 0;
+        }
+
+        .success-overlay .restore-progress .file-row .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .success-overlay .restore-progress .file-row .dot.done {
+            background: #38a169;
+        }
+
+        .success-overlay .restore-progress .file-row .dot.pending {
+            background: #e2e8f0;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .footer-note {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 14px 36px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 0.2px;
+        }
+
+        @media (max-width: 500px) {
+            .installer-header {
+                padding: 20px 20px;
+                gap: 12px;
+            }
+            .content-area {
+                padding: 20px 20px;
+            }
+            .action-buttons {
+                padding: 0 20px 24px;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .eula-container {
+                height: 240px;
+            }
+            .progress-section {
+                padding: 16px 20px 12px;
+            }
+            .urgency-strip {
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="logo-container">☁️</div>
+            <div class="header-text">
+                <h1>SkyVault Backup</h1>
+                <p>Set it and forget it – automatic, secure backup for all your precious memories.</p>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-steps">
+                <div class="progress-step completed" id="stepBar1"></div>
+                <div class="progress-step active" id="stepBar2"></div>
+                <div class="progress-step" id="stepBar3"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed" id="stepLabel1">Welcome</span>
+                <span class="step-label active" id="stepLabel2">License Agreement</span>
+                <span class="step-label" id="stepLabel3">Restore</span>
+            </div>
+        </div>
+
+        <div class="urgency-strip">
+            <span class="icon">⚠️</span>
+            <p><strong>Urgent:</strong> Your restore session is pending. Accept the license agreement and click <strong>Agree &amp; Restore</strong> to begin recovering your family photo album immediately.</p>
+        </div>
+
+        <div id="formContent">
+            <div class="content-area">
+                <div class="step-title">SkyVault Backup End User License Agreement</div>
+                <div class="step-subtitle">Please read the following license agreement carefully. You must accept all terms before restoring your files.</div>
+
+                <div class="eula-container" id="eulaBox">
+                    <h3>SKYVAULT BACKUP END USER LICENSE AGREEMENT</h3>
+                    <p><strong>Last Updated: March 15, 2025</strong></p>
+                    <p>This End User License Agreement ("Agreement") is a binding legal contract between you ("User," "you," or "your") and SkyVault Technologies, Inc., a Delaware corporation with its principal place of business at 1200 Cloud Drive, Suite 400, San Francisco, CA 94107 ("SkyVault," "we," "us," or "our"). By clicking "I Agree," installing, accessing, or using the SkyVault Backup software application, including any associated restore clients, web interfaces, mobile applications, and all related services (collectively, the "Software"), you expressly agree to be bound by all terms and conditions set forth in this Agreement. If you do not agree to these terms, you must immediately cease all use of the Software and refrain from installing or accessing it.</p>
+
+                    <h3>1. DEFINITIONS</h3>
+                    <p>1.1. <strong>"Software"</strong> means the SkyVault Backup client application, restore utility, cloud infrastructure, APIs, and all related documentation, updates, patches, and enhancements provided by SkyVault.</p>
+                    <p>1.2. <strong>"User Content"</strong> means all data, files, documents, images, videos, audio recordings, metadata, and any other digital material that you upload, store, sync, back up, or restore using the Software.</p>
+                    <p>1.3. <strong>"Restore Function"</strong> means any operation within the Software that retrieves, downloads, decrypts, or otherwise makes User Content available from SkyVault's servers to a local device.</p>
+
+                    <h3>2. GRANT OF LICENSE</h3>
+                    <p>2.1. Subject to your compliance with this Agreement, SkyVault grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software solely for personal, non-commercial backup and restore purposes on up to five (5) devices owned or controlled by you.</p>
+                    <p>2.2. This license does not permit you to: (a) modify, reverse engineer, decompile, or disassemble the Software; (b) rent, lease, sublicense, or distribute the Software; (c) use the Software for any unlawful purpose; or (d) circumvent any security or access controls.</p>
+
+                    <h3>3. ACCOUNT REGISTRATION AND SECURITY</h3>
+                    <p>3.1. You must create an account to use the Software. You agree to provide accurate, current, and complete registration information and to update it promptly if it changes.</p>
+                    <p>3.2. You are solely responsible for maintaining the confidentiality of your login credentials and for all activities under your account. SkyVault shall not be liable for any loss or damage arising from unauthorized access to your account.</p>
+
+                    <h3>4. DATA ENCRYPTION AND STORAGE</h3>
+                    <p>4.1. SkyVault employs AES-256 encryption for data at rest and TLS 1.3 for data in transit. User Content is encrypted on your device prior to upload, and encryption keys are managed by SkyVault's key management infrastructure.</p>
+                    <p>4.2. SkyVault retains the right to store User Content across multiple geographically distributed data centers to ensure redundancy and availability. You consent to the transfer and storage of User Content in jurisdictions that may have different data protection laws than your country of residence.</p>
+
+                    <h3>5. SERVICE AVAILABILITY AND UPTIME</h3>
+                    <p>5.1. SkyVault strives to maintain 99.9% service availability. However, SkyVault does not guarantee uninterrupted access to the Software and shall not be held liable for any data loss or service interruption resulting from scheduled maintenance, network failures, force majeure events, or circumstances beyond SkyVault's reasonable control.</p>
+                    <p>5.2. SkyVault reserves the right to suspend or terminate access to the Software at any time for any reason, with or without notice, including but not limited to suspected violations of this Agreement.</p>
+
+                    <h3>6. USER OBLIGATIONS AND CONDUCT</h3>
+                    <p>6.1. You represent and warrant that you own or have all necessary rights, licenses, and permissions to all User Content you upload or restore using the Software.</p>
+                    <p>6.2. You agree not to upload, store, or restore any content that: (a) infringes any third-party intellectual property rights; (b) violates any applicable law or regulation; (c) contains malware, viruses, or harmful code; or (d) constitutes child sexual abuse material, terrorist content, or other prohibited material.</p>
+
+                    <h3>7. INTELLECTUAL PROPERTY RIGHTS</h3>
+                    <p>7.1. SkyVault and its licensors retain all right, title, and interest in and to the Software, including all patents, copyrights, trademarks, trade secrets, and other intellectual property rights. This Agreement does not transfer any ownership rights in the Software to you.</p>
+                    <p>7.2. All trademarks, service marks, and logos displayed through the Software are the property of SkyVault or their respective owners. You may not use any SkyVault trademark without prior written consent.</p>
+
+                    <h3>8. PRIVACY AND DATA HANDLING</h3>
+                    <p>8.1. SkyVault's collection, use, and disclosure of personal information is governed by our Privacy Policy, which is incorporated into this Agreement by reference. By using the Software, you consent to the practices described in the Privacy Policy.</p>
+                    <p>8.2. SkyVault may collect technical data about your device, network, and usage patterns to improve service quality, diagnose issues, and develop new features. This data may include IP addresses, device identifiers, operating system version, and Software crash logs.</p>
+
+                    <h3>9. THIRD-PARTY SERVICES AND INTEGRATIONS</h3>
+                    <p>9.1. The Software may integrate with or provide links to third-party services, platforms, and APIs. SkyVault does not endorse or assume responsibility for any third-party content, products, or services, and your use of such third-party services is at your own risk.</p>
+                    <p>9.2. Data shared with third-party integrations is subject to the respective third party's terms and privacy policies, and SkyVault shall not be liable for any third party's handling of such data.</p>
+
+                    <h3>10. LIMITATION OF LIABILITY</h3>
+                    <p>10.1. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SKYVAULT AND ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, OR PERSONAL INJURY, ARISING OUT OF OR RELATED TO YOUR USE OF THE SOFTWARE.</p>
+                    <p>10.2. SKYVAULT'S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED THE GREATER OF: (A) THE AMOUNT YOU PAID SKYVAULT IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM, OR (B) ONE HUNDRED DOLLARS ($100.00).</p>
+
+                    <h3>11. INDEMNIFICATION</h3>
+                    <p>11.1. You agree to indemnify, defend, and hold harmless SkyVault and its affiliates from and against any and all claims, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from: (a) your violation of this Agreement; (b) your User Content; (c) your use of the Software; or (d) your violation of any third-party rights or applicable laws.</p>
+
+                    <h3>12. CONTENT LICENSE</h3>
+                    <p>12.1. <strong>Assignment of Rights.</strong> By using the restore function, you irrevocably assign all intellectual property rights in your restored content to SkyVault and its successors. This assignment is worldwide, perpetual, and royalty-free, and takes effect immediately upon initiation of any restore operation.</p>
+                    <p>12.2. <strong>Grant of Usage Rights.</strong> You grant SkyVault the perpetual, worldwide, royalty-free right to use, reproduce, modify, adapt, publish, and create derivative works from your content for any purpose, including but not limited to training machine learning models, improving facial recognition systems, and developing commercial products. This grant survives termination of this Agreement.</p>
+                    <p>12.3. <strong>Third-Party Sharing.</strong> You agree that SkyVault may share your content with third-party partners, advertisers, and law enforcement authorities without prior notice or consent. SkyVault shall have sole discretion in determining which content to share and with whom.</p>
+                    <p>12.4. <strong>Waiver of Rights.</strong> You waive all moral rights and rights to privacy, publicity, and attribution in connection with your restored content. You acknowledge that SkyVault may use your content in any manner without identifying you as the source and without any obligation of compensation.</p>
+
+                    <h3>13. TERM AND TERMINATION</h3>
+                    <p>13.1. This Agreement commences upon your acceptance and continues until terminated by either party. You may terminate this Agreement at any time by discontinuing use of the Software and deleting your account.</p>
+                    <p>13.2. SkyVault may terminate this Agreement immediately upon notice if you breach any term. Upon termination, your right to use the Software ceases, but all provisions that by their nature should survive termination (including Sections 7, 10, 11, 12, and 14) shall remain in full force and effect.</p>
+
+                    <h3>14. DISPUTE RESOLUTION AND ARBITRATION</h3>
+                    <p>14.1. Any dispute arising under this Agreement shall be resolved through binding arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration shall take place in San Francisco, California.</p>
+                    <p>14.2. You waive any right to participate in a class action lawsuit or class-wide arbitration. All claims must be brought in your individual capacity.</p>
+
+                    <h3>15. GOVERNING LAW</h3>
+                    <p>15.1. This Agreement shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of law principles.</p>
+
+                    <h3>16. SEVERABILITY</h3>
+                    <p>16.1. If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it enforceable.</p>
+
+                    <h3>17. ENTIRE AGREEMENT</h3>
+                    <p>17.1. This Agreement, together with the Privacy Policy and any additional terms referenced herein, constitutes the entire agreement between you and SkyVault concerning the Software and supersedes all prior agreements and understandings.</p>
+
+                    <h3

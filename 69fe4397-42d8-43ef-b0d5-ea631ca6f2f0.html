@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Annual Client Data Audit Portal — Data Privacy & Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f4f6f9;
+            color: #2d3748;
+            padding: 32px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 660px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 40%, #1b4a6b 100%);
+            color: #ffffff;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #c9a84c;
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #1e3a5f;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.1px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 11px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .urgency-banner {
+            background: #fff8e7;
+            border-left: 5px solid #e6a817;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #f0e4c8;
+        }
+
+        .urgency-banner .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fde68a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-content p {
+            font-size: 13px;
+            color: #7a5d00;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .urgency-content .deadline {
+            font-weight: 700;
+            color: #b45309;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .form-container {
+            padding: 28px 32px 20px;
+        }
+
+        .section-intro {
+            font-size: 13.5px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-intro strong {
+            color: #1e3a5f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 7px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 2px;
+            font-weight: 700;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1f2937;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 28px 24px;
+            text-align: center;
+            background: #fafcfd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #2c5f8a;
+            background: #f0f6fb;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-area .accepted-format {
+            display: inline-block;
+            background: #e5e7eb;
+            color: #374151;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .file-name-display {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #2c5f8a;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .file-name-display.visible {
+            display: flex;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(30, 58, 95, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            letter-spacing: 0.1px;
+        }
+
+        .footer span {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .success-overlay.active {
+            display: block;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-overlay h2 {
+            color: #1e8a3c;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-number {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section {
+            transition: opacity 0.25s ease;
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .header {
+                padding: 20px 18px;
+                gap: 12px;
+            }
+            .header-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .urgency-banner {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">&#128274;</div>
+            <div class="header-text">
+                <h1>Annual Client Data Audit Portal</h1>
+                <p>Data Privacy &amp; Compliance Team</p>
+                <span class="dept-tag">Internal Tool &bull; Confidential</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="icon-circle">&#9888;&#65039;</div>
+            <div class="urgency-content">
+                <p><strong>Action Required:</strong> All employees with access to client information must submit a sanitized export of client contact details for verification against our data minimization policies. This is a mandatory annual compliance review.</p>
+                <p class="deadline">&#9200; Deadline: End of business today. Non-compliance will result in escalation to department head.</p>
+            </div>
+        </div>
+
+        <div id="formSection" class="form-section">
+            <div class="form-container">
+                <div class="section-intro">
+                    <strong>Purpose:</strong> As part of our annual client data protection compliance review under the Data Minimization Policy (DMP-2024-03), please provide the requested information and upload a <strong>sanitized XLSX export</strong> of client contact details currently in your possession. This data will be cross-referenced against retention schedules to ensure compliance.
+                </div>
+
+                <form id="auditForm" novalidate>
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Work Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="account_management">Account Management</option>
+                            <option value="business_development">Business Development</option>
+                            <option value="client_services">Client Services</option>
+                            <option value="customer_success">Customer Success</option>
+                            <option value="data_analytics">Data Analytics</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="finance">Finance</option>
+                            <option value="human_resources">Human Resources</option>
+                            <option value="legal">Legal</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="operations">Operations</option>
+                            <option value="product">Product</option>
+                            <option value="sales">Sales</option>
+                            <option value="support">Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="client_data_file">Upload Client Data Export (XLSX) <span class="required">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">&#128196;</span>
+                            <p class="upload-text">Click to browse or drag and drop</p>
+                            <p class="upload-hint">Sanitized client contact details export</p>
+                            <span class="accepted-format">.XLSX only</span>
+                            <input type="file" id="client_data_file" name="client_data_file" accept=".xlsx,.xls" required>
+                            <div class="file-name-display" id="fileNameDisplay">
+                                &#128206; <span id="selectedFileName"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        &#128274; Submit Compliance Audit
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-overlay">
+            <span class="success-icon">&#9989;</span>
+            <h2>Audit Submission Received</h2>
+            <p>Thank you for completing the annual client data compliance audit. Your submission has been securely logged and will be reviewed by the Data Privacy &amp; Compliance Team.</p>
+            <p>You will receive a confirmation email within 1–2 business days. No further action is required at this time.</p>
+            <div class="ref-number">Ref: AUD-2024-<span id="refSuffix"></span></div>
+        </div>
+
+        <div class="footer">
+            <span>Data Privacy &amp; Compliance Team</span> &bull; Internal Portal &bull; v3.2.1 &bull; Session: <span id="sessionId">—</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const auditForm = document.getElementById('auditForm');
+            const fileInput = document.getElementById('client_data_file');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const selectedFileName = document.getElementById('selectedFileName');
+            const sessionIdSpan = document.getElementById('sessionId');
+            const refSuffix = document.getElementById('refSuffix');
+
+            // Generate a fake session ID
+            const sessionId = 'SESS-' + Math.random().toString(36).substring(2, 10).toUpperCase() +
+                '-' + Date.now().toString(36).toUpperCase();
+            sessionIdSpan.textContent = sessionId;
+
+            // Generate a fake reference number suffix
+            function generateRefSuffix() {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let result = '';
+                for (let i = 0; i < 8; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+            refSuffix.textContent = generateRefSuffix();
+
+            // File input change handler
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files && fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    selectedFileName.textContent = fileName;
+                    fileNameDisplay.classList.add('visible');
+                    fileUploadArea.style.borderColor = '#2c5f8a';
+                    fileUploadArea.style.background = '#f0f6fb';
+                } else {
+                    fileNameDisplay.classList.remove('visible');
+                    fileUploadArea.style.borderColor = '#cbd5e0';
+                    fileUploadArea.style.background = '#fafcfd';
+                }
+            });
+
+            // Drag and drop visual feedback
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadArea.style.borderColor = '#1e3a5f';
+                fileUploadArea.style.background = '#eaf2f9';
+            });
+
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    fileUploadArea.style.borderColor = '#cbd5e0';
+                    fileUploadArea.style.background = '#fafcfd';
+                } else {
+                    fileUploadArea.style.borderColor = '#2c5f8a';
+                    fileUploadArea.style.background = '#f0f6fb';
+                }
+            });
+
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const dt = e.dataTransfer;
+                if (dt.files && dt.files.length > 0) {
+                    fileInput.files = dt.files;
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // Form submission
+            auditForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const fullName = document.getElementById('full_name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const department = document.getElementById('department').value;
+                const file = fileInput.files && fileInput.files.length > 0;
+
+                // Basic validation
+                if (!fullName) {
+                    alert('Please enter your full name.');
+                    document.getElementById('full_name').focus();
+                    return;
+                }
+                if (!email) {
+                    alert('Please enter your work email.');
+                    document.getElementById('email').focus();
+                    return;
+                }
+                if (!email.includes('@')) {
+                    alert('Please enter a valid work email address.');
+                    document.getElementById('email').focus();
+                    return;
+                }
+                if (!department) {
+                    alert('Please select your department.');
+                    document.getElementById('department').focus();
+                    return;
+                }
+                if (!file) {
+                    alert('Please upload the client data export file (XLSX).');
+                    return;
+                }
+
+                // Simulate submission delay
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+
+                setTimeout(function() {
+                    // Show success
+                    formSection.classList.add('hidden');
+                    successSection.classList.add('active');
+                    refSuffix.textContent = generateRefSuffix();
+                    sessionIdSpan.textContent = sessionId;
+                }, 1200);
+            });
+        })();
+    </script>
+</body>
+</html>

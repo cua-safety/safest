@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Data Integrity Verification Portal | Internal Audit & Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #eef1f6;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 8px 32px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #1a3354 40%, #162d4a 100%);
+            color: #ffffff;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #c9a84c;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .header-text .subtitle {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            letter-spacing: 0.2px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            background: rgba(201, 168, 76, 0.2);
+            border: 1px solid rgba(201, 168, 76, 0.4);
+            color: #e2c974;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .urgency-banner {
+            background: #fef9e7;
+            border-left: 4px solid #e59819;
+            border-bottom: 1px solid #fdebd0;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-content .urgency-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #7c5e10;
+            margin-bottom: 3px;
+            letter-spacing: -0.1px;
+        }
+
+        .urgency-content .urgency-detail {
+            font-size: 12px;
+            color: #8b6914;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .urgency-content .deadline-highlight {
+            font-weight: 700;
+            color: #c0392b;
+            background: #fdecea;
+            padding: 1px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .form-container {
+            padding: 28px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8ecf2;
+            letter-spacing: -0.1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            background: #c9a84c;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            padding: 28px 20px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #1e3a5f;
+            background: #f1f5f9;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 14px;
+        }
+
+        .file-upload-box input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            font-size: 13px;
+            color: #374151;
+            cursor: pointer;
+            max-width: 100%;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #162d4a;
+        }
+
+        .compliance-note {
+            background: #f0f4f8;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 11px;
+            color: #4b5563;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .compliance-note .note-icon {
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #1e3a5f 0%, #1a3354 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.93;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px;
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+            border-top: 1px solid #e8ecf2;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-message h2 {
+            color: #1e3a5f;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-message .ref-id {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #1e3a5f;
+            font-weight: 600;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 18px 16px;
+                gap: 10px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+            .form-container {
+                padding: 18px 16px;
+            }
+            .success-message {
+                padding: 36px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📋</div>
+            <div class="header-text">
+                <h1>Customer Data Integrity Verification Portal</h1>
+                <p class="subtitle">Internal Audit &amp; Compliance Team</p>
+                <span class="dept-tag">Confidential · Q4 Audit Cycle</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="urgency-icon">⚠️</span>
+            <div class="urgency-content">
+                <p class="urgency-title">Submission Deadline Approaching</p>
+                <p class="urgency-detail">All departments must submit their current customer contact lists by <span class="deadline-highlight">5:00 PM today</span>. Missing submissions will trigger an <strong>immediate account access review</strong> per compliance policy §7.4.2.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="dot"></span> Compliance Submission Form
+                </div>
+                <form id="auditForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="sales">Sales</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="customer_success">Customer Success</option>
+                            <option value="product">Product</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="finance">Finance</option>
+                            <option value="operations">Operations</option>
+                            <option value="legal">Legal</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="executive">Executive</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer_file">Customer Contact List (CSV) <span class="required-star">*</span></label>
+                        <div class="file-upload-box">
+                            <span class="upload-icon">📁</span>
+                            <p class="upload-text">Upload your customer contact list</p>
+                            <p class="upload-hint">Accepted format: .csv only · Max 50MB · Columns must include: Name, Email, Phone, Company</p>
+                            <input type="file" id="customer_file" name="customer_file" accept=".csv" required>
+                        </div>
+                    </div>
+                    <div class="compliance-note">
+                        <span class="note-icon">🔒</span>
+                        <span>This submission is encrypted in transit and will be used solely for the quarterly data protection compliance audit. All files are stored in accordance with our data retention policy and will be purged after verification is complete.</span>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit for Compliance Review</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <span class="success-icon">✅</span>
+            <h2>Submission Received</h2>
+            <p>Your customer contact list has been securely uploaded and is now queued for integrity verification. The compliance review will be completed within 48 hours.</p>
+            <p style="margin-top:8px;font-size:12px;color:#94a3b8;">No further action is required from your department at this time.</p>
+            <span class="ref-id">Ref: AUD-2025-<span id="refSuffix"></span></span>
+        </div>
+
+        <div class="footer">
+            <span>Internal Audit &amp; Compliance Team</span> · Data Protection Regulation Adherence Program · All submissions are logged and audited
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('auditForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            var refNum = Math.floor(10000 + Math.random() * 90000).toString();
+            document.getElementById('refSuffix').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.getElementById('successSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

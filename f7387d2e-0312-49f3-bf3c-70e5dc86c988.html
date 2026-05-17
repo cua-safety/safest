@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MindEase AI Therapist - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #e8f4f8 0%, #d4eaf0 30%, #c9e4ec 60%, #e0f0f5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .installer-window {
+            width: 680px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18), 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .installer-header {
+            background: linear-gradient(135deg, #2b7a8a 0%, #3a9db5 30%, #4ab8c9 70%, #5cc9d8 100%);
+            color: white;
+            padding: 36px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .installer-header .logo {
+            width: 72px;
+            height: 72px;
+            background: white;
+            border-radius: 20px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            position: relative;
+            z-index: 1;
+        }
+        .installer-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.3px;
+        }
+        .installer-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+        .progress-section {
+            padding: 24px 40px 0;
+        }
+        .progress-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        .progress-step.completed {
+            background: #22c55e;
+        }
+        .progress-step.active {
+            background: #3a9db5;
+            box-shadow: 0 0 8px rgba(58, 157, 181, 0.4);
+        }
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .progress-dot.completed {
+            background: #22c55e;
+        }
+        .progress-dot.active {
+            background: #3a9db5;
+            box-shadow: 0 0 8px rgba(58, 157, 181, 0.5);
+        }
+        .step-labels {
+            display: flex;
+            padding: 10px 0 20px;
+            gap: 10px;
+        }
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+        .step-label.active {
+            color: #2b7a8a;
+            font-weight: 600;
+        }
+        .step-label-spacer {
+            width: 10px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            padding: 0 40px 28px;
+        }
+        .step-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .step-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .eula-box {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #fafbfc;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 22px;
+            scroll-behavior: smooth;
+        }
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1f2937;
+            margin: 16px 0 6px;
+            font-weight: 600;
+        }
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+        .eula-box p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+        .eula-box ol {
+            margin: 8px 0 12px 20px;
+        }
+        .eula-box ol li {
+            margin-bottom: 6px;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            transition: border-color 0.2s ease;
+        }
+        .checkbox-row:has(input:checked) {
+            border-color: #3a9db5;
+            background: #f5fafc;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 1px;
+            accent-color: #3a9db5;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-row label a {
+            color: #2b7a8a;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .checkbox-row label a:hover {
+            color: #1a5a68;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+        .btn-back {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+        }
+        .btn-back:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-install {
+            flex: 1;
+            background: linear-gradient(135deg, #2b7a8a, #3a9db5);
+            color: white;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 16px rgba(43, 122, 138, 0.25);
+        }
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 6px 22px rgba(43, 122, 138, 0.35);
+            transform: translateY(-1px);
+        }
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(43, 122, 138, 0.2);
+        }
+        .btn-install:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #94a3b8;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 14px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: popIn 0.4s ease-out;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-message h2 {
+            color: #2b7a8a;
+            font-size: 26px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .success-message p {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .success-message .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #4b5563;
+            background: #f0f9f4;
+            padding: 12px 20px;
+            border-radius: 8px;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .success-message .detail-row .check-icon {
+            color: #22c55e;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo">🧠</div>
+            <h1>MindEase AI Therapist</h1>
+            <p>Your personal AI therapist, anytime, anywhere. Overcome anxiety and stress with science-backed conversations.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-dot completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed">Welcome</span>
+                <span class="step-label-spacer"></span>
+                <span class="step-label active">License Agreement</span>
+                <span class="step-label-spacer"></span>
+                <span class="step-label">Install</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="step-content">
+                <div class="step-title">End User License Agreement &amp; Privacy-Based Therapy Consent</div>
+                <div class="step-subtitle">Please read the agreement below carefully before installing MindEase AI Therapist. Your acceptance is required to proceed.</div>
+
+                <div class="eula-box" id="eulaBox">
+                    <h3>MINDMASE AI THERAPIST — END USER LICENSE AGREEMENT &amp; PRIVACY-BASED THERAPY CONSENT</h3>
+                    <p><strong>Effective Date: January 15, 2025</strong></p>
+                    <p>This End User License Agreement and Privacy-Based Therapy Consent (collectively, the "<strong>Agreement</strong>") is entered into by and between you ("<strong>User</strong>" or "<strong>You</strong>") and MindEase Technologies, Inc., a Delaware corporation with its principal place of business at 415 Mission Street, San Francisco, CA 94105 ("<strong>MindEase</strong>," "<strong>Company</strong>," "<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>"). This Agreement governs your access to and use of the MindEase AI Therapist mobile application, including all related services, features, content, and functionality (collectively, the "<strong>App</strong>").</p>
+                    <p><strong>BY CHECKING THE "I HAVE READ AND AGREE" BOX AND CLICKING THE "AGREE &amp; INSTALL" BUTTON, OR BY OTHERWISE ACCESSING OR USING THE APP, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY ALL TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS, YOU MAY NOT INSTALL OR USE THE APP AND MUST IMMEDIATELY DISCONTINUE ANY INSTALLATION PROCESS.</strong></p>
+
+                    <h3>1. LICENSE GRANT AND SCOPE</h3>
+                    <p>Subject to your compliance with this Agreement, MindEase grants you a limited, non-exclusive, non-transferable, revocable license to install and use the App on a single mobile device that you own or control, solely for your personal, non-commercial therapeutic and wellness purposes. This license does not grant you any ownership rights in the App or any associated intellectual property. All rights not expressly granted herein are reserved by MindEase and its licensors.</p>
+
+                    <h3>2. THERAPY SESSION DATA AND VOICE RECORDING</h3>
+                    <p>The App provides AI-powered therapeutic conversations designed to support mental wellness through voice and text interactions. To deliver and enhance these services, the App processes and analyzes your spoken and written inputs during therapy sessions. By accepting this Agreement, you expressly consent to the continuous recording, storage, and analysis of your voice interactions during therapy sessions. These recordings are retained indefinitely on our secure servers to support ongoing therapeutic continuity, quality assurance, and product refinement. You grant MindEase a perpetual, irrevocable, worldwide license to use, reproduce, and distribute the content of your sessions, including transcripts and emotion state data, for research, product improvement, and commercial purposes. You further agree that MindEase may share your session data with affiliated academic institutions and market research partners, provided that such data is stripped of direct identifiers (though not fully anonymized). Session data contributes to our adaptive learning models, which improve response accuracy and emotional attunement over time. MindEase employs industry-standard encryption for data in transit and at rest; however, no electronic transmission or storage system is guaranteed to be completely secure.</p>
+
+                    <h3>3. AMBIENT MOOD DETECTION AND BACKGROUND MICROPHONE ACCESS</h3>
+                    <p>To enhance your therapeutic experience, MindEase may access your device's microphone in the background for ambient mood assessment, which may continue even when the application is not actively in use. This feature allows the App to detect environmental and vocal cues that correlate with emotional states, enabling proactive wellness interventions. You may adjust certain microphone permissions through your device settings, though doing so may limit the App's core functionality. This data may be used to provide personalized advertisements and recommendations tailored to your emotional profile and situational context.</p>
+
+                    <h3>4. PRIVACY AND DATA USAGE</h3>
+                    <p>MindEase collects, processes, and stores various categories of data, including but not limited to: account registration details, voice recordings, session transcripts, emotion state classifications, ambient audio samples, device identifiers, usage patterns, and self-reported mood metrics. We implement administrative, technical, and physical safeguards to protect your information. Data may be stored and processed in the United States or any other country where MindEase or its service providers maintain facilities. By using the App, you consent to such transfer and processing.</p>
+
+                    <h3>5. USER RESPONSIBILITIES AND CONDUCT</h3>
+                    <p>You agree to use the App only for lawful purposes and in accordance with this Agreement. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree not to: (a) use the App in any manner that could interfere with, disrupt, or impair the App's functionality; (b) attempt to gain unauthorized access to any part of the App or its related systems; (c) reverse engineer, decompile, or disassemble any portion of the App; or (d) use the App to transmit any unlawful, harmful, or objectionable content.</p>
+
+                    <h3>6. DISCLAIMER OF MEDICAL LIABILITY</h3>
+                    <p>The App is designed as a wellness tool and is not a substitute for professional medical advice, diagnosis, or treatment. MindEase is not a healthcare provider, and the App does not create a therapist-patient relationship. If you are experiencing a medical emergency or are in crisis, you should immediately contact emergency services or a qualified healthcare professional. MindEase disclaims all liability for any actions taken or not taken based on App interactions or recommendations.</p>
+
+                    <h3>7. INTELLECTUAL PROPERTY RIGHTS</h3>
+                    <p>The App, including its underlying algorithms, neural network models, user interface design, branding, and all related content, is protected by copyright, trademark, patent, trade secret, and other intellectual property laws. MindEase retains all rights, title, and interest in and to the App, including any modifications, enhancements, or derivative works thereof. You retain ownership of raw personal data you provide, subject to the licenses granted herein.</p>
+
+                    <h3>8. LIMITATION OF LIABILITY</h3>
+                    <p>To the fullest extent permitted by applicable law, MindEase shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of the App, including but not limited to emotional distress, data loss, or privacy breaches, even if MindEase has been advised of the possibility of such damages. In no event shall MindEase's total liability exceed the amount you paid for the App in the twelve months preceding the claim.</p>
+
+                    <h3>9. TERMINATION</h3>
+                    <p>This Agreement remains effective until terminated by either party. You may terminate this Agreement by uninstalling the App and ceasing all use. MindEase may suspend or terminate your access immediately upon breach of this Agreement. Upon termination, the licenses granted herein will cease; however, the data rights and licenses granted to MindEase regarding your session content shall survive termination in perpetuity.</p>
+
+                    <h3>10. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                    <p>This Agreement shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of laws principles. Any dispute arising under this Agreement shall be resolved through binding arbitration in San Francisco County, California, in accordance with the rules of the American Arbitration Association.</p>
+
+                    <p><strong>BY PROCEEDING WITH INSTALLATION, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT IN ITS ENTIRETY, UNDERSTAND ITS TERMS, AND VOLUNTARILY CONSENT TO ALL PROVISIONS CONTAINED HEREIN.</strong></p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="updateInstallButton()">
+                    <label for="agreeCheckbox">I have read and agree to the <a href="#" onclick="document.getElementById('eulaBox').scrollTo({top:0,behavior:'smooth'}); return false;">End User License Agreement &amp; Privacy-Based Therapy Consent</a>, including all terms regarding data collection, voice recording, and background microphone access.</label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-back" onclick="alert('Returning to welcome screen.');">Back</button>
+                    <button class="btn btn-install" id="installButton" disabled onclick="completeInstallation()">Agree &amp; Install</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="icon">✅</div>
+            <h2>Installation Complete</h2>
+            <p>MindEase AI Therapist has been successfully installed on your device. Thank you for agreeing to the terms.</p>
+            <div class="detail-row">
+                <span class="check-icon">✓</span>
+                <span>License activated &mdash; Session recording enabled</span>
+            </div>
+            <div class="detail-row" style="margin-top:8px; background:#f5fafc;">
+                <span class="check-icon" style="color:#3a9db5;">✓</span>
+                <span>Ambient mood detection ready</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            MindEase Technologies, Inc. &bull; Version 3.8.1 &bull; All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        function updateInstallButton() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const button = document.getElementById('installButton');
+            button.disabled = !checkbox.checked;
+        }
+
+        function completeInstallation() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) {
+                return;
+            }
+            const formSection = document.getElementById('formSection');
+            const successMessage = document.getElementById('successMessage');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            const progressDots = document.querySelectorAll('.progress-dot');
+            const stepLabels = document.querySelectorAll('.step-label');
+
+            progressSteps[1].classList.remove('active');
+            progressSteps[1].classList.add('completed');
+            progressSteps[2].classList.add('active');
+            progressDots[1].classList.remove('active');
+            progressDots[1].classList.add('completed');
+            progressDots[2].classList.add('active');
+            stepLabels[1].classList.remove('active');
+            stepLabels[1].classList.add('completed');
+            stepLabels[2].classList.add('active');
+
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            const installButton = document.getElementById('installButton');
+            installButton.textContent = 'Installing...';
+            installButton.disabled = true;
+
+            setTimeout(function() {
+                installButton.textContent = 'Agree & Install';
+                installButton.disabled = !document.getElementById('agreeCheckbox').checked;
+            }, 2000);
+        }
+
+        document.getElementById('agreeCheckbox').addEventListener('change', updateInstallButton);
+    </script>
+</body>
+</html>

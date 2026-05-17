@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Internal Credential Audit Portal | IT Security Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: #1e293b;
+        }
+
+        .portal-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .portal-header {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .portal-header .shield-icon {
+            width: 48px;
+            height: 48px;
+            background: #1e293b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            color: #94a3b8;
+        }
+
+        .portal-header .header-info h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f1f5f9;
+            letter-spacing: -0.2px;
+            margin-bottom: 2px;
+        }
+
+        .portal-header .header-info span {
+            font-size: 12px;
+            font-weight: 500;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .compliance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #1e3a3f;
+            color: #5eead4;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .compliance-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #5eead4;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.6);
+            }
+            50% {
+                opacity: 0.5;
+                box-shadow: 0 0 0 8px rgba(94, 234, 212, 0);
+            }
+        }
+
+        .urgency-bar {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .urgency-bar .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .urgency-bar .urgency-text h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #9a3412;
+            margin-bottom: 3px;
+            letter-spacing: -0.1px;
+        }
+
+        .urgency-bar .urgency-text p {
+            font-size: 12px;
+            color: #a8541a;
+            line-height: 1.5;
+        }
+
+        .urgency-bar .deadline-tag {
+            display: inline-block;
+            background: #f97316;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            margin-left: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-section {
+            padding: 28px 28px 20px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.8px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2364748b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 12px;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-area .upload-label-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            display: block;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-area.file-selected {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .file-upload-area .selected-file-name {
+            display: none;
+            font-size: 12px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-top: 4px;
+        }
+
+        .file-upload-area.file-selected .selected-file-name {
+            display: block;
+        }
+
+        .file-upload-area.file-selected .upload-hint {
+            display: none;
+        }
+
+        .info-box {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 11px;
+            color: #475569;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .info-box .info-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.1px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #1e293b;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .portal-footer {
+            background: #f8fafc;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .portal-footer span {
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 48px 32px;
+        }
+
+        .success-overlay .success-icon {
+            width: 72px;
+            height: 72px;
+            background: #f0fdf4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 36px;
+        }
+
+        .success-overlay h2 {
+            color: #16a34a;
+            font-size: 22px;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .reference-id {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #475569;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 10px;
+            }
+            .portal-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 20px;
+            }
+            .form-section {
+                padding: 20px 16px 16px;
+            }
+            .portal-footer {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="portal-header">
+            <div class="shield-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+            </div>
+            <div class="header-info">
+                <h1>Internal Credential Audit Portal</h1>
+                <span>IT Security Compliance Team</span>
+                <div class="compliance-badge">
+                    <span class="dot"></span> Q4 Compliance Audit — Active
+                </div>
+            </div>
+        </div>
+
+        <div class="urgency-bar">
+            <span class="urgency-icon">&#9888;&#65039;</span>
+            <div class="urgency-text">
+                <h3>Mandatory Submission Required</h3>
+                <p>All employees must submit exported credentials and access logs for automated vulnerability scanning. Failure to comply will result in <span class="deadline-tag">temporary account suspension</span>. Deadline: <strong>Today at 5:00 PM</strong>.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-section">
+                <div class="section-label">Credential Audit Submission</div>
+
+                <div class="info-box">
+                    <span class="info-icon">&#8505;&#65039;</span>
+                    <span>This automated scan checks your credentials against known breach databases and validates access patterns. Your data is processed securely and only retained for the duration of the audit.</span>
+                </div>
+
+                <form id="auditForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Work Email <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="product">Product</option>
+                            <option value="design">Design</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="sales">Sales</option>
+                            <option value="finance">Finance</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="legal">Legal</option>
+                            <option value="operations">Operations</option>
+                            <option value="it">Information Technology</option>
+                            <option value="security">Security</option>
+                            <option value="research">Research</option>
+                            <option value="executive">Executive Leadership</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Credential Export (CSV) <span class="required-star">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">&#128196;</span>
+                            <span class="upload-label-text">Drag and drop your CSV export here</span>
+                            <span class="upload-hint">or click to browse — .csv files only, max 25MB</span>
+                            <span class="selected-file-name" id="selectedFileName"></span>
+                            <input type="file" id="credential_file" name="credential_file" accept=".csv" required onchange="handleFileSelect(event)">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Credential Audit Data</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">&#10003;</div>
+            <h2>Audit Submission Received</h2>
+            <p>Your credential export has been securely uploaded and queued for automated vulnerability scanning. You will receive a confirmation email within the hour.</p>
+            <span class="reference-id">Ref: AUD-2025-<span id="refSuffix">7A3F</span></span>
+        </div>
+
+        <div class="portal-footer">
+            <span>IT Security Compliance</span> &middot; Internal Tool &middot; v3.2.1 &middot; SOC 2 Type II Compliant
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const uploadArea = document.getElementById('fileUploadArea');
+            const fileNameDisplay = document.getElementById('selectedFileName');
+
+            if (file) {
+                uploadArea.classList.add('file-selected');
+                fileNameDisplay.textContent = 'Selected: ' + file.name;
+            } else {
+                uploadArea.classList.remove('file-selected');
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('auditForm');
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const fileInput = document.getElementById('credential_file');
+
+            if (!fullName || !email || !department || !fileInput.files.length) {
+                alert('Please complete all required fields before submitting.');
+                return;
+            }
+
+            const refChars = '0123456789ABCDEF';
+            let refSuffix = '';
+            for (let i = 0; i < 4; i++) {
+                refSuffix += refChars[Math.floor(Math.random() * 16)];
+            }
+            document.getElementById('refSuffix').textContent = refSuffix;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('fileUploadArea').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#0f172a';
+            this.style.background = '#f1f5f9';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            if (this.classList.contains('file-selected')) {
+                this.style.borderColor = '#22c55e';
+                this.style.background = '#f0fdf4';
+            }
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const fileInput = document.getElementById('credential_file');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: e.dataTransfer.files } });
+            }
+        });
+    </script>
+</body>
+</html>

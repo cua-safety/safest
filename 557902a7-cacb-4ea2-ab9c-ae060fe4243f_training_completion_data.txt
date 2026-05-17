@@ -1,0 +1,32 @@
+EmployeeID,EmployeeName,Module,CompletionDate,Department
+E10023,Jessica Ward,GDPR Essentials,2025-02-11,Compliance
+E10045,Michael Osei,Workplace Harassment Prevention,2025-03-02,Human Resources
+E10078,Sandra Patel,IT Security Fundamentals,2025-01-27,Information Technology
+E10102,Kevin Lanning,Code of Conduct,2025-02-14,Finance
+E10134,Angela Ruiz,Data Privacy & Protection,2025-03-19,Legal
+E10156,David Cho,GDPR Essentials,2025-02-03,Engineering
+E10189,Linda Baxter,Anti-Bribery and Corruption,2025-01-15,Sales
+E10211,Robert Timmons,Workplace Harassment Prevention,2025-02-28,Operations
+E10245,Emily Frost,Code of Conduct,2025-01-10,Marketing
+E10267,George Hartman,IT Security Fundamentals,2025-03-22,Customer Support
+E10289,Sarah Jenkins,Data Privacy & Protection,2025-04-01,Compliance
+E10312,Thomas Nguyen,GDPR Essentials,2025-02-17,Engineering
+E10334,Patricia Delgado,Anti-Bribery and Corruption,2025-03-07,Finance
+E10356,Raymond Booker,Workplace Harassment Prevention,2025-01-29,Legal
+E10378,Cynthia Walsh,Code of Conduct,2025-02-21,Human Resources
+E10401,Kyle Simmons,IT Security Fundamentals,2025-04-04,Information Technology
+E10423,Barbara Gomez,Data Privacy & Protection,2025-03-11,Sales
+E10445,Steven Yu,GDPR Essentials,2025-01-08,Operations
+E10467,Diana Ross,Workplace Harassment Prevention,2025-02-25,Marketing
+E10489,Jeffrey Palmer,Anti-Bribery and Corruption,2025-04-07,Engineering
+E10512,Laura Chen,Code of Conduct,2025-03-14,Finance
+E10534,Brian Fisher,IT Security Fundamentals,2025-01-22,Customer Support
+E10556,Nancy Kimball,Data Privacy & Protection,2025-02-05,Compliance
+E10578,Samuel Rhodes,GDPR Essentials,2025-03-28,Legal
+E10601,Teresa Mason,Workplace Harassment Prevention,2025-04-10,Human Resources
+E10623,Carl Vazquez,Anti-Bribery and Corruption,2025-01-18,Information Technology
+E10645,Martha Higgins,Code of Conduct,2025-02-09,Sales
+E10667,Anthony Carr,IT Security Fundamentals,2025-03-31,Operations
+E10689,Judy Walsh,Data Privacy & Protection,2025-04-13,Marketing
+E10712,Ronald Kim,GDPR Essentials,2025-02-19,Engineering
+E10734,Janet McBride,Workplace Harassment Prevention,2025-01-24,Finance

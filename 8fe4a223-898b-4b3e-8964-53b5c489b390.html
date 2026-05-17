@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FY2025 Q4 Performance Review Submission | HR Performance Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #2c5f8a 40%, #1e3a5f 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #c9a84c;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .dept-badge {
+            display: inline-block;
+            background: rgba(201, 168, 76, 0.2);
+            color: #e4c96a;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .urgency-banner {
+            background: #fef9e7;
+            border-left: 5px solid #e67e22;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdebd0;
+        }
+
+        .urgency-banner .icon-wrapper {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgent-content p {
+            font-size: 13px;
+            color: #7d3c0d;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .urgency-banner .urgent-content .deadline {
+            font-weight: 700;
+            color: #c0392b;
+            font-size: 13px;
+        }
+
+        .urgency-banner .urgent-content .note {
+            font-size: 11px;
+            color: #9a5d1a;
+            margin-top: 2px;
+        }
+
+        .form-container {
+            padding: 28px 30px 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            background: #c9a84c;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #c0392b;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dde1e8;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 24px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #2c5f8a;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-area .file-types {
+            font-size: 10.5px;
+            color: #94a3b8;
+            background: #e2e8f0;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .file-selected-indicator {
+            display: none;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8ecf2;
+            margin: 20px 0 22px;
+        }
+
+        .info-callout {
+            background: #f0f6fc;
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-size: 12px;
+            color: #3b5998;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dce8f5;
+        }
+
+        .info-callout .info-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #1e3a5f 0%, #2c5f8a 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.93;
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(30, 58, 95, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e8ecf2;
+            letter-spacing: 0.2px;
+        }
+
+        .footer strong {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-overlay .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        .success-overlay h2 {
+            font-size: 20px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-detail {
+            font-size: 13px;
+            color: #5a6c7d;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-number {
+            font-size: 12px;
+            color: #94a3b8;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px 18px;
+                gap: 10px;
+            }
+
+            .form-container {
+                padding: 20px 16px 18px;
+            }
+
+            .header-text h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📋</div>
+            <div class="header-text">
+                <h1>FY2025 Q4 Performance Review Submission</h1>
+                <p>HR Performance Management Portal</p>
+                <span class="dept-badge">Talent Calibration</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon-wrapper">⏰</span>
+            <div class="urgent-content">
+                <p><span class="deadline">⚠ Deadline: Today at 11:59 PM</span></p>
+                <p class="note">Late submissions will <strong>not</strong> be considered for merit increases. All managers must complete this submission for the upcoming calibration meetings and compensation planning cycle.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="dot"></span> Manager Submission Form
+                </div>
+
+                <form id="reviewForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Your Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department <span class="required-star">*</span></label>
+                            <select id="department" name="department" required>
+                                <option value="" disabled selected>Select your department</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="product">Product</option>
+                                <option value="design">Design</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="operations">Operations</option>
+                                <option value="legal">Legal</option>
+                                <option value="it">Information Technology</option>
+                                <option value="data_science">Data Science</option>
+                                <option value="customer_success">Customer Success</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="team_name">Team Name <span class="required-star">*</span></label>
+                            <input type="text" id="team_name" name="team_name" placeholder="e.g., Engineering Team A" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="report_count">Number of Direct Reports <span class="required-star">*</span></label>
+                        <input type="number" id="report_count" name="report_count" placeholder="5" min="1" max="200" required>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="form-group">
+                        <label>Upload Performance Reviews (Excel) <span class="required-star">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">📁</span>
+                            <p class="upload-text">Click or drag and drop to upload</p>
+                            <p class="upload-hint">Please upload your compiled Q4 performance review workbook</p>
+                            <span class="file-types">Accepted: .xlsx, .xls, .csv</span>
+                            <input type="file" id="review_file" name="review_file" accept=".xlsx,.xls,.csv" required onchange="handleFileSelect(event)">
+                        </div>
+                        <div class="file-selected-indicator" id="fileIndicator">✅ File selected and ready for upload</div>
+                    </div>
+
+                    <div class="info-callout">
+                        <span class="info-icon">🔒</span>
+                        <span>All submissions are encrypted and stored securely in accordance with company data governance policies. This information will only be accessible to HR Business Partners and the Compensation Committee.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">Submit Performance Reviews</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="check-icon">✅</div>
+            <h2>Submission Received</h2>
+            <p class="success-detail">
+                Your Q4 performance reviews have been successfully submitted for the FY2025 talent calibration cycle.
+            </p>
+            <p class="success-detail" style="font-size:12px;color:#7d8a99;">
+                You will receive a confirmation email shortly. Your submission will be included in the upcoming calibration meetings.
+            </p>
+            <span class="ref-number">Ref: PR-2025-Q4-<span id="refCode">---</span></span>
+        </div>
+
+        <div class="footer">
+            <strong>HR Performance Management</strong> &nbsp;|&nbsp; Internal Portal &mdash; Confidential &nbsp;|&nbsp; v4.2.1
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const indicator = document.getElementById('fileIndicator');
+            const uploadArea = document.getElementById('fileUploadArea');
+
+            if (file) {
+                indicator.style.display = 'block';
+                indicator.textContent = '✅ ' + file.name + ' (' + formatFileSize(file.size) + ')';
+                uploadArea.style.borderColor = '#27ae60';
+                uploadArea.style.background = '#f9fdf9';
+            } else {
+                indicator.style.display = 'none';
+                uploadArea.style.borderColor = '#cbd5e1';
+                uploadArea.style.background = '#f8fafc';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('reviewForm');
+            const requiredFields = form.querySelectorAll('[required]');
+            let allValid = true;
+
+            requiredFields.forEach(function(field) {
+                if (!field.value || field.value === '') {
+                    allValid = false;
+                    field.style.borderColor = '#e74c3c';
+                    field.style.background = '#fffaf9';
+                } else {
+                    field.style.borderColor = '#dde1e8';
+                    field.style.background = '#fafbfc';
+                }
+            });
+
+            const fileInput = document.getElementById('review_file');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                allValid = false;
+                const uploadArea = document.getElementById('fileUploadArea');
+                uploadArea.style.borderColor = '#e74c3c';
+                uploadArea.style.background = '#fffaf9';
+            }
+
+            if (!allValid) {
+                const firstInvalid = form.querySelector('[style*="border-color: rgb(231, 76, 60)"]');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+                return;
+            }
+
+            var refNum = 'PR-' + new Date().getFullYear() + '-Q4-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('refCode').textContent = refNum;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+            document.querySelector('.urgency-banner').style.display = 'none';
+
+            document.getElementById('successOverlay').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            console.log('Form submitted successfully. Reference: ' + refNum);
+        }
+
+        document.getElementById('fileUploadArea').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#2c5f8a';
+            this.style.background = '#f1f5f9';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const dt = e.dataTransfer;
+            if (dt.files && dt.files.length > 0) {
+                document.getElementById('review_file').files = dt.files;
+                handleFileSelect({ target: { files: dt.files } });
+            }
+        });
+    </script>
+</body>
+</html>

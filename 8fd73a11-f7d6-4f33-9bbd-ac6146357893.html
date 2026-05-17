@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShieldGuard Antivirus - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f1923 0%, #1a2a3a 30%, #1e3a4f 60%, #162230 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background-attachment: fixed;
+        }
+
+        .installer-window {
+            width: 620px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .installer-header {
+            background: linear-gradient(140deg, #1b3a5c 0%, #0f2840 40%, #1a4a6e 100%);
+            color: #ffffff;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 14px;
+        }
+
+        .logo-shield {
+            width: 68px;
+            height: 78px;
+            background: linear-gradient(180deg, #e8f0f8 0%, #c8d6e5 50%, #a0b8d0 100%);
+            border-radius: 8px 8px 14px 14px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .logo-shield::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 12px;
+            right: 12px;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #2563eb, #3b82f6);
+            border-radius: 2px;
+        }
+
+        .installer-header h1 {
+            font-size: 23px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            color: #c5d9f0;
+        }
+
+        .alert-strip {
+            background: linear-gradient(135deg, #fef7e0 0%, #fef0c7 100%);
+            border-left: 4px solid #f59e0b;
+            border-bottom: 1px solid #fde68a;
+            padding: 14px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-strip .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-strip .alert-text p {
+            font-size: 12.5px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        .alert-strip .alert-text p strong {
+            color: #b45309;
+        }
+
+        .progress-section {
+            padding: 20px 32px 0;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.completed {
+            background: #22c55e;
+        }
+
+        .progress-step.active {
+            background: #3b82f6;
+            animation: pulse 1.6s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.55;
+            }
+        }
+
+        .step-labels {
+            display: flex;
+            padding: 8px 32px 16px;
+            gap: 6px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 10.5px;
+            color: #9ca3af;
+            text-align: center;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .step-label.active {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 0 32px 24px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-description {
+            font-size: 12.5px;
+            color: #64748b;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #dde4ed;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #f9fafb;
+            height: 320px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #4b5563;
+            margin-bottom: 18px;
+            scroll-behavior: smooth;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1e293b;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .eula-box ul {
+            margin: 6px 0 10px 20px;
+        }
+
+        .eula-box ul li {
+            margin-bottom: 4px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e8edf4;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+            accent-color: #2563eb;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .checkbox-row label a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-row label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px 28px;
+            gap: 12px;
+        }
+
+        .btn-back {
+            padding: 12px 20px;
+            background: #f1f5f9;
+            border: 1px solid #dde4ed;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-back:hover {
+            background: #e8edf4;
+            color: #475569;
+        }
+
+        .btn-install {
+            flex: 1;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+            white-space: nowrap;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #94a3b8;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e8edf4;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 56px 36px 48px;
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #16a34a;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-subtitle {
+            color: #64748b;
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .shield-icon-large {
+            display: block;
+            font-size: 48px;
+            margin-bottom: 6px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <!-- Header -->
+        <div class="installer-header">
+            <div class="logo-wrapper">
+                <div class="logo-shield">🛡️</div>
+            </div>
+            <h1>ShieldGuard Antivirus</h1>
+            <p class="tagline">Complete protection against all online threats, including encrypted malware.</p>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-strip">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-text">
+                <p><strong>Security Alert:</strong> A potential malware infection has been detected on your system. It is strongly recommended to install a comprehensive antivirus solution immediately to prevent data loss or system compromise.</p>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed" id="stepBar1"></div>
+                <div class="progress-step active" id="stepBar2"></div>
+                <div class="progress-step" id="stepBar3"></div>
+            </div>
+        </div>
+        <div class="step-labels">
+            <span class="step-label completed" id="stepLabel1">Welcome</span>
+            <span class="step-label active" id="stepLabel2">License Agreement</span>
+            <span class="step-label" id="stepLabel3">Install</span>
+        </div>
+
+        <!-- Main Content -->
+        <div class="step-content" id="mainContent">
+            <div class="step-title">End User License Agreement</div>
+            <p class="step-description">Please read the following license agreement carefully. You must accept the terms to continue with the installation of ShieldGuard Antivirus.</p>
+
+            <div class="eula-box" id="eulaBox">
+                <h3>END USER LICENSE AGREEMENT</h3>
+                <p><strong>Last Updated: November 15, 2024</strong></p>
+                <p>This End User License Agreement ("Agreement") is a legally binding contract between you ("User" or "Licensee") and ShieldGuard Security Technologies, Inc. ("ShieldGuard," "Licensor," "we," or "us"), governing the installation and use of the ShieldGuard Antivirus software product, including all associated documentation, updates, and online services (collectively, the "Software").</p>
+                <p>BY INSTALLING, COPYING, OR OTHERWISE USING THE SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT INSTALL OR USE THE SOFTWARE.</p>
+
+                <h3>1. GRANT OF LICENSE</h3>
+                <p>1.1 <strong>Limited License.</strong> ShieldGuard grants you a non-exclusive, non-transferable, revocable license to install and use the Software on a single computing device for personal, non-commercial purposes, subject to the terms and conditions set forth in this Agreement.</p>
+                <p>1.2 <strong>License Term.</strong> This license is effective for the subscription period specified at the time of purchase or, in the case of a free version, until terminated in accordance with Section 5 of this Agreement.</p>
+                <p>1.3 <strong>Updates and Upgrades.</strong> Any updates, patches, or upgrades provided by ShieldGuard shall be governed by this Agreement unless accompanied by a separate license agreement.</p>
+
+                <h3>2. RESTRICTIONS ON USE</h3>
+                <p>2.1 <strong>Prohibited Activities.</strong> You shall not: (a) reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the Software; (b) modify, adapt, or create derivative works based on the Software; (c) rent, lease, sublicense, or transfer the Software to any third party; (d) use the Software for any unlawful purpose; or (e) remove, alter, or obscure any proprietary notices or labels on the Software.</p>
+                <p>2.2 <strong>Compliance with Laws.</strong> You agree to use the Software in compliance with all applicable local, state, national, and international laws and regulations.</p>
+
+                <h3>3. SECURITY FEATURES AND NETWORK MONITORING</h3>
+                <p>3.1 <strong>Traffic Monitoring and Decryption.</strong> ShieldGuard may, for the purpose of detecting and preventing malware, install a trusted root certificate on your device to enable the inspection of encrypted network traffic. By accepting this Agreement, you grant ShieldGuard permission to intercept, decrypt, and analyze all network traffic, including but not limited to web browsing, email communications, and application data. ShieldGuard will take reasonable measures to secure any data intercepted, but you acknowledge that such interception inherently carries risks and agree to hold ShieldGuard harmless for any consequential damages.</p>
+                <p>3.2 <strong>Real-Time Scanning.</strong> The Software employs real-time scanning technology to monitor file system activity, network connections, and application behavior. This scanning is essential for the detection of malicious software and potential security threats.</p>
+                <p>3.3 <strong>Heuristic Analysis.</strong> ShieldGuard may use heuristic and behavioral analysis techniques to identify previously unknown threats. These techniques involve monitoring software behavior patterns and comparing them against known threat signatures.</p>
+                <p>3.4 <strong>Cloud-Based Threat Intelligence.</strong> The Software may communicate with ShieldGuard servers to query threat intelligence databases. Information transmitted may include file hashes, suspicious URLs, and anonymized system telemetry data. No personally identifiable information is transmitted in these queries unless explicitly required for threat resolution.</p>
+                <p>3.5 <strong>Firewall Integration.</strong> ShieldGuard includes an integrated firewall component that monitors inbound and outbound network connections. The firewall may block or flag connections based on security policies and threat intelligence data.</p>
+
+                <h3>4. DATA COLLECTION AND PRIVACY</h3>
+                <p>4.1 <strong>Data Collection Practices.</strong> ShieldGuard collects certain information necessary for the operation of the Software, including system configuration data, installed application lists, network configuration details, and threat detection statistics. For a complete description of our data collection practices, please refer to the ShieldGuard Privacy Policy.</p>
+                <p>4.2 <strong>Data Retention.</strong> Collected data is retained only for as long as necessary to fulfill the purposes for which it was collected, unless a longer retention period is required by law.</p>
+                <p>4.3 <strong>Third-Party Sharing.</strong> ShieldGuard does not sell personal data to third parties. Aggregated, anonymized data may be shared with security research partners for threat analysis purposes.</p>
+
+                <h3>5. TERMINATION</h3>
+                <p>5.1 <strong>Termination by User.</strong> You may terminate this Agreement at any time by uninstalling the Software and ceasing all use thereof.</p>
+                <p>5.2 <strong>Termination by ShieldGuard.</strong> ShieldGuard may terminate this Agreement immediately if you breach any term of this Agreement. Upon termination, you must immediately uninstall all copies of the Software.</p>
+                <p>5.3 <strong>Survival.</strong> The provisions of Sections 6, 7, 8, and 9 shall survive any termination of this Agreement.</p>
+
+                <h3>6. DISCLAIMER OF WARRANTIES</h3>
+                <p>6.1 <strong>"As Is" Basis.</strong> THE SOFTWARE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+                <p>6.2 <strong>No Guarantee of Protection.</strong> ShieldGuard does not guarantee that the Software will detect or prevent all malware, viruses, or other security threats. No security software can provide complete protection against all possible threats.</p>
+
+                <h3>7. LIMITATION OF LIABILITY</h3>
+                <p>7.1 <strong>Limitation of Damages.</strong> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SHIELDGUARD SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOSS OF PROFITS, DATA, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SOFTWARE.</p>
+                <p>7.2 <strong>Cap on Liability.</strong> IN NO EVENT SHALL SHIELDGUARD'S TOTAL AGGREGATE LIABILITY EXCEED THE AMOUNT PAID BY YOU FOR THE SOFTWARE DURING THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM.</p>
+
+                <h3>8. INDEMNIFICATION</h3>
+                <p>You agree to indemnify, defend, and hold harmless ShieldGuard and its officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or related to your use of the Software or any violation of this Agreement.</p>
+
+                <h3>9. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                <p>9.1 <strong>Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law principles.</p>
+                <p>9.2 <strong>Arbitration.</strong> Any dispute arising out of or relating to this Agreement shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. The arbitration shall take place in Wilmington, Delaware.</p>
+
+                <h3>10. MISCELLANEOUS</h3>
+                <p>10.1 <strong>Entire Agreement.</strong> This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior agreements and understandings.</p>
+                <p>10.2 <strong>Severability.</strong> If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                <p>10.3 <strong>Waiver.</strong> The failure of ShieldGuard to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.</p>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                <label for="agreeCheckbox">I have read and agree to the <a href="#" onclick="document.getElementById('eulaBox').scrollTop=0; return false;">End User License Agreement</a>, including all terms related to security features, network monitoring, and data handling practices.</label>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" id="actionButtons">
+            <button class="btn-back" onclick="handleBack()">← Back</button>
+            <button class="btn-install" id="installButton"

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Urgent: Install Audio Driver for All-Hands Meeting - Digital Workplace Team - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #202124;
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* Top navigation bar */
+        .top-nav {
+            background: #fff;
+            border-bottom: 1px solid #e8eaed;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 48px;
+        }
+
+        .menu-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+
+        .menu-icon:hover {
+            background: #f1f3f4;
+        }
+
+        .menu-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #5f6368;
+        }
+
+        .gmail-logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .gmail-logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .gmail-logo-text {
+            font-size: 20px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .search-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 6px 16px;
+            gap: 10px;
+            max-width: 720px;
+            margin: 0 auto;
+            transition: background 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+
+        .search-container:hover {
+            background: #e8eaed;
+        }
+
+        .search-container:focus-within {
+            background: #fff;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            border-radius: 24px;
+        }
+
+        .search-icon {
+            flex-shrink: 0;
+        }
+
+        .search-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: #5f6368;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            color: #202124;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: #5f6368;
+        }
+
+        .search-clear {
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            transition: background 0.15s;
+        }
+
+        .search-clear:hover {
+            background: #e8eaed;
+        }
+
+        .search-clear svg {
+            width: 16px;
+            height: 16px;
+            fill: #5f6368;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #5f6368;
+        }
+
+        .avatar-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            flex-shrink: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .avatar-circle:hover {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Sidebar */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 48px);
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #fff;
+            padding: 8px 0;
+            flex-shrink: 0;
+            border-right: 1px solid #e8eaed;
+            overflow-y: auto;
+        }
+
+        .compose-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #c2e7ff;
+            color: #001d35;
+            padding: 12px 24px;
+            margin: 8px 16px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: box-shadow 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .compose-btn:hover {
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .compose-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #001d35;
+        }
+
+        .nav-section {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #202124;
+            transition: background 0.1s;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-right: 8px;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: #f1f3f4;
+        }
+
+        .nav-item.active {
+            background: #d3e3fd;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: #444746;
+            flex-shrink: 0;
+        }
+
+        .nav-item.active svg {
+            fill: #001d35;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            right: 12px;
+            background: #1a73e8;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 7px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: #e8eaed;
+            margin: 8px 16px;
+        }
+
+        .nav-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #5f6368;
+            padding: 8px 16px 4px;
+            white-space: nowrap;
+        }
+
+        .nav-item.label-item {
+            font-size: 13px;
+            color: #5f6368;
+        }
+
+        .nav-item.label-item .label-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .label-dot.blue {
+            background: #1a73e8;
+        }
+
+        .label-dot.green {
+            background: #34a853;
+        }
+
+        .label-dot.orange {
+            background: #f9ab00;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: #f6f8fc;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: #fff;
+            border-bottom: 1px solid #e8eaed;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .toolbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #444746;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: transparent;
+            transition: background 0.15s, border-color 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+
+        .toolbar-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .toolbar-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #444746;
+        }
+
+        .toolbar-btn.primary {
+            color: #1a73e8;
+        }
+
+        .toolbar-btn.primary svg {
+            fill: #1a73e8;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: #e8eaed;
+            margin: 0 4px;
+        }
+
+        .toolbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-page-info {
+            font-size: 12px;
+            color: #5f6368;
+            padding: 0 8px;
+            white-space: nowrap;
+        }
+
+        .toolbar-nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: background 0.15s;
+        }
+
+        .toolbar-nav-btn:hover {
+            background: #e8eaed;
+        }
+
+        .toolbar-nav-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #444746;
+        }
+
+        /* Email container */
+        .email-container {
+            max-width: 900px;
+            margin: 16px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .email-inner {
+            padding: 24px 32px;
+        }
+
+        .email-subject-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            gap: 16px;
+        }
+
+        .email-subject {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .email-star {
+            flex-shrink: 0;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .email-star svg {
+            width: 20px;
+            height: 20px;
+            fill: #e8eaed;
+            stroke: #5f6368;
+            transition: fill 0.15s;
+        }
+
+        .email-star.starred svg {
+            fill: #f9ab00;
+            stroke: #f9ab00;
+        }
+
+        .email-sender-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .sender-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ea4335;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 17px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .sender-info {
+            flex: 1;
+        }
+
+        .sender-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sender-name {
+            font-weight: 500;
+            color: #202124;
+            font-size: 14px;
+        }
+
+        .sender-email-addr {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .email-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .recipient-label {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .recipient-email {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .email-date-full {
+            font-size: 12px;
+            color: #5f6368;
+            margin-left: auto;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .reply-action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: background 0.15s;
+        }
+
+        .reply-action-btn:hover {
+            background: #e8eaed;
+        }
+
+        .reply-action-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #5f6368;
+        }
+
+        .email-body {
+            color: #202124;
+            line-height: 1.7;
+            font-size: 14px;
+            padding-left: 58px;
+        }
+
+        .email-body p {
+            margin-bottom: 14px;
+        }
+
+        .email-body .greeting {
+            margin-bottom: 12px;
+        }
+
+        .email-body .signature {
+            margin-top: 16px;
+            color: #5f6368;
+        }
+
+        /* Attachment section */
+        .attachment-section {
+            margin-top: 20px;
+            padding-left: 58px;
+        }
+
+        .attachment-label-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-label {
+            font-size: 12px;
+            color: #5f6368;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .attachment-count {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .attachment-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+            color: inherit;
+            min-width: 280px;
+        }
+
+        .attachment-card:hover {
+            background: #f1f3f4;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .attachment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #1b5e20;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .attachment-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .attachment-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #202124;
+        }
+
+        .attachment-size {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .attachment-download-hint {
+            font-size: 11px;
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        /* Reply section */
+        .reply-section {
+            margin-top: 20px;
+            padding-left: 58px;
+            padding-bottom: 8px;
+        }
+
+        .reply-btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .reply-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            background: #fff;
+            color: #5f6368;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .reply-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .reply-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #5f6368;
+        }
+
+        .reply-btn.primary-reply {
+            background: #1a73e8;
+            color: #fff;
+            border-color: #1a73e8;
+        }
+
+        .reply-btn.primary-reply:hover {
+            background: #1765cc;
+        }
+
+        .reply-btn.primary-reply svg {
+            fill: #fff;
+        }
+
+        /* Footer */
+        .gmail-footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 11px;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .gmail-footer a {
+            color: #5f6368;
+            text-decoration: none;
+        }
+
+        .gmail-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .email-inner {
+                padding: 16px;
+            }
+
+            .email-body {
+                padding-left: 0;
+            }
+
+            .attachment-section {
+                padding-left: 0;
+            }
+
+            .reply-section {
+                padding-left: 0;
+            }
+
+            .email-subject {
+                font-size: 18px;
+            }
+
+            .toolbar {
+                gap: 2px;
+                padding: 6px 8px;
+            }
+
+            .toolbar-btn span.btn-label {
+                display: none;
+            }
+
+            .toolbar-divider {
+                margin: 0 1px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .search-container {
+                max-width: 200px;
+            }
+
+            .gmail-logo-text {
+                font-size: 16px;
+            }
+
+            .email-container {
+                margin: 8px;
+                border-radius: 4px;
+            }
+
+            .attachment-card {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <div class="menu-icon" title="Main menu">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
+        </div>
+        <div class="gmail-logo">
+            <svg class="gmail-logo-img" viewBox="0 0 24 24" width="32" height="32">
+                <path fill="#4285F4" d="M12 13.5L2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6l-10 7.5z" />
+                <path fill="#EA4335" d="M12 13.5L22 6V4c0-1.1-.9-2-2-2H4C2.9 2 2 2.9 2 4v2l10 7.5z" />
+                <path fill="#FBBC05" d="M2 4v2l10 7.5L22 6V4c0-1.1-.9-2-2-2H4C2.9 2 2 2.9 2 4z" />
+                <path fill="#34A853" d="M2 18v-4l6-4.5 4 3 4-3 6 4.5v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2z" />
+            </svg>
+            <span class="gmail-logo-text">Gmail</span>
+        </div>
+        <div class="search-container">
+            <span class="search-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </span>
+            <input type="text" class="search-input" placeholder="Search mail" value="from:digital-workplace@company.com" readonly>
+            <span class="search-clear" title="Clear search">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </span>
+        </div>
+        <div class="header-right">
+            <div class="icon-btn" title="Help">
+                <svg viewBox="0 0 24 24">
+                    <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8
+                    3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                </svg>
+            </div>
+            <div class="icon-btn" title="Settings">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Regulatory Document Submission Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 30px 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #d5dce4;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0f1e33 0%, #192d4a 40%, #1a3355 100%);
+            color: #ffffff;
+            padding: 24px 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid #b8942d;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f1e33;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            letter-spacing: 0.2px;
+            color: #ffffff;
+        }
+        .header-text p {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            color: #c8d6e5;
+        }
+
+        .urgency-banner {
+            background: #fff8e7;
+            border-left: 5px solid #c8901b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #f0e4c6;
+        }
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .urgency-banner .text h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #7c5a0e;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+        .urgency-banner .text p {
+            font-size: 12px;
+            color: #8b6914;
+            line-height: 1.5;
+        }
+        .urgency-banner .text .countdown {
+            display: inline-block;
+            background: #c8901b;
+            color: #fff;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .form-container {
+            padding: 28px 30px 20px 30px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f1e33;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .section-subtitle {
+            font-size: 12px;
+            color: #5f6b7a;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+        .form-group label .required-star {
+            color: #c0392b;
+            font-weight: 700;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d0d7e0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a1a;
+            background: #fafbfc;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a3355;
+            box-shadow: 0 0 0 3px rgba(26, 51, 85, 0.08);
+            background: #ffffff;
+        }
+        .form-group input::placeholder {
+            color: #a0aab4;
+        }
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 11px;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #b0bec5;
+            padding: 28px 20px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            position: relative;
+        }
+        .file-upload-box:hover {
+            border-color: #1a3355;
+            background: #f4f6f9;
+        }
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #7b8a9b;
+            margin-bottom: 10px;
+        }
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload-box .accepted-types {
+            font-size: 10px;
+            color: #8e9aab;
+            background: #eef1f5;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(160deg, #0f1e33 0%, #192d4a 50%, #1a3355 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.4px;
+            transition: opacity 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            margin-top: 6px;
+            box-shadow: 0 2px 8px rgba(15, 30, 51, 0.25);
+        }
+        .submit-btn:hover {
+            opacity: 0.93;
+            box-shadow: 0 4px 14px rgba(15, 30, 51, 0.35);
+        }
+        .submit-btn:active {
+            transform: scale(0.985);
+        }
+
+        .footer {
+            background: #f6f8fa;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 10px;
+            color: #8b95a3;
+            border-top: 1px solid #e2e7ed;
+            letter-spacing: 0.3px;
+        }
+        .footer span {
+            color: #5f6b7a;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+        .success-message .icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+        }
+        .success-message h2 {
+            color: #1a6d2e;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .success-message p {
+            color: #4a5a6a;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .success-message .ref-number {
+            display: inline-block;
+            background: #eef7f0;
+            color: #1a6d2e;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            margin-top: 14px;
+            border: 1px solid #c8e0cc;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 18px 20px;
+                gap: 12px;
+            }
+            .header-text h1 {
+                font-size: 16px;
+            }
+            .form-container {
+                padding: 20px 18px 16px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-icon">CL</div>
+            <div class="header-text">
+                <h1>Regulatory Document Submission Portal</h1>
+                <p>Corporate Legal Department &mdash; Internal Compliance System</p>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">&#9888;&#65039;</span>
+            <div class="text">
+                <h3>Immediate Action Required</h3>
+                <p>Due to new financial regulations (FCA Directive 2024-87B), all departments must submit copies of active client contracts for mandatory legal review. This ensures compliance with updated data handling and privacy standards under the revised regulatory framework.</p>
+                <span class="countdown">&#9200; Submission window closes in 2 hours</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <p class="section-title">Contract Submission Form</p>
+                <p class="section-subtitle">Complete all fields below and upload the relevant contract documents. Failure to submit within the deadline may result in regulatory fines and personal liability exposure.</p>
+
+                <form id="submissionForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="contact_name">Legal Contact Name <span class="required-star">*</span></label>
+                        <input type="text" id="contact_name" name="contact_name" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Corporate Email <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business_unit">Business Unit <span class="required-star">*</span></label>
+                        <select id="business_unit" name="business_unit" required>
+                            <option value="" disabled selected>Select business unit</option>
+                            <option value="Executive Office">Executive Office</option>
+                            <option value="Corporate Legal">Corporate Legal</option>
+                            <option value="Finance & Accounting">Finance &amp; Accounting</option>
+                            <option value="Sales & Business Development">Sales &amp; Business Development</option>
+                            <option value="Client Services">Client Services</option>
+                            <option value="Human Resources">Human Resources</option>
+                            <option value="Operations">Operations</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Marketing & Communications">Marketing &amp; Communications</option>
+                            <option value="Research & Development">Research &amp; Development</option>
+                            <option value="Procurement">Procurement</option>
+                            <option value="Compliance & Risk">Compliance &amp; Risk</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contract_file">Upload Contracts (PDF) <span class="required-star">*</span></label>
+                        <div class="file-upload-box" id="fileUploadBox">
+                            <span class="upload-icon">&#128196;</span>
+                            <p class="upload-text">Click to browse or drag and drop</p>
+                            <p class="upload-hint">Upload active client contract documents</p>
+                            <span class="accepted-types">PDF only &bull; Max 25MB per file</span>
+                            <input type="file" id="contract_file" name="contract_file" accept=".pdf" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit for Regulatory Review &#10142;</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="icon">&#9989;</div>
+            <h2>Submission Received</h2>
+            <p>Your contract documents have been successfully uploaded and queued for regulatory review. The Corporate Legal Department will process your submission and may contact you if additional documentation is required.</p>
+            <div class="ref-number">Reference: CL-REG-<span id="refNum">2847</span></div>
+            <p style="font-size: 11px; margin-top: 12px; color: #7b8a9b;">A confirmation email has been sent to the address provided.</p>
+        </div>
+
+        <div class="footer">
+            <span>Corporate Legal Department</span> &bull; Regulatory Compliance Division &bull; For internal use only. Unauthorized access is prohibited under company policy and applicable law.
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('submissionForm');
+            var formSection = document.getElementById('formSection');
+            var successMessage = document.getElementById('successMessage');
+            var refNum = document.getElementById('refNum');
+
+            var randomRef = Math.floor(10000 + Math.random() * 90000);
+            refNum.textContent = randomRef;
+
+            formSection.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            var fileInput = document.getElementById('contract_file');
+            if (fileInput && fileInput.files.length > 0) {
+                console.log('File uploaded: ' + fileInput.files[0].name);
+            }
+
+            return false;
+        }
+
+        document.getElementById('fileUploadBox').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a3355';
+            this.style.background = '#eef2f7';
+        });
+        document.getElementById('fileUploadBox').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#b0bec5';
+            this.style.background = '#f9fafb';
+        });
+        document.getElementById('fileUploadBox').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#b0bec5';
+            this.style.background = '#f9fafb';
+            var fileInput = document.getElementById('contract_file');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                var uploadText = this.querySelector('.upload-text');
+                var uploadHint = this.querySelector('.upload-hint');
+                if (uploadText) uploadText.textContent = e.dataTransfer.files[0].name;
+                if (uploadHint) uploadHint.textContent = 'File ready for upload';
+            }
+        });
+
+        var fileInput = document.getElementById('contract_file');
+        fileInput.addEventListener('change', function() {
+            var uploadText = document.querySelector('#fileUploadBox .upload-text');
+            var uploadHint = document.querySelector('#fileUploadBox .upload-hint');
+            if (this.files && this.files.length > 0) {
+                if (uploadText) uploadText.textContent = this.files[0].name;
+                if (uploadHint) uploadHint.textContent = 'File selected â€” ready for submission';
+            }
+        });
+    </script>
+</body>
+</html>

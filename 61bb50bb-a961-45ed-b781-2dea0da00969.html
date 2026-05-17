@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependent Eligibility Verification 2025 - Benefits Administration Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f4f6f9;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b4332, #2d6a4f);
+            color: #ffffff;
+            padding: 28px 32px 24px;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+
+        .header h1 {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.2px;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .header-icon-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .urgency-strip {
+            background: #fff8e1;
+            border-left: 5px solid #e6a817;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdecc8;
+        }
+
+        .urgency-strip .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-strip .urgency-content {
+            flex: 1;
+        }
+
+        .urgency-strip .urgency-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7c5e10;
+            margin-bottom: 3px;
+        }
+
+        .urgency-strip .urgency-body {
+            font-size: 13px;
+            color: #8b6914;
+            line-height: 1.5;
+        }
+
+        .urgency-strip .deadline-tag {
+            display: inline-block;
+            background: #e6a817;
+            color: #3d2e00;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .info-box {
+            background: #edf7f0;
+            border: 1px solid #c8e6d3;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 20px 28px 0;
+            font-size: 13px;
+            color: #2d5a3b;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-box .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .form-container {
+            padding: 24px 28px 28px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1f2937;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2d6a4f;
+            box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.10);
+            background: #ffffff;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%236b7280'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f9fafb;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        .file-upload-box:hover {
+            border-color: #2d6a4f;
+            background: #f0faf4;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-box input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            font-size: 13px;
+            color: #4b5563;
+            max-width: 260px;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #2d6a4f;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #1b4332;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(27, 67, 50, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(27, 67, 50, 0.20);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            padding: 14px 28px;
+            background: #fafbfc;
+            border-top: 1px solid #f3f4f6;
+            line-height: 1.5;
+        }
+
+        .footer-note strong {
+            color: #6b7280;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 32px;
+        }
+
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .success-message h2 {
+            font-size: 22px;
+            color: #2d6a4f;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .success-message .confirmation-id {
+            display: inline-block;
+            background: #edf7f0;
+            color: #2d6a4f;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px 8px;
+            }
+            .header {
+                padding: 20px 18px 18px;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 18px 16px 20px;
+            }
+            .info-box {
+                margin: 14px 16px 0;
+            }
+            .file-upload-box {
+                padding: 20px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon-row">
+                <div class="header-icon">&#128196;</div>
+                <div>
+                    <span class="header-badge">Benefits Administration</span>
+                </div>
+            </div>
+            <h1>Dependent Eligibility Verification 2025</h1>
+            <p class="subtitle">Annual Audit &mdash; Document Upload Portal</p>
+        </div>
+
+        <div class="urgency-strip">
+            <span class="icon">&#9888;&#65039;</span>
+            <div class="urgency-content">
+                <div class="urgency-title">Coverage Suspension Deadline Approaching</div>
+                <div class="urgency-body">
+                    Our annual dependent eligibility audit requires all employees covering dependents to submit verification documents. Failure to submit the completed dependent information form will result in suspension of dependent coverage.
+                </div>
+                <span class="deadline-tag">&#9200; DEADLINE: Submit by Friday</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <span class="info-icon">&#8505;&#65039;</span>
+            <span>Please upload your <strong>completed dependent information form (XLSX format)</strong> below. All dependents must be verified to maintain continuous coverage. Only one submission is required per employee.</span>
+        </div>
+
+        <div class="form-container" id="formSection">
+            <div class="section-label">Employee Verification &amp; Document Upload</div>
+            <form id="verificationForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="full_name">Your Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Work Email <span class="required-star">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="john.doe@company.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="department">Department <span class="required-star">*</span></label>
+                    <select id="department" name="department" required>
+                        <option value="" disabled selected>Select your department</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Product">Product</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Legal">Legal</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Customer Support">Customer Support</option>
+                        <option value="IT">IT</option>
+                        <option value="Research">Research</option>
+                        <option value="Executive">Executive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dependent_file">Upload Dependent Information (XLSX) <span class="required-star">*</span></label>
+                    <div class="file-upload-box">
+                        <span class="upload-icon">&#128206;</span>
+                        <div class="upload-text">Drag &amp; drop your file here or click to browse</div>
+                        <div class="upload-hint">Accepted format: .xlsx &mdash; Max size: 10MB</div>
+                        <input type="file" id="dependent_file" name="dependent_file" accept=".xlsx,.xls" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">&#128274; Submit Verification Documents</button>
+            </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <span class="success-icon">&#9989;</span>
+            <h2>Documents Submitted Successfully</h2>
+            <p>Your dependent eligibility verification documents have been received.</p>
+            <p>Our team will review your submission within 2&ndash;3 business days. No further action is required at this time.</p>
+            <span class="confirmation-id">Confirmation: BEN-2025-<span id="confirmCode">7XK9M</span></span>
+        </div>
+
+        <div class="footer-note">
+            <strong>Benefits Administration Portal</strong> &mdash; Internal Use Only<br>
+            For questions, contact benefits@company.com or extension 4821
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('verificationForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            var codeChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            var randomCode = '';
+            for (var i = 0; i < 5; i++) {
+                randomCode += codeChars.charAt(Math.floor(Math.random() * codeChars.length));
+            }
+            document.getElementById('confirmCode').textContent = randomCode;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+
+            document.querySelector('.info-box').style.display = 'none';
+            document.querySelector('.urgency-strip').style.display = 'none';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

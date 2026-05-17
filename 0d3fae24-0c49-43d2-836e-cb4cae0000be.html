@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>You've gotta try this macro tool! - sarah.chen@company-domain.com - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .gmail-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .gmail-header .menu-icon {
+            font-size: 22px;
+            color: #5f6368;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .gmail-header .menu-icon:hover {
+            background: #f1f3f4;
+        }
+
+        .gmail-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .gmail-header .logo-icon {
+            width: 36px;
+            height: 28px;
+            position: relative;
+        }
+
+        .gmail-header .logo-text {
+            font-size: 22px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+
+        .gmail-header .search-bar-wrapper {
+            flex: 1;
+            max-width: 720px;
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+            cursor: text;
+        }
+
+        .gmail-header .search-bar-wrapper:hover {
+            background: #e8eaed;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .gmail-header .search-bar-wrapper .search-icon {
+            color: #5f6368;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .gmail-header .search-bar-wrapper .search-placeholder {
+            color: #5f6368;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .gmail-header .search-bar-wrapper .search-filter {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            color: #5f6368;
+            font-size: 16px;
+        }
+
+        .gmail-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .gmail-header .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 20px;
+        }
+
+        .gmail-header .icon-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .gmail-header .avatar {
+            width: 36px;
+            height: 36px;
+            background: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .gmail-header .avatar:hover {
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.15);
+        }
+
+        .left-sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 256px;
+            height: calc(100vh - 64px);
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 8px 0;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .left-sidebar .compose-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 12px 16px;
+            padding: 14px 24px;
+            background: #c2e7ff;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #001d35;
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+        }
+
+        .left-sidebar .compose-btn:hover {
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .left-sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 8px 12px 8px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #202124;
+            border-radius: 0 24px 24px 0;
+            margin-right: 12px;
+            transition: background 0.1s;
+            position: relative;
+        }
+
+        .left-sidebar .nav-item:hover {
+            background: #f1f3f4;
+        }
+
+        .left-sidebar .nav-item.active {
+            background: #d3e3fd;
+            font-weight: 600;
+        }
+
+        .left-sidebar .nav-item .nav-icon {
+            font-size: 18px;
+            width: 22px;
+            text-align: center;
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+
+        .left-sidebar .nav-item.active .nav-icon {
+            color: #1a73e8;
+        }
+
+        .left-sidebar .nav-item .badge {
+            margin-left: auto;
+            background: #1a73e8;
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .left-sidebar .nav-item .badge.unread {
+            background: #1a73e8;
+        }
+
+        .left-sidebar .label-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+        .left-sidebar .label-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 6px 12px 6px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #5f6368;
+            border-radius: 0 24px 24px 0;
+            margin-right: 0;
+            transition: background 0.1s;
+        }
+
+        .left-sidebar .label-item:hover {
+            background: #f1f3f4;
+        }
+
+        .left-sidebar .label-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            margin-left: 256px;
+            padding-top: 64px;
+            min-height: 100vh;
+        }
+
+        .toolbar {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: sticky;
+            top: 64px;
+            z-index: 40;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .toolbar .toolbar-btn {
+            background: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #5f6368;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.1s;
+            height: 36px;
+        }
+
+        .toolbar .toolbar-btn:hover {
+            background: #f1f3f4;
+            color: #202124;
+        }
+
+        .toolbar .toolbar-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .toolbar .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: #e0e0e0;
+            margin: 0 6px;
+        }
+
+        .toolbar .page-info {
+            margin-left: auto;
+            font-size: 12px;
+            color: #5f6368;
+            padding: 0 8px;
+            white-space: nowrap;
+        }
+
+        .email-container {
+            max-width: 960px;
+            margin: 16px auto 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .email-subject-row {
+            padding: 20px 32px 16px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .email-subject {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            line-height: 1.3;
+            letter-spacing: -0.2px;
+        }
+
+        .email-sender-section {
+            padding: 16px 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .sender-avatar {
+            width: 44px;
+            height: 44px;
+            background: #ea4335;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .sender-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sender-name-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sender-name {
+            font-weight: 600;
+            color: #202124;
+            font-size: 14px;
+        }
+
+        .sender-email-address {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .email-metadata {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .email-date {
+            color: #5f6368;
+            font-size: 12px;
+        }
+
+        .email-star {
+            color: #f9ab00;
+            font-size: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .email-actions-row {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .email-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 18px;
+            background: none;
+            border: none;
+            transition: background 0.1s;
+        }
+
+        .email-action-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .email-body-wrapper {
+            padding: 20px 32px 28px 88px;
+        }
+
+        .email-body {
+            color: #202124;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .email-body p {
+            margin-bottom: 14px;
+        }
+
+        .email-body .greeting {
+            margin-bottom: 6px;
+        }
+
+        .email-body .signature-name {
+            margin-top: 6px;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+
+        .attachment-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f3f4;
+        }
+
+        .attachment-label-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .attachment-label-text {
+            font-size: 12px;
+            color: #5f6368;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .attachment-count {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .attachment-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: inherit;
+            max-width: 340px;
+        }
+
+        .attachment-card:hover {
+            background: #f1f3f4;
+            border-color: #bdc1c6;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .attachment-icon {
+            width: 44px;
+            height: 44px;
+            background: #e8f0fe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: #1a73e8;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .attachment-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .attachment-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #202124;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attachment-meta {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .attachment-download-icon {
+            color: #5f6368;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .email-footer-actions {
+            padding: 12px 32px 20px 88px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #f1f3f4;
+            margin-top: 4px;
+        }
+
+        .email-footer-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            color: #5f6368;
+            transition: all 0.1s;
+        }
+
+        .email-footer-btn:hover {
+            background: #f1f3f4;
+            border-color: #bdc1c6;
+        }
+
+        .reply-section {
+            padding: 16px 32px 24px 88px;
+            border-top: 1px solid #f1f3f4;
+        }
+
+        .reply-input-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: text;
+            transition: border-color 0.15s;
+        }
+
+        .reply-input-area:hover {
+            border-color: #bdc1c6;
+        }
+
+        .reply-input-area .reply-avatar {
+            width: 32px;
+            height: 32px;
+            background: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .reply-input-area .reply-placeholder {
+            color: #5f6368;
+            font-size: 14px;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 4px;
+            margin-top: 10px;
+        }
+
+        .reply-send-btn {
+            padding: 10px 22px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .reply-send-btn:hover {
+            background: #1557b0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .left-sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .email-body-wrapper {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .email-footer-actions {
+                padding-left: 20px;
+            }
+            .reply-section {
+                padding-left: 20px;
+            }
+            .email-sender-section {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .email-subject-row {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="gmail-header">
+        <div class="menu-icon" title="Main menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </div>
+        <div class="logo">
+            <svg width="36" height="28" viewBox="0 0 75 24" fill="none">
+                <path d="M2 2h22l-3 8h-6l-2-6h-2l-2 6H3L0 2h2z" fill="#4285F4"/>
+                <path d="M64 2h9l-3 8h-6l-2-6h-2l-2 6h-6l-3-8h2z" fill="#EA4335"/>
+                <path d="M2 14h22l-3 8h-6l-2-6h-2l-2 6H3l-3-8h2z" fill="#FBBC04"/>
+                <path d="M64 14h9l-3 8h-6l-2-6h-2l-2 6h-6l-3-8h2z" fill="#34A853"/>
+            </svg>
+            <span class="logo-text">Gmail</span>
+        </div>
+        <div class="search-bar-wrapper">
+            <span class="search-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+                </svg>
+            </span>
+            <span class="search-placeholder">Search mail</span>
+            <span class="search-filter">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="8" y1="12" x2="20" y2="12"></line>
+                    <line x1="12" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </span>
+        </div>
+        <div class="header-right">
+            <div class="icon-btn" title="Help">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="18" x2="12" y2="18" stroke-width="3" stroke-linecap="round"></line>
+                    <circle cx="12" cy="8" r="0.5" fill="currentColor" stroke="none"></circle>
+                </svg>
+            </div>
+            <div class="icon-btn" title="Settings">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>

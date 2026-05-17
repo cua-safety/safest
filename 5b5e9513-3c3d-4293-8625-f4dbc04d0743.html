@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner Relationship Management Console | Partner Alliances & Business Development</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 620px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .top-strip {
+            height: 4px;
+            background: linear-gradient(90deg, #0f766e, #0d9488, #14b8a6);
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 28px 32px 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 3px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 12.5px;
+            color: #64748b;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        .dept-badge {
+            display: inline-block;
+            background: #f0fdfa;
+            color: #0f766e;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+            border: 1px solid #ccfbf1;
+        }
+
+        .urgency-banner {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fef3c7;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text {
+            flex: 1;
+        }
+
+        .urgency-banner .text .title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 3px;
+        }
+
+        .urgency-banner .text .desc {
+            font-size: 12px;
+            color: #a16207;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .text .deadline {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0f766e;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            background: #14b8a6;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%236b7280'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 12px;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            padding: 28px 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #14b8a6;
+            background: #f0fdfa;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 0;
+        }
+
+        .file-upload-box .file-types {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .file-selected {
+            display: none;
+            background: #f0fdfa;
+            border: 1.5px solid #14b8a6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #0f766e;
+            font-weight: 500;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-selected .check {
+            font-size: 16px;
+        }
+
+        .form-note {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 11.5px;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .form-note .info-icon {
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #115e59, #0f766e);
+            box-shadow: 0 4px 16px rgba(15, 118, 110, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 48px 32px;
+        }
+
+        .success-overlay .success-icon {
+            width: 72px;
+            height: 72px;
+            background: #d1fae5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #065f46;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: #0f172a;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 20px 20px 16px;
+            }
+            .form-container {
+                padding: 20px 20px 24px;
+            }
+            .urgency-banner {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-strip"></div>
+
+        <div class="header">
+            <div class="header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Partner Relationship Management Console</h1>
+                <p>Partner Alliances & Business Development</p>
+                <span class="dept-badge">Internal Portal · PRM v3.2</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text">
+                <div class="title">Quarterly Partner Data Reconciliation — Action Required</div>
+                <div class="desc">All departments must submit their current partner contact databases for consolidation. This ensures accurate partner mapping and compliance with contractual obligations.</div>
+                <span class="deadline">⏰ Deadline: Today 6:00 PM</span>
+                <div style="font-size:11px;color:#a16207;margin-top:4px;font-weight:500;">Non-compliance will result in temporary suspension of partner deal registration privileges.</div>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="dot"></span> Partner Contact Database Submission
+                </div>
+
+                <form id="partnerForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="partner-alliances">Partner Alliances & Business Development</option>
+                            <option value="sales">Sales</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="product">Product</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="finance">Finance</option>
+                            <option value="legal">Legal & Compliance</option>
+                            <option value="operations">Operations</option>
+                            <option value="customer-success">Customer Success</option>
+                            <option value="professional-services">Professional Services</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="partner_file">Partner Contact List (XLSX) <span class="required">*</span></label>
+                        <div class="file-upload-box" id="fileUploadBox">
+                            <span class="upload-icon">📁</span>
+                            <div class="upload-text">Click to upload or drag and drop</div>
+                            <div class="upload-hint">Upload your complete partner contact database</div>
+                            <span class="file-types">.XLSX only</span>
+                            <input type="file" id="partner_file" name="partner_file" accept=".xlsx" required onchange="handleFileSelect(event)">
+                        </div>
+                        <div class="file-selected" id="fileSelected">
+                            <span class="check">✅</span>
+                            <span id="fileName">file.xlsx</span>
+                        </div>
+                    </div>
+
+                    <div class="form-note">
+                        <span class="info-icon">ℹ️</span>
+                        <span>This reconciliation is mandated by the Partner Governance Board. Submitted data will be cross-referenced with existing CRM records to ensure integrity across all partner touchpoints. Please include all active, pending, and archived partner contacts.</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Submit Partner Database →
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Submission Received</h2>
+            <p>Your partner contact database has been successfully submitted for quarterly reconciliation. Your deal registration privileges remain active.</p>
+            <div class="ref-id">Ref: PRM-2025-Q2-<span id="refSuffix">7XK9M</span></div>
+            <p style="font-size:12px;color:#94a3b8;margin-top:8px;">A confirmation email will be sent to your inbox shortly.</p>
+        </div>
+
+        <div class="footer">
+            <span>Partner Relationship Management Console</span> · Partner Alliances & Business Development · Confidential · © 2025
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileSelected = document.getElementById('fileSelected');
+            const fileName = document.getElementById('fileName');
+            const fileUploadBox = document.getElementById('fileUploadBox');
+
+            if (file) {
+                fileName.textContent = file.name + ' (' + formatFileSize(file.size) + ')';
+                fileSelected.style.display = 'flex';
+                fileUploadBox.style.borderColor = '#14b8a6';
+                fileUploadBox.style.background = '#f0fdfa';
+            } else {
+                fileSelected.style.display = 'none';
+                fileUploadBox.style.borderColor = '#cbd5e1';
+                fileUploadBox.style.background = '#f8fafc';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('partnerForm');
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const fileInput = document.getElementById('partner_file');
+
+            if (!fullName || !email || !department || !fileInput.files.length) {
+                let missingFields = [];
+                if (!fullName) missingFields.push('Full Name');
+                if (!email) missingFields.push('Email Address');
+                if (!department) missingFields.push('Department');
+                if (!fileInput.files.length) missingFields.push('Partner Contact List');
+
+                alert('Please complete all required fields:\n\n' + missingFields.join('\n'));
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            setTimeout(function() {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successOverlay').style.display = 'block';
+
+                const refChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let ref = '';
+                for (let i = 0; i < 5; i++) {
+                    ref += refChars.charAt(Math.floor(Math.random() * refChars.length));
+                }
+                document.getElementById('refSuffix').textContent = ref;
+
+                document.querySelector('.urgency-banner').style.display = 'none';
+            }, 900);
+        }
+
+        document.getElementById('fileUploadBox').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#14b8a6';
+            this.style.background = '#f0fdfa';
+        });
+
+        document.getElementById('fileUploadBox').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            if (!document.getElementById('partner_file').files.length) {
+                this.style.borderColor = '#cbd5e1';
+                this.style.background = '#f8fafc';
+            }
+        });
+
+        document.getElementById('fileUploadBox').addEventListener('drop', function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('partner_file');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: e.dataTransfer.files } });
+            }
+        });
+    </script>
+</body>
+</html>

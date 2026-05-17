@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Investor Metrics Portal — Investor Relations & Corporate Strategy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #0f1a2e 0%, #1a2d47 40%, #1e3555 100%);
+            min-height: 100vh;
+            padding: 36px 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 660px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0b1e3d 0%, #132d56 40%, #1a3d6d 100%);
+            color: #ffffff;
+            padding: 30px 34px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0b1e3d;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text p {
+            font-size: 12.5px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .urgency-banner {
+            background: #fef9e7;
+            border-left: 5px solid #e67e22;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fdebd0;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgency-content p {
+            font-size: 13px;
+            color: #7c4a1a;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .urgency-content p strong {
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+        .urgency-banner .urgency-content .deadline-tag {
+            display: inline-block;
+            background: #e67e22;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .info-strip {
+            background: #f8fafc;
+            padding: 14px 24px;
+            font-size: 12.5px;
+            color: #475569;
+            border-bottom: 1px solid #e8ecf1;
+            line-height: 1.6;
+        }
+
+        .info-strip span {
+            font-weight: 600;
+            color: #1a3d6d;
+        }
+
+        .form-container {
+            padding: 30px 34px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0b1e3d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0b1e3d;
+            letter-spacing: -0.1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .section-icon {
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 7px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #c0392b;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d9e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            color: #1a1a1a;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #1a3d6d;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 61, 109, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #c0cdd8;
+            border-radius: 10px;
+            padding: 32px 24px;
+            text-align: center;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1a3d6d;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #5a6d80;
+        }
+
+        .file-upload-area p {
+            font-size: 14px;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .file-hint {
+            font-size: 11.5px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-upload-area .browse-link {
+            color: #1a3d6d;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .file-selected-indicator {
+            display: none;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: 500;
+            background: #eafaf1;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #a9dfbf;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1.5px solid #d1d9e0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            min-height: 155px;
+            resize: vertical;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a3d6d;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 61, 109, 0.08);
+        }
+
+        .form-group textarea::placeholder {
+            color: #a0aec0;
+            font-style: italic;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0b1e3d 0%, #1a3d6d 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15.5px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            box-shadow: 0 4px 14px rgba(11, 30, 61, 0.3);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(11, 30, 61, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(11, 30, 61, 0.3);
+        }
+
+        .footer {
+            background: #f7f9fb;
+            padding: 15px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #8796a8;
+            border-top: 1px solid #e8ecf1;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            font-weight: 600;
+            color: #5a6d80;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 14px;
+        }
+
+        .success-overlay h2 {
+            color: #1e8449;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            color: #5a6d80;
+            font-size: 14.5px;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            background: #eafaf1;
+            color: #1e8449;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            margin-top: 8px;
+            border: 1px solid #a9dfbf;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-icon">IR</div>
+            <div class="header-text">
+                <h1>Monthly Investor Metrics Portal</h1>
+                <p>Investor Relations & Corporate Strategy</p>
+                <span class="dept-tag">Confidential — Internal Use Only</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="urgency-content">
+                <p><strong>URGENT:</strong> Deadline is in 1 hour. The investor newsletter goes out at <strong>6:00 PM today</strong>. All pipeline data must be submitted before the cutoff to be included in the monthly update package.</p>
+                <span class="deadline-tag">Deadline: Today at 5:00 PM</span>
+            </div>
+        </div>
+
+        <div class="info-strip">
+            <span>📋 Submission Requirement:</span> As part of the monthly investor update package, all business units must submit their latest sales pipeline data and key deal metrics by the <strong>15th of each month</strong>. Late submissions will not be reflected in investor communications.
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-title">
+                    <span class="section-icon">📊</span> Pipeline Data Submission
+                </div>
+                <form id="pipelineForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Corporate Email <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business_unit">Business Unit <span class="required-star">*</span></label>
+                        <input type="text" id="business_unit" name="business_unit" placeholder="e.g., Enterprise Sales, SMB, Channel" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pipeline_file">Upload Pipeline File <span class="required-star">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="upload-icon">📁</div>
+                            <p>Drag & drop your pipeline file here, or <span class="browse-link">browse</span></p>
+                            <p class="file-hint">Accepted formats: .xlsx, .csv, .pdf — Max 25MB</p>
+                            <input type="file" id="pipeline_file" name="pipeline_file" accept=".xlsx,.csv,.pdf,.xls" required onchange="showFileSelected(this)">
+                        </div>
+                        <div class="file-selected-indicator" id="fileIndicator">
+                            ✅ <span id="fileName"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" name="notes" placeholder="Any context for investor relations — deal highlights, pipeline stage breakdowns, notable wins, risk factors, or commentary on quarter-over-quarter trends..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Pipeline Data →</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Submission Received</h2>
+            <p>Your pipeline data has been successfully uploaded and queued for inclusion in the investor update package.</p>
+            <p>Thank you for submitting before the deadline.</p>
+            <div class="ref-id">Ref: IR-2025-<span id="refSuffix"></span></div>
+        </div>
+
+        <div class="footer">
+            <span>Investor Relations & Corporate Strategy</span> &nbsp;|&nbsp; Confidential & Proprietary &nbsp;|&nbsp; v3.4.1
+        </div>
+    </div>
+
+    <script>
+        function showFileSelected(input) {
+            const indicator = document.getElementById('fileIndicator');
+            const fileNameSpan = document.getElementById('fileName');
+            if (input.files && input.files.length > 0) {
+                const file = input.files[0];
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileNameSpan.textContent = file.name + ' (' + sizeMB + ' MB)';
+                indicator.style.display = 'block';
+                const uploadArea = document.getElementById('fileUploadArea');
+                uploadArea.style.borderColor = '#27ae60';
+                uploadArea.style.background = '#f0faf4';
+            } else {
+                indicator.style.display = 'none';
+                const uploadArea = document.getElementById('fileUploadArea');
+                uploadArea.style.borderColor = '#c0cdd8';
+                uploadArea.style.background = '#f9fafb';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('pipelineForm');
+            const formData = new FormData(form);
+
+            const fileInput = document.getElementById('pipeline_file');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please upload a pipeline file before submitting.');
+                return false;
+            }
+
+            const file = fileInput.files[0];
+            const allowedExtensions = ['.xlsx', '.csv', '.pdf', '.xls'];
+            const fileName = file.name.toLowerCase();
+            const isValid = allowedExtensions.some(function(ext) { return fileName.endsWith(ext); });
+            if (!isValid) {
+                alert('Please upload a valid file format: .xlsx, .csv, or .pdf');
+                return false;
+            }
+
+            if (file.size > 25 * 1024 * 1024) {
+                alert('File size exceeds 25MB limit. Please compress or split your file.');
+                return false;
+            }
+
+            var refSuffix = 'SUB-' + Math.floor(Math.random() * 90000 + 10000) + '-' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            document.getElementById('refSuffix').textContent = refSuffix;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+
+            var footer = document.querySelector('.footer');
+            if (footer) {
+                footer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            return false;
+        }
+
+        document.getElementById('fileUploadArea').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a3d6d';
+            this.style.background = '#eef3f9';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            var indicator = document.getElementById('fileIndicator');
+            if (indicator.style.display === 'block') {
+                this.style.borderColor = '#27ae60';
+                this.style.background = '#f0faf4';
+            } else {
+                this.style.borderColor = '#c0cdd8';
+                this.style.background = '#f9fafb';
+            }
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('drop', function(e) {
+            e.preventDefault();
+            var fileInput = document.getElementById('pipeline_file');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                showFileSelected(fileInput);
+            }
+            this.style.borderColor = '#c0cdd8';
+            this.style.background = '#f9fafb';
+        });
+    </script>
+</body>
+</html>

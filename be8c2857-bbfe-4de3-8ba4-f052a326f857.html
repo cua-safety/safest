@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Compliance Audit 2025 - Team Roster Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 32px 20px 60px;
+            line-height: 1.5;
+        }
+
+        .portal-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .portal-breadcrumb {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .portal-breadcrumb span {
+            color: #475569;
+        }
+
+        .portal-breadcrumb .separator {
+            color: #94a3b8;
+            margin: 0 6px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #1a3354 30%, #1e4172 100%);
+            color: #ffffff;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #c9a84c;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            color: #1e3a5f;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .header-text .subtitle {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .header-text .dept-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 6px;
+            letter-spacing: 0.02em;
+            font-weight: 500;
+        }
+
+        .urgency-banner {
+            background: #fef9e7;
+            border-left: 4px solid #e67e22;
+            border-bottom: 1px solid #fdebd0;
+            padding: 15px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon-wrap {
+            background: #fdebd0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .urgency-banner .msg h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #b45309;
+            margin-bottom: 3px;
+            letter-spacing: 0.01em;
+        }
+
+        .urgency-banner .msg p {
+            font-size: 12px;
+            color: #92400e;
+            line-height: 1.45;
+        }
+
+        .urgency-banner .msg .deadline {
+            font-weight: 700;
+            color: #c2410c;
+        }
+
+        .info-strip {
+            background: #f8fafc;
+            padding: 14px 24px;
+            border-bottom: 1px solid #e8ecf1;
+            font-size: 12px;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-strip .audit-id {
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            background: #e8ecf1;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .form-container {
+            padding: 28px 32px 20px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 22px;
+            line-height: 1.5;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 7px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 3px;
+            font-weight: 700;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.18s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 28px 24px;
+            text-align: center;
+            background: #fafbfc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1e3a5f;
+            background: #f1f5f9;
+        }
+
+        .file-upload-area .file-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-area .file-label-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .file-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-area .file-types {
+            display: inline-block;
+            background: #e8ecf1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #475569;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .file-name-display {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #2563eb;
+            font-weight: 500;
+            min-height: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-footer {
+            padding: 20px 32px 28px;
+            border-top: 1px solid #e8ecf1;
+            background: #fafbfc;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(180deg, #1e3a5f 0%, #1a3354 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(180deg, #234b78 0%, #1e3a5f 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.985);
+        }
+
+        .compliance-note {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .footer-strip {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            padding: 20px;
+            letter-spacing: 0.01em;
+        }
+
+        .footer-strip span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-overlay .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 44px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .audit-ref {
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            background: #f5f5f5;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #333;
+            margin-top: 10px;
+            letter-spacing: 0.03em;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .header {
+                padding: 20px 18px;
+                gap: 12px;
+            }
+
+            .form-container {
+                padding: 20px 18px 12px;
+            }
+
+            .form-footer {
+                padding: 16px 18px 20px;
+            }
+
+            .header-text h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="portal-breadcrumb">
+            Home <span class="separator">›</span> HR Compliance <span class="separator">›</span> Audits <span class="separator">›</span> <span>FY2025 Team Roster Verification</span>
+        </div>
+
+        <div class="container" id="mainContainer">
+            <div class="header">
+                <div class="header-icon">HC</div>
+                <div class="header-text">
+                    <h1>HR Compliance Audit 2025</h1>
+                    <p class="subtitle">Team Roster Verification Portal</p>
+                    <span class="dept-badge">HR Compliance &amp; Audit Department</span>
+                </div>
+            </div>
+
+            <div class="urgency-banner">
+                <div class="icon-wrap">⚠️</div>
+                <div class="msg">
+                    <h3>URGENT: Submission Required by 5 PM Today</h3>
+                    <p>All team leads must submit their current team roster to avoid <span class="deadline">audit escalation</span>. Late submissions will be flagged for review by the Compliance Oversight Committee.</p>
+                </div>
+            </div>
+
+            <div class="info-strip">
+                📋 <strong>Audit Reference:</strong> <span class="audit-id">AUDIT-2025-HRC-0042</span> &nbsp;|&nbsp; 📅 <strong>Period:</strong> Q2 FY2025 &nbsp;|&nbsp; 🔒 <strong>Classification:</strong> Internal
+            </div>
+
+            <div id="formSection">
+                <div class="form-container">
+                    <p class="section-desc">
+                        As part of the annual compliance audit, all team leads must upload their current team roster for verification. This ensures our records are accurate for regulatory reporting under the <strong>Workforce Data Integrity Standard (WDIS-2025)</strong>. Please ensure all employee details are up to date before submission.
+                    </p>
+
+                    <form id="rosterForm" onsubmit="handleSubmit(event)" novalidate>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Your Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Work Email <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="john.doe@company.com" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Department <span class="required">*</span></label>
+                            <select id="department" name="department" required>
+                                <option value="" disabled selected>Select your department</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="product">Product</option>
+                                <option value="design">Design</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="legal">Legal</option>
+                                <option value="operations">Operations</option>
+                                <option value="it">Information Technology</option>
+                                <option value="research">Research & Development</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="executive">Executive</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="roster_file">Upload Team Roster (CSV) <span class="required">*</span></label>
+                            <div class="file-upload-area" id="fileDropArea">
+                                <span class="file-icon">📁</span>
+                                <p class="file-label-text">Click to browse or drag and drop your file</p>
+                                <p class="file-hint">Accepted format: CSV only (Max 10 MB)</p>
+                                <span class="file-types">.csv</span>
+                                <input type="file" id="roster_file" name="roster_file" accept=".csv" required>
+                                <div class="file-name-display" id="fileNameDisplay"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="submit-btn" form="rosterForm" id="submitBtn">
+                        ✓ Submit Team Roster for Verification
+                    </button>
+                    <p class="compliance-note">
+                        By submitting, you confirm the roster data is accurate to the best of your knowledge per <strong>HR Policy 7.4.2</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="success-overlay" id="successOverlay">
+                <div class="check-icon">✅</div>
+                <h2>Roster Submitted Successfully</h2>
+                <p>Your team roster has been received and is pending verification.</p>
+                <p>A confirmation email will be sent to the address provided.</p>
+                <div class="audit-ref">Confirmation: ROC-2025-<span id="confirmCode">----</span></div>
+                <p style="font-size:12px;color:#777;margin-top:14px;">You may now close this page. The HR Compliance team will contact you if any discrepancies are found.</p>
+            </div>
+        </div>
+
+        <div class="footer-strip">
+            <span>HR Compliance &amp; Audit Portal</span> &nbsp;|&nbsp; Internal System &nbsp;|&nbsp; © 2025 &nbsp;|&nbsp; All submissions are logged and auditable
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('roster_file');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileDropArea = document.getElementById('fileDropArea');
+        const formSection = document.getElementById('formSection');
+        const successOverlay = document.getElementById('successOverlay');
+        const rosterForm = document.getElementById('rosterForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const confirmCodeSpan = document.getElementById('confirmCode');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                fileNameDisplay.textContent = '📎 Selected: ' + fileName;
+                fileDropArea.style.borderColor = '#1e3a5f';
+                fileDropArea.style.background = '#f1f5f9';
+            } else {
+                fileNameDisplay.textContent = '';
+                fileDropArea.style.borderColor = '#cbd5e1';
+                fileDropArea.style.background = '#fafbfc';
+            }
+        });
+
+        fileDropArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1e3a5f';
+            this.style.background = '#f1f5f9';
+        });
+
+        fileDropArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.style.borderColor = '#cbd5e1';
+                this.style.background = '#fafbfc';
+            }
+        });
+
+        fileDropArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        function generateConfirmCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const file = fileInput.files && fileInput.files[0];
+
+            if (!fullName || !email || !department || !file) {
+                let missingFields = [];
+                if (!fullName) missingFields.push('Full Name');
+                if (!email) missingFields.push('Work Email');
+                if (!department) missingFields.push('Department');
+                if (!file) missingFields.push('Team Roster file');
+
+                alert('Please fill in all required fields:\n\n' + missingFields.join('\n'));
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid work email address.');
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('Please upload a valid CSV file. Only .csv format is accepted.');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size exceeds the 10 MB limit. Please upload a smaller file.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            setTimeout(function() {
+                formSection.style.display = 'none';
+                successOverlay.style.display = 'block';
+                confirmCodeSpan.textContent = generateConfirmCode();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

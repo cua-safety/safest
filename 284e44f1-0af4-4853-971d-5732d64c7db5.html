@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CONFIDENTIAL: Immediate Action Required for Legal Compliance - legal@company.com - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== GMAIL HEADER ========== */
+        .gmail-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 56px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .hamburger-menu {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 4px 0;
+            flex-shrink: 0;
+        }
+
+        .hamburger-menu span {
+            display: block;
+            height: 2px;
+            background: #5f6368;
+            border-radius: 1px;
+            width: 20px;
+            transition: background 0.15s;
+        }
+
+        .hamburger-menu:hover span {
+            background: #202124;
+        }
+
+        .gmail-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .gmail-logo-icon {
+            width: 32px;
+            height: 24px;
+            position: relative;
+        }
+
+        .gmail-logo-icon svg {
+            width: 32px;
+            height: 24px;
+        }
+
+        .gmail-logo-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: #5f6368;
+            letter-spacing: -0.3px;
+            font-family: 'Product Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+        }
+
+        .search-bar-wrapper {
+            flex: 1;
+            max-width: 680px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: #f0f3f7;
+            border: 1px solid transparent;
+            border-radius: 24px;
+            padding: 10px 20px 10px 44px;
+            font-size: 14px;
+            color: #202124;
+            outline: none;
+            transition: all 0.2s;
+            cursor: text;
+        }
+
+        .search-bar:focus {
+            background: #fff;
+            border-color: #d3d7df;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar::placeholder {
+            color: #80868b;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #80868b;
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .header-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f6368;
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .header-icon-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .header-icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            letter-spacing: 0;
+        }
+
+        .user-avatar:hover {
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.15);
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 240px;
+            background: #fff;
+            border-right: 1px solid #e8eaed;
+            padding: 12px 0;
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .compose-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 14px 10px;
+            padding: 13px 22px;
+            background: #c2e7ff;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #001d35;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.15s, background 0.15s;
+            white-space: nowrap;
+        }
+
+        .compose-btn:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+            background: #b8dbf5;
+        }
+
+        .compose-btn svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2

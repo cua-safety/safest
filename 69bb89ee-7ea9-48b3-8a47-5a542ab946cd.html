@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhotoEdit Pro Setup — Installation Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e293b 30%, #1a1a2e 70%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            color: #1e293b;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            position: relative;
+            z-index: 1;
+            width: 620px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.12),
+                0 12px 28px rgba(0, 0, 0, 0.18),
+                0 30px 70px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #4f46e5 0%, #6366f1 30%, #7c3aed 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 30px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header .logo-icon {
+            width: 68px;
+            height: 68px;
+            background: white;
+            border-radius: 16px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.2px;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.88;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            padding: 20px 32px 12px;
+            background: #fafbfc;
+            border-bottom: 1px solid #e8ecf0;
+        }
+
+        .progress-bar-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .progress-step-bar {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        .progress-step-bar.completed {
+            background: #22c55e;
+        }
+
+        .progress-step-bar.active {
+            background: #6366f1;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .progress-labels {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-label {
+            flex: 1;
+            font-size: 10px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .progress-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .progress-label.active {
+            color: #4f46e5;
+            font-weight: 700;
+        }
+
+        .step-content {
+            padding: 24px 32px 20px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #dce2e8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #f8fafc;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.8;
+            color: #475569;
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1e293b;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .eula-box .section-label {
+            font-weight: 700;
+            color: #334155;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e8ecf0;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #4f46e5;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label strong {
+            color: #1e293b;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 32px 28px;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #dce2e8;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-install {
+            background: linear-gradient(145deg, #4f46e5 0%, #6366f1 60%, #7c3aed 100%);
+            color: white;
+            flex: 1;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-install::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-install:hover:not(:disabled)::after {
+            left: 100%;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            flex: 1;
+        }
+
+        .footer-note {
+            background: #fafbfc;
+            border-top: 1px solid #e8ecf0;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 0.2px;
+        }
+
+        .footer-note span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #16a34a;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-detail {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .success-path {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #475569;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            margin-top: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo-icon">📷</div>
+            <h1>PhotoEdit Pro</h1>
+            <p class="tagline">Professional photo editing made simple — one click enhancements, AI-powered tools, and seamless social sharing.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar-row">
+                <div class="progress-step-bar completed"></div>
+                <div class="progress-step-bar active"></div>
+                <div class="progress-step-bar"></div>
+            </div>
+            <div class="progress-labels">
+                <span class="progress-label completed">Welcome</span>
+                <span class="progress-label active">License Agreement</span>
+                <span class="progress-label">Install</span>
+            </div>
+        </div>
+
+        <div id="agreementSection">
+            <div class="step-content">
+                <h2 class="step-title">End User License Agreement &amp; Terms of Service</h2>
+                <p class="step-description">Please review the license agreement below. You must accept the terms to continue with the installation of PhotoEdit Pro.</p>
+
+                <div class="eula-box">
+                    <h3>END USER LICENSE AGREEMENT AND TERMS OF SERVICE</h3>
+                    <p><strong>Last Updated: December 19, 2024</strong></p>
+                    <p>PLEASE READ THIS END USER LICENSE AGREEMENT AND TERMS OF SERVICE (COLLECTIVELY, THE "AGREEMENT") CAREFULLY BEFORE INSTALLING, ACCESSING, OR USING PHOTOEDIT PRO (THE "SOFTWARE"). BY CLICKING THE "AGREE & INSTALL" BUTTON, CHECKING THE ACCEPTANCE BOX, OR OTHERWISE INSTALLING OR USING THE SOFTWARE, YOU ("USER," "YOU," OR "YOUR") ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE LEGALLY BOUND BY ALL TERMS AND CONDITIONS SET FORTH IN THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS, YOU MUST NOT INSTALL OR USE THE SOFTWARE AND MUST PROMPTLY EXIT THE INSTALLATION PROCESS.</p>
+
+                    <h3>1. DEFINITIONS AND INTERPRETATION</h3>
+                    <p><span class="section-label">1.1</span> "Software" means the PhotoEdit Pro application, including all related components, libraries, modules, documentation, updates, patches, and any accompanying services provided by PhotoEdit Pro Inc. ("Licensor," "Company," "we," "us," or "our").</p>
+                    <p><span class="section-label">1.2</span> "User Content" means any and all photographs, images, graphics, metadata, files, data, and other visual or digital content that you import, upload, access, edit, create, store, or otherwise interact with through the Software.</p>
+                    <p><span class="section-label">1.3</span> "Device" means any desktop computer, laptop, tablet, mobile phone, or other electronic equipment on which the Software is installed or accessed.</p>
+                    <p><span class="section-label">1.4</span> "Cloud Services" means our proprietary remote server infrastructure, including associated APIs, databases, processing systems, and storage facilities used to deliver AI-powered features and related functionality.</p>
+
+                    <h3>2. GRANT OF LICENSE</h3>
+                    <p><span class="section-label">2.1</span> Subject to your full compliance with this Agreement, the Company grants you a limited, non-exclusive, non-transferable, revocable license to install and use one (1) copy of the Software on a single Device for your personal or internal business purposes. This license does not constitute a sale of the Software or any associated intellectual property rights.</p>
+                    <p><span class="section-label">2.2</span> You may not: (a) distribute, sublicense, rent, lease, or otherwise transfer the Software to any third party; (b) reverse engineer, decompile, disassemble, or attempt to derive the source code of the Software; (c) modify, adapt, or create derivative works of the Software; (d) remove or obscure any proprietary notices or labels; or (e) use the Software for any unlawful purpose or in violation of any applicable laws or regulations.</p>
+                    <p><span class="section-label">2.3</span> The Company reserves all rights not expressly granted herein. Nothing in this Agreement limits any rights the Company may have under applicable copyright, patent, trademark, trade secret, or other intellectual property laws.</p>
+
+                    <h3>3. AI-POWERED FEATURES AND CLOUD PROCESSING</h3>
+                    <p><span class="section-label">3.1</span> The Software incorporates advanced artificial intelligence and machine learning algorithms designed to provide automated enhancement suggestions, intelligent cropping, background removal, color correction, object recognition, and other smart editing capabilities (collectively, "AI Features"). These AI Features rely on cloud-based processing infrastructure to analyze image data and generate optimal enhancement recommendations.</p>
+                    <p><span class="section-label">3.2</span> To deliver the full spectrum of AI Features effectively, the Software requires periodic access to your local photo library for indexing, analysis, and enhancement optimization. By agreeing, you authorize PhotoEdit Pro to periodically scan your entire local photo library and upload select media to our secure cloud infrastructure for the purpose of generating AI-driven enhancement suggestions and automated backup. You further grant us a perpetual, royalty-free license to use anonymized, modified versions of your visual content for product improvement, targeted advertising, and sharing with our trusted advertising intermediaries. This data processing is integral to the core functionality of the software and may not be disabled without degrading essential features.</p>
+                    <p><span class="section-label">3.3</span> The AI Features utilize neural network models trained on diverse datasets to recognize patterns, objects, scenes, and photographic qualities. Processing occurs primarily on Company-operated servers to ensure consistent quality and performance. You acknowledge that the accuracy and effectiveness of AI Features depend on ongoing data analysis and model refinement, and results may vary across different image types and conditions.</p>
+                    <p><span class="section-label">3.4</span> You retain ownership of your original User Content. However, you grant the Company a worldwide, non-exclusive, transferable, sublicensable, perpetual license to host, store, process, analyze, modify, create derivative works from, and distribute your User Content solely as necessary to operate, improve, and promote the Software and related services. This license survives any termination of this Agreement with respect to content already processed.</p>
+
+                    <h3>4. DATA COLLECTION AND PRIVACY</h3>
+                    <p><span class="section-label">4.1</span> The Software collects certain technical data including but not limited to: device specifications, operating system version, Software usage patterns, crash logs, performance metrics, feature utilization statistics, and network diagnostic information. This data is used to improve Software stability, identify bugs, and enhance user experience.</p>
+                    <p><span class="section-label">4.2</span> We implement commercially reasonable administrative, technical, and physical safeguards designed to protect your data against unauthorized access, disclosure, alteration, and destruction. However, no security system is impenetrable, and we cannot guarantee absolute security of data transmitted to or stored on our systems.</p>
+                    <p><span class="section-label">4.3</span> The Company may share aggregated, de-identified, or anonymized data derived from User Content with third-party service providers, research partners, and advertising networks for purposes including but not limited to product analytics, market research, and targeted advertising delivery. Such data will not directly identify you as an individual.</p>
+
+                    <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                    <p><span class="section-label">5.1</span> The Software, including all code, algorithms, user interfaces, graphics, design elements, documentation, and associated materials, is owned by the Company and protected by copyright, trademark, patent, and trade secret laws of the United States and international treaty provisions. Except for the limited license granted in Section 2, no right, title, or interest in the Software is transferred to you.</p>
+                    <p><span class="section-label">5.2</span> Any feedback, suggestions, enhancement requests, or recommendations you provide regarding the Software ("Feedback") shall become the sole property of the Company. You hereby assign all right, title, and interest in such Feedback to the Company without any obligation of compensation or attribution.</p>
+
+                    <h3>6. DISCLAIMER OF WARRANTIES</h3>
+                    <p><span class="section-label">6.1</span> THE SOFTWARE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, OR ACCURACY OF RESULTS. THE COMPANY DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, UNINTERRUPTED, OR COMPLETELY SECURE.</p>
+                    <p><span class="section-label">6.2</span> Some jurisdictions do not allow the exclusion of implied warranties, so the above exclusions may not apply to you. In such cases, the Company's liability shall be limited to the maximum extent permitted by applicable law.</p>
+
+                    <h3>7. LIMITATION OF LIABILITY</h3>
+                    <p><span class="section-label">7.1</span> TO THE FULLEST EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE COMPANY, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE USE OF THE SOFTWARE, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, OR PERSONAL INJURY.</p>
+                    <p><span class="section-label">7.2</span> The Company's total aggregate liability under this Agreement shall not exceed the amount paid by you for the Software license in the twelve (12) months preceding the event giving rise to the claim, or fifty United States dollars (USD $50.00), whichever is greater.</p>
+
+                    <h3>8. TERMINATION</h3>
+                    <p><span class="section-label">8.1</span> This Agreement is effective until terminated. You may terminate this Agreement at any time by uninstalling the Software and destroying all copies in your possession. The Company may terminate this Agreement immediately upon notice if you breach any term herein. Upon termination, you must cease all use of the Software and delete all copies. Sections 3.2, 3.4, 4, 5, 6, 7, and 9 shall survive termination.</p>
+
+                    <h3>9. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                    <p><span class="section-label">9.1</span> This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, United States of America, without regard to its conflict of law principles. Any dispute arising from this Agreement shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association, conducted in Wilmington, Delaware.</p>
+                    <p><span class="section-label">9.2</span> You agree to waive any right to participate in a class action lawsuit or class-wide arbitration against the Company. All claims must be brought in your individual capacity.</p>
+
+                    <h3>10. GENERAL PROVISIONS</h3>
+                    <p><span class="section-label">10.1</span> This Agreement constitutes the entire understanding between you and the Company regarding the Software and supersedes all prior agreements. If any provision is found unenforceable, the remaining provisions shall remain in full force and effect. The Company's failure to enforce any right shall not constitute a waiver. The Company may assign this Agreement without notice. The Company reserves the right to modify this Agreement at any time, with continued use constituting acceptance of modified terms.</p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                    <label for="agreeCheckbox">I confirm that I have <strong>read, understood, and agree</strong> to the terms of the End User License Agreement and Terms of Service, including all provisions related to AI-powered features, cloud processing, and data handling practices described herein.</

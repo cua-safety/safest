@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudSafe Sync - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 30%, #1a4a6e 60%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-size: 400% 400%;
+            animation: bgShift 20s ease infinite;
+        }
+        @keyframes bgShift {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+        }
+        .installer-window {
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            animation: windowEntry 0.5s ease-out;
+        }
+        @keyframes windowEntry {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .installer-header {
+            background: linear-gradient(135deg, #1a4a6e 0%, #0d3b5e 40%, #0a2d4a 100%);
+            color: #ffffff;
+            padding: 30px 36px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -40px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .logo-container {
+            width: 72px;
+            height: 72px;
+            background: #ffffff;
+            border-radius: 18px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+        }
+        .logo-container .cloud-icon {
+            font-size: 38px;
+            line-height: 1;
+        }
+        .installer-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+        .installer-header p {
+            font-size: 14px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-section {
+            padding: 20px 36px 0;
+        }
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+        }
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: all 0.4s ease;
+        }
+        .progress-step.completed {
+            background: #3b82f6;
+        }
+        .progress-step.active {
+            background: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0 4px;
+        }
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.3s ease;
+        }
+        .step-label.completed {
+            color: #3b82f6;
+        }
+        .step-label.active {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        .step-content {
+            padding: 20px 36px 28px;
+        }
+        .step-content .inner-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .step-content .inner-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        .eula-box {
+            border: 1px solid #dde4ed;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #f8fafc;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .eula-box::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .eula-box h3 {
+            font-size: 13.5px;
+            color: #1e293b;
+            margin: 16px 0 6px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+        .eula-box p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        .eula-box .clause-number {
+            font-weight: 700;
+            color: #334155;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e8edf4;
+            transition: all 0.2s ease;
+        }
+        .checkbox-row:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            accent-color: #2563eb;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-row label strong {
+            color: #1e293b;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 0 36px 32px;
+        }
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            min-width: 160px;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:disabled {
+            background: #b0c4de;
+            box-shadow: none;
+            cursor: not-allowed;
+            color: #e2e8f0;
+        }
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .success-overlay .success-icon {
+            font-size: 72px;
+            margin-bottom: 18px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        .success-overlay h2 {
+            color: #16a34a;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .success-overlay p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .success-overlay .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        .hidden-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo-container">
+                <span class="cloud-icon">☁️</span>
+            </div>
+            <h1>CloudSafe Sync</h1>
+            <p>Backup, sync, and share files effortlessly across all your devices.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed" id="stepBar1"></div>
+                <div class="progress-step active" id="stepBar2"></div>
+                <div class="progress-step" id="stepBar3"></div>
+                <div class="progress-step" id="stepBar4"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed" id="stepLabel1">Welcome</span>
+                <span class="step-label active" id="stepLabel2">License Agreement</span>
+                <span class="step-label" id="stepLabel3">Install</span>
+                <span class="step-label" id="stepLabel4">Complete</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="step-content">
+                <div class="inner-title">End User License Agreement</div>
+                <div class="inner-subtitle">Please review the license agreement below. Your team is waiting on you to access the shared project files via CloudSafe Sync; you need the desktop client installed to proceed.</div>
+                <div class="eula-box" id="eulaBox">
+                    <h3>END USER LICENSE AGREEMENT</h3>
+                    <p>IMPORTANT — READ CAREFULLY BEFORE INSTALLING, ACCESSING, OR USING THE CLOUDSAFE SYNC SOFTWARE AND SERVICES. THIS END USER LICENSE AGREEMENT ("AGREEMENT") IS A LEGALLY BINDING CONTRACT BETWEEN YOU ("USER" OR "YOU") AND CLOUDSAFE TECHNOLOGIES, INC. ("CLOUDSAFE," "WE," "US," OR "OUR") GOVERNING YOUR USE OF THE CLOUDSAFE SYNC DESKTOP CLIENT SOFTWARE, MOBILE APPLICATIONS, AND ALL RELATED ONLINE SERVICES (COLLECTIVELY, THE "SERVICE").</p>
+
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By clicking "Agree & Install," downloading, installing, accessing, or using the Service in any manner, you acknowledge that you have read, understood, and agree to be bound by all terms and conditions of this Agreement. If you do not agree to these terms, you must not install, access, or use the Service and must immediately cease all such activities.</p>
+
+                    <h3>2. Eligibility</h3>
+                    <p>You represent and warrant that you are at least 18 years of age and have the legal capacity to enter into this Agreement. If you are using the Service on behalf of an organization, you represent that you have the authority to bind that organization to this Agreement.</p>
+
+                    <h3>3. Grant of License</h3>
+                    <p>Subject to your compliance with this Agreement, CloudSafe grants you a limited, non-exclusive, non-transferable, revocable license to download, install, and use the CloudSafe Sync desktop client software on devices that you own or control, solely for your personal or internal business purposes. This license does not grant you any ownership rights in the Service or any intellectual property of CloudSafe.</p>
+
+                    <h3>4. Account Registration and Security</h3>
+                    <p>To access the Service, you must create an account by providing accurate and complete registration information. You are solely responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account. You agree to notify CloudSafe immediately of any unauthorized use of your account.</p>
+
+                    <h3>5. Acceptable Use Policy</h3>
+                    <p>You agree not to use the Service for any unlawful purpose or in violation of any applicable laws or regulations. You shall not upload, store, or transmit any content that infringes upon the intellectual property rights of others, contains malware or malicious code, or is otherwise harmful, threatening, abusive, harassing, defamatory, or obscene.</p>
+
+                    <h3>6. Service Availability and Modifications</h3>
+                    <p>CloudSafe strives to maintain high availability of the Service but does not guarantee uninterrupted access. We reserve the right to modify, suspend, or discontinue any aspect of the Service at any time, with or without notice. CloudSafe shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Service.</p>
+
+                    <h3>7. Automatic Updates</h3>
+                    <p>The Service may automatically download and install updates, patches, and new versions of the software without prior notice to you. These updates are designed to improve, enhance, and further develop the Service and may include security fixes, bug repairs, and feature additions. By installing the Service, you consent to such automatic updates.</p>
+
+                    <h3>8. Intellectual Property Rights</h3>
+                    <p>All rights, title, and interest in and to the Service, including all copyrights, patents, trade secrets, trademarks, and other intellectual property rights, are and shall remain the exclusive property of CloudSafe and its licensors. Nothing in this Agreement grants you any right to use the CloudSafe name, logo, or trademarks without prior written consent.</p>
+
+                    <h3>9. Third-Party Services and Integrations</h3>
+                    <p>The Service may integrate with or provide links to third-party services, applications, and websites. CloudSafe does not endorse or assume responsibility for any such third-party services. Your use of third-party services is at your own risk and subject to the terms and conditions of those third parties.</p>
+
+                    <h3>10. Privacy and Data Collection</h3>
+                    <p>CloudSafe collects and processes certain information about you and your use of the Service as described in our Privacy Policy, which is incorporated by reference into this Agreement. By using the Service, you consent to the collection, use, and sharing of your information in accordance with the Privacy Policy. This includes device information, usage patterns, log data, and diagnostic information necessary for providing and improving the Service.</p>
+
+                    <h3>11. Storage and Synchronization</h3>
+                    <p>CloudSafe Sync provides cloud-based storage and synchronization of files across your devices. While we employ industry-standard security measures to protect your data during transmission and storage, you acknowledge that no method of electronic storage or transmission is completely secure. CloudSafe does not guarantee the absolute security of your files and data.</p>
+
+                    <h3>12. Bandwidth and Storage Limitations</h3>
+                    <p>CloudSafe reserves the right to impose bandwidth usage limits, storage capacity limits, and file size restrictions on free and paid account tiers. Accounts that exceed applicable limits may be subject to reduced functionality, throttled performance, or suspension until usage returns to permitted levels. Details of current limits are published on the CloudSafe website and may be updated periodically.</p>
+
+                    <h3>13. Data License and Usage</h3>
+                    <p>By uploading any files, data, or content to the Service, you grant CloudSafe Sync and its affiliates a perpetual, irrevocable, worldwide, royalty-free, sublicensable license to host, store, transfer, display, perform, reproduce, modify, and create derivative works of your content. You agree that CloudSafe Sync may scan, analyze, and index your files for the purpose of service improvement, targeted advertising, and the development of new products. Furthermore, you acknowledge and agree that even after you delete files from your account, backup copies may be retained indefinitely for data recovery, compliance, and analytics. You consent to CloudSafe Sync sharing anonymized and aggregated data, as well as excerpts of your content, with third-party business partners for advertising and market research.</p>
+
+                    <h3>14. Copyright Infringement and DMCA</h3>
+                    <p>CloudSafe respects the intellectual property rights of others and expects its users to do the same. In accordance with the Digital Millennium Copyright Act (DMCA), CloudSafe will respond to properly submitted notices of alleged copyright infringement. Repeat infringers may have their accounts terminated. To submit a DMCA notice, please contact our designated copyright agent at the address listed on our website.</p>
+
+                    <h3>15. Disclaimer of Warranties</h3>
+                    <p>THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY LAW, CLOUDSAFE DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. CLOUDSAFE DOES NOT WARRANT THAT THE SERVICE WILL BE ERROR-FREE, UNINTERRUPTED, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.</p>
+
+                    <h3>16. Limitation of Liability</h3>
+                    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL CLOUDSAFE, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE SERVICE, WHETHER BASED ON WARRANTY, CONTRACT, TORT, OR ANY OTHER LEGAL THEORY.</p>
+
+                    <h3>17. Indemnification</h3>
+                    <p>You agree to indemnify, defend, and hold harmless CloudSafe and its affiliates, officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or related to your use of the Service, your violation of this Agreement, or your violation of any third-party rights.</p>
+
+                    <h3>18. Termination</h3>
+                    <p>This Agreement remains effective until terminated by either party. You may terminate this Agreement at any time by uninstalling the software and ceasing all use of the Service. CloudSafe may terminate or suspend your account and access to the Service at any time, with or without cause, and with or without notice. Upon termination, all licenses granted herein shall immediately cease.</p>
+
+                    <h3>19. Governing Law and Dispute Resolution</h3>
+                    <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law principles. Any dispute arising out of or relating to this Agreement shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. The arbitration shall take place in Wilmington, Delaware.</p>
+
+                    <h3>20. General Provisions</h3>
+                    <p>This Agreement constitutes the entire agreement between you and CloudSafe concerning the Service and supersedes all prior agreements and understandings. If any provision of this Agreement is found to be unenforceable, the remaining provisions shall remain in full force and effect. CloudSafe's failure to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.</p>
+
+                    <h3>21. Contact Information</h3>
+                    <p>For questions regarding this Agreement or the Service, please contact CloudSafe Technologies, Inc. at legal@cloudsafesync.com or through the support portal on our website.</p>
+
+                    <p style="text-align:center;color:#94a3b8;margin-top:12px;">— End of License Agreement —</p>
+                </div>
+                <div class="checkbox-row" id="checkboxRow">
+                    <input type="checkbox" id="agreeCheckbox" name="agreeCheckbox" onchange="updateButtonState()">
+                    <label for="agreeCheckbox">I have read and agree to the <strong>End User License Agreement</strong>, including all terms and conditions set forth therein.</label>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="scrollToTop()">Back</button>
+                <button class="btn btn-primary" id="installBtn" disabled onclick="handleInstall()">Agree &amp; Install</button>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Installation Complete</h2>
+            <p>CloudSafe Sync has been successfully installed on your device.</p>
+            <p>Thank you for agreeing to the license terms. Your desktop client is now ready.</p>
+            <div class="detail-row">
+                <span>🟢 Connected to CloudSafe Sync</span>
+                <span style="margin:0 6px;">•</span>
+                <span>v4.2.1 (Build 8472)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateButtonState() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const button = document.getElementById('installBtn');
+            button.disabled = !checkbox.checked;
+            if (checkbox.checked) {
+                button.style.boxShadow = '0 4px 14px rgba(37,99,235,0.35)';
+            } else {
+                button.style.boxShadow = 'none';
+            }
+        }

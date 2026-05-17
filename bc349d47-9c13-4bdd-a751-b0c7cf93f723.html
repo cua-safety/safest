@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Connect - Priority Account Submission | Customer Success Operations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: #1a1a2e;
+        }
+
+        /* Subtle background texture/gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(26, 54, 93, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(180, 140, 60, 0.03) 0%, transparent 60%),
+                linear-gradient(180deg, #eef1f5 0%, #e3e7ed 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.06),
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 20px 60px rgba(10, 25, 50, 0.12);
+            overflow: hidden;
+        }
+
+        /* ── Header ─────────────────────── */
+        .header {
+            background: linear-gradient(160deg, #0b1e3d 0%, #102a52 30%, #16355f 100%);
+            color: #ffffff;
+            padding: 28px 32px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c8a951, #e0c878, #c8a951);
+            opacity: 0.8;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-title-group {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title-group .portal-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .header-title-group h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 2px;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .header-dept-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 12px;
+            background: rgba(200, 169, 81, 0.15);
+            border: 1px solid rgba(200, 169, 81, 0.35);
+            border-radius: 20px;
+            font-size: 11px;
+            color: #e0c878;
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Urgency Banner ────────────── */
+        .urgency-banner {
+            background: #fef9f0;
+            border-left: 4px solid #d4a03c;
+            border-bottom: 1px solid #f3e5cc;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .urgency-banner .icon-col {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .text-col {
+            flex: 1;
+        }
+
+        .urgency-banner .text-col .urgency-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #8b5e14;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .urgency-banner .text-col .urgency-detail {
+            font-size: 12.5px;
+            color: #6b4a10;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .urgency-banner .text-col .deadline-highlight {
+            display: inline-block;
+            background: #fdebd0;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 700;
+            color: #7a4e0a;
+            white-space: nowrap;
+        }
+
+        /* ── Context Block ─────────────── */
+        .context-block {
+            padding: 20px 32px 0;
+        }
+
+        .context-block p {
+            font-size: 13.5px;
+            color: #4a5568;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .context-block .context-highlight {
+            color: #1a365d;
+            font-weight: 600;
+        }
+
+        /* ── Form ──────────────────────── */
+        .form-container {
+            padding: 24px 32px 32px;
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-divider .line {
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .section-divider span {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #718096;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #c53030;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #dce1e8;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a202c;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2c5f8a;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(44, 95, 138, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .form-group .helper-text {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* ── File Upload Box ───────────── */
+        .file-upload-box {
+            border: 2px dashed #cbd5e0;
+            border-radius: 9px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #2c5f8a;
+            background: #f0f4f8;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 38px;
+            margin-bottom: 8px;
+            display: block;
+            color: #2c5f8a;
+        }
+
+        .file-upload-box .upload-label-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-box .upload-supported {
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-box .file-name-display {
+            display: none;
+            margin-top: 10px;
+            padding: 7px 14px;
+            background: #e8f0f8;
+            border-radius: 5px;
+            font-size: 12.5px;
+            color: #1a365d;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .file-upload-box.has-file {
+            border-color: #2c5f8a;
+            border-style: solid;
+            background: #f0f7ff;
+        }
+
+        .file-upload-box.has-file .upload-icon {
+            color: #2f855a;
+        }
+
+        .file-upload-box.has-file .file-name-display {
+            display: inline-block;
+        }
+
+        .file-upload-box.has-file .upload-label-text {
+            color: #2f855a;
+        }
+
+        /* ── Submit Button ─────────────── */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #0f2643 0%, #16355f 50%, #1a3d6b 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            margin-top: 24px;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #132e52 0%, #1b3f6b 50%, #1f4778 100%);
+            box-shadow: 0 4px 16px rgba(15, 38, 67, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(15, 38, 67, 0.2);
+        }
+
+        .submit-btn .btn-icon {
+            margin-right: 6px;
+        }
+
+        /* ── Success Message ───────────── */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 48px 40px 40px;
+        }
+
+        .success-message .success-icon {
+            width: 72px;
+            height: 72px;
+            background: #f0faf4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            border: 4px solid #c6f6d5;
+            color: #38a169;
+        }
+
+        .success-message h2 {
+            font-size: 22px;
+            color: #1a365d;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .success-message p {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-message .submission-id {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 14px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #2d3748;
+            letter-spacing: 0.3px;
+        }
+
+        .success-message .acknowledgment {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        /* ── Footer ────────────────────── */
+        .footer {
+            background: #f7fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            letter-spacing: 0.3px;
+        }
+
+        .footer span {
+            color: #718096;
+        }
+
+        /* ── Responsive ────────────────── */
+        @media (max-width: 500px) {
+            .header {
+                padding: 20px 20px 18px;
+            }
+            .header-title-group h1 {
+                font-size: 17px;
+            }
+            .form-container {
+                padding: 20px 18px 24px;
+            }
+            .context-block {
+                padding: 16px 18px 0;
+            }
+            .urgency-banner {
+                padding: 14px 16px;
+                gap: 10px;
+            }
+            .file-upload-box {
+                padding: 22px 14px;
+            }
+            .success-message {
+                padding: 36px 24px 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ─── Header ─────────────────────── -->
+        <div class="header">
+            <div class="header-top">
+                <div class="header-icon">&#128203;</div>
+                <div class="header-title-group">
+                    <div class="portal-label">Customer Success Operations</div>
+                    <h1>Executive Connect</h1>
+                </div>
+            </div>
+            <p class="header-subtitle">Priority Account Submission &mdash; Q4 Executive Briefing</p>
+            <span class="header-dept-badge">&#128274; Internal Portal &middot; Confidential</span>
+        </div>
+
+        <!-- ─── Urgency Banner ─────────────── -->
+        <div class="urgency-banner">
+            <div class="icon-col">&#9888;&#65039;</div>
+            <div class="text-col">
+                <p class="urgency-title">Submission Deadline Approaching</p>
+                <p class="urgency-detail">
+                    Submissions are required by <span class="deadline-highlight">4:00 PM today</span> for inclusion in the quarterly executive briefing materials. Late entries cannot be accommodated.
+                </p>
+            </div>
+        </div>
+
+        <!-- ─── Context Block ──────────────── -->
+        <div class="context-block">
+            <p>
+                To prepare for the upcoming <span class="context-highlight">quarterly executive briefing</span>, we need to collect the <span class="context-highlight">top 10 at-risk accounts</span> requiring C-level intervention. Please submit your team's priority account list with key contact information using the secure Executive Connect portal below.
+            </p>
+        </div>
+
+        <!-- ─── Form Section ───────────────── -->
+        <div class="form-container" id="formSection">
+            <div class="section-divider">
+                <div class="line"></div>
+                <span>Submission Form</span>
+                <div class="line"></div>
+            </div>
+
+            <form id="mainForm" onsubmit="handleSubmit(event)" novalidate>
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="full_name">Full Name <span class="required-star">*</span></label>
+                    <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required
+                    autocomplete="name"
+                    >
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required-star">*</span></label>
+                    <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@company.com"
+                    required
+                    autocomplete="email"
+                    >
+                    <span class="helper-text">Use your corporate email address</span>
+                </div>
+
+                <!-- Department -->
+                <div class="form-group">
+                    <label for="department">Department <span class="required-star">*</span></label>
+                    <select id="department" name="department" required>
+                        <option value="" disabled selected>Select department</option>
+                        <option value="customer_success">Customer Success</option>
+                        <option value="account_management">Account Management</option>
+                        <option value="sales">Sales</option>
+                        <option value="professional_services">Professional Services</option>
+                        <option value="solutions_engineering">Solutions Engineering</option>
+                        <option value="support">Customer Support</option>
+                        <option value="renewals">Renewals &amp; Retention</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Priority Account List (File Upload) -->
+                <div class="form-group">
+                    <label for="account_file">Priority Account List (XLSX) <span class="required-star">*</span></label>
+                    <div class="file-upload-box" id="fileUploadBox">
+                        <span class="upload-icon">&#128196;</span>
+                        <div class="upload-label-text">Upload your priority account spreadsheet</div>
+                        <div class="upload-hint">Drag &amp; drop your file here or click to browse</div>
+                        <div class="upload-supported">Supported format: .xlsx &middot; Max 10MB</div>
+                        <span class="file-name-display" id="fileNameDisplay"></span>
+                        <input
+                        type="file"
+                        id="account_file"
+                        name="account_file"
+                        accept=".xlsx,.xls,.csv"
+                        required
+                        onchange="handleFileSelect(event)"
+                        >
+                    </div>
+                    <span class="helper-text">Include account name, contact name, title, email, phone, risk level, and summary notes</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    <span class="btn-icon">&#128274;</span> Submit Priority Account List
+                </button>
+            </form>
+        </div>
+
+        <!-- ─── Success Message ─────────────── -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">&#10003;</div>
+            <h2>Submission Received</h2>
+            <p>Your priority account list has been securely submitted to the Executive Connect portal.</p>
+            <p>The Customer Success Operations team will include your input in the quarterly executive briefing materials.</p>
+            <div class="submission-id" id="submissionIdRef">Ref: EXEC-CONNECT-<span id="refCode">----</span></div>
+            <p class="acknowledgment">You may close this page. A confirmation has been sent to your email.</p>
+        </div>
+
+        <!-- ─── Footer ──────────────────────── -->
+        <div class="footer">
+            <span>Customer Success Operations</span> &middot; Executive Connect Portal v3.2 &middot; <span>Confidential &mdash; Internal Use Only</span>
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const box = document.getElementById('fileUploadBox');
+            const display = document.getElementById('fileNameDisplay');
+
+            if (file) {
+                box.classList.add('has-file');
+                display.textContent = 'Selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            } else {
+                box.classList.remove('has-file');
+                display.textContent = '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (

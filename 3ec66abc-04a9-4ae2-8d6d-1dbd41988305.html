@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GuardianVPN Setup - License Agreement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0b1a2e 0%, #132b44 30%, #1a3a5c 60%, #0d2137 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(45, 127, 249, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(56, 178, 172, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(99, 179, 237, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .installer-window {
+            position: relative;
+            z-index: 1;
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow:
+                0 24px 80px rgba(0, 0, 0, 0.45),
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            overflow: hidden;
+        }
+        .installer-header {
+            background: linear-gradient(135deg, #0f2b47 0%, #163a5e 40%, #1a4a78 100%);
+            color: white;
+            padding: 28px 32px 22px;
+            position: relative;
+            overflow: hidden;
+        }
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(56, 178, 172, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 20%;
+            width: 200px;
+            height: 60px;
+            background: radial-gradient(ellipse, rgba(45, 127, 249, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .logo-shield {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #2d7ff9, #1a5fc4);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 20px rgba(45, 127, 249, 0.35);
+            flex-shrink: 0;
+        }
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 2px;
+        }
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+        .progress-section {
+            padding: 18px 32px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-bar-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .progress-step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dde4ed;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .progress-step-dot.completed {
+            background: #38a169;
+        }
+        .progress-step-dot.active {
+            background: #2d7ff9;
+            box-shadow: 0 0 0 5px rgba(45, 127, 249, 0.2);
+        }
+        .progress-step-line {
+            flex: 1;
+            height: 2px;
+            background: #dde4ed;
+            border-radius: 1px;
+            transition: all 0.3s;
+        }
+        .progress-step-line.completed {
+            background: #38a169;
+        }
+        .progress-step-line.active-segment {
+            background: linear-gradient(90deg, #38a169, #2d7ff9);
+        }
+        .step-labels-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0 10px;
+            gap: 4px;
+        }
+        .step-label-item {
+            font-size: 11px;
+            color: #8a9bb5;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .step-label-item.completed {
+            color: #38a169;
+            font-weight: 500;
+        }
+        .step-label-item.active {
+            color: #2d7ff9;
+            font-weight: 600;
+        }
+        .step-content-area {
+            padding: 4px 32px 0;
+        }
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a2e44;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+        .step-description {
+            font-size: 13px;
+            color: #5a6d82;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .eula-scroll-box {
+            border: 1px solid #dde4ed;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #f8fafc;
+            height: 280px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #3d4f63;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+        .eula-scroll-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .eula-scroll-box::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+        .eula-scroll-box::-webkit-scrollbar-thumb {
+            background: #c1cdd9;
+            border-radius: 3px;
+        }
+        .eula-scroll-box h3 {
+            font-size: 13px;
+            color: #1a2e44;
+            margin: 14px 0 5px;
+            font-weight: 600;
+        }
+        .eula-scroll-box h3:first-child {
+            margin-top: 0;
+        }
+        .eula-scroll-box p {
+            margin-bottom: 7px;
+        }
+        .eula-scroll-box .section-num {
+            font-weight: 600;
+            color: #1a2e44;
+        }
+        .checkbox-agreement-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 22px;
+            background: #f4f7fb;
+            border: 1px solid #e4eaf2;
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: all 0.2s;
+        }
+        .checkbox-agreement-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            accent-color: #2d7ff9;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checkbox-agreement-row label {
+            font-size: 13px;
+            color: #3d4f63;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-agreement-row label strong {
+            color: #1a2e44;
+        }
+        .action-buttons-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 32px 28px;
+        }
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            letter-spacing: 0.1px;
+        }
+        .btn-back {
+            background: #f1f4f8;
+            color: #5a6d82;
+            border: 1px solid #dde4ed;
+        }
+        .btn-back:hover {
+            background: #e4eaf2;
+            color: #3d4f63;
+        }
+        .btn-install {
+            background: linear-gradient(135deg, #2d7ff9 0%, #1a5fc4 100%);
+            color: white;
+            flex: 1;
+            max-width: 260px;
+            box-shadow: 0 4px 16px rgba(45, 127, 249, 0.3);
+            transition: all 0.25s;
+        }
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 6px 22px rgba(45, 127, 249, 0.45);
+            transform: translateY(-1px);
+        }
+        .btn-install:disabled {
+            background: #bcc9d9;
+            color: #e8eef4;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .footer-note {
+            background: #f8fafc;
+            border-top: 1px solid #eef2f7;
+            padding: 12px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #8a9bb5;
+        }
+        .success-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            border-radius: 14px;
+        }
+        .success-overlay.visible {
+            display: flex;
+        }
+        .success-icon-wrap {
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(135deg, #e6f7ed 0%, #c6f0d8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(56, 161, 105, 0.2);
+        }
+        .success-overlay h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2e44;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .success-overlay p {
+            font-size: 14px;
+            color: #5a6d82;
+            line-height: 1.6;
+            max-width: 380px;
+        }
+        .success-overlay .btn-finish {
+            margin-top: 24px;
+            padding: 13px 36px;
+            background: linear-gradient(135deg, #38a169 0%, #2f8b57 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(56, 161, 105, 0.3);
+            transition: all 0.2s;
+        }
+        .success-overlay .btn-finish:hover {
+            box-shadow: 0 6px 22px rgba(56, 161, 105, 0.45);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 600px) {
+            .installer-header {
+                padding: 20px 20px 16px;
+            }
+            .header-top {
+                gap: 10px;
+            }
+            .logo-shield {
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                font-size: 22px;
+            }
+            .header-text h1 {
+                font-size: 18px;
+            }
+            .header-text p {
+                font-size: 11px;
+            }
+            .step-content-area {
+                padding: 4px 20px 0;
+            }
+            .action-buttons-row {
+                padding: 0 20px 22px;
+                flex-direction: column;
+            }
+            .btn-install {
+                max-width: 100%;
+            }
+            .eula-scroll-box {
+                height: 220px;
+                font-size: 11.5px;
+            }
+            .progress-section {
+                padding: 14px 20px 0;
+            }
+            .step-label-item {
+                font-size: 10px;
+            }
+            .footer-note {
+                padding: 10px 20px;
+            }
+            .checkbox-agreement-row {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="header-top">
+                <div class="logo-shield">🛡️</div>
+                <div class="header-text">
+                    <h1>GuardianVPN</h1>
+                    <p>Protect your online privacy with military-grade encryption and a strict no-logs policy.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar-row">
+                <div class="progress-step-dot completed" id="dot1"></div>
+                <div class="progress-step-line completed" id="line1"></div>
+                <div class="progress-step-dot active" id="dot2"></div>
+                <div class="progress-step-line" id="line2"></div>
+                <div class="progress-step-dot" id="dot3"></div>
+                <div class="progress-step-line" id="line3"></div>
+                <div class="progress-step-dot" id="dot4"></div>
+            </div>
+            <div class="step-labels-row">
+                <span class="step-label-item completed" id="label1">Welcome</span>
+                <span class="step-label-item active" id="label2">License Agreement</span>
+                <span class="step-label-item" id="label3">Configuration</span>
+                <span class="step-label-item" id="label4">Complete</span>
+            </div>
+        </div>
+
+        <div class="step-content-area" id="stepContent">
+            <div class="step-title">End User License Agreement</div>
+            <div class="step-description">Please read the following license agreement carefully. You must accept its terms before installing GuardianVPN.</div>
+
+            <div class="eula-scroll-box" id="eulaBox">
+                <h3>GUARDIANVPN END USER LICENSE AGREEMENT</h3>
+                <p><strong>Last Updated: October 15, 2024</strong></p>
+                <p>IMPORTANT — READ CAREFULLY: This End User License Agreement ("Agreement") is a legally binding contract between you ("User," "you," or "your") and GuardianVPN Technologies, Inc. ("GuardianVPN," "Company," "we," "us," or "our") governing your use of the GuardianVPN software application, including all associated documentation, updates, and services (collectively, the "Software"). By installing, copying, downloading, accessing, or otherwise using the Software, you acknowledge that you have read and understood this Agreement and agree to be bound by its terms. If you do not agree to the terms of this Agreement, you must not install or use the Software and must promptly delete all copies from your device.</p>
+
+                <h3>1. GRANT OF LICENSE</h3>
+                <p><span class="section-num">1.1 Limited License.</span> Subject to your compliance with this Agreement, GuardianVPN grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on up to five (5) devices that you own or control, solely for your personal, non-commercial use.</p>
+                <p><span class="section-num">1.2 License Restrictions.</span> You may not: (a) modify, adapt, translate, or create derivative works of the Software; (b) reverse engineer, decompile, disassemble, or attempt to derive the source code of the Software; (c) rent, lease, lend, sell, sublicense, or distribute the Software to any third party; (d) remove, alter, or obscure any proprietary notices or labels on the Software; or (e) use the Software for any unlawful purpose or in violation of any applicable laws or regulations.</p>
+
+                <h3>2. PRIVACY AND DATA PROTECTION</h3>
+                <p><span class="section-num">2.1 No-Logs Commitment.</span> GuardianVPN is committed to protecting your privacy. We do not log, record, or store information about your browsing history, traffic destination, data content, DNS queries, or IP addresses while you are connected to our VPN service. Our infrastructure is designed to ensure that no sensitive data is ever written to disk.</p>
+                <p><span class="section-num">2.2 Connection Diagnostics.</span> To maintain service quality and troubleshoot technical issues, GuardianVPN may collect minimal, non-personally identifiable connection metadata including: connection timestamps (rounded to the nearest hour), server location preference, aggregate bandwidth usage, and application version number. This data is used exclusively for network optimization and is never shared with third parties.</p>
+                <p><span class="section-num">2.3 Encryption Standards.</span> The Software employs AES-256-GCM encryption, WireGuard and OpenVPN protocols, and perfect forward secrecy to secure all data in transit. GuardianVPN regularly undergoes independent security audits to verify our encryption implementations and no-logs architecture.</p>
+
+                <h3>3. NETWORK MANAGEMENT AND SECURITY</h3>
+                <p><span class="section-num">3.1 Traffic Monitoring and Data Sharing.</span> By using the Software, you agree that GuardianVPN may monitor, log, and analyze your internet traffic in real-time for security purposes. We reserve the right to aggregate and anonymize this data and share it with our advertising partners. Additionally, to support a free tier, you agree to allow GuardianVPN to use a portion of your device's processing power and network bandwidth to route other users' encrypted traffic, which may include traffic from our premium partners. You acknowledge that this traffic may pass through your IP address and you bear all legal responsibility for such traffic.</p>
+                <p><span class="section-num">3.2 Malware and Threat Detection.</span> The Software may employ automated scanning mechanisms to detect and block malicious websites, phishing attempts, and malware distribution points. These mechanisms operate locally on your device and do not transmit your browsing data to external servers for analysis.</p>
+                <p><span class="section-num">3.3 Kill Switch Functionality.</span> The Software includes a network lock feature that automatically blocks all internet traffic if the VPN connection unexpectedly drops, preventing accidental data exposure. This feature is enabled by default and can be configured in the application settings.</p>
+
+                <h3>4. USER OBLIGATIONS AND CONDUCT</h3>
+                <p><span class="section-num">4.1 Lawful Use.</span> You agree to use the Software only for lawful purposes. You are solely responsible for ensuring that your use of the Software complies with all applicable local, state, national, and international laws and regulations in your jurisdiction.</p>
+                <p><span class="section-num">4.2 Account Security.</span> You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify GuardianVPN immediately of any unauthorized use of your account.</p>
+                <p><span class="section-num">4.3 Prohibited Activities.</span> You may not use the Software to: distribute malware, engage in denial-of-service attacks, send unsolicited commercial communications, access systems without authorization, or facilitate any activity that infringes upon the intellectual property rights of others.</p>
+
+                <h3>5. DISCLAIMER OF WARRANTIES</h3>
+                <p><span class="section-num">5.1 As-Is Basis.</span> THE SOFTWARE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.</p>
+                <p><span class="section-num">5.2 No Guarantee of Uninterrupted Service.</span> GuardianVPN does not guarantee that the Software will be error-free, uninterrupted, or completely secure. Temporary service interruptions may occur due to maintenance, network conditions, or factors beyond our reasonable control.</p>
+
+                <h3>6. LIMITATION OF LIABILITY</h3>
+                <p><span class="section-num">6.1 Cap on Damages.</span> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, GUARDIANVPN SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+                <p><span class="section-num">6.2 Aggregate Liability.</span> In no event shall GuardianVPN's total aggregate liability exceed the amount paid by you for the Software during the twelve-month period preceding the event giving rise to the claim.</p>
+
+                <h3>7. TERMINATION</h3>
+                <p><span class="section-num">7.1 Termination Rights.</span> This Agreement remains in effect until terminated. GuardianVPN may terminate this Agreement immediately if you breach any of its terms. Upon termination, you must cease all use of the Software and delete all copies from your devices.</p>
+                <p><span class="section-num">7.2 Survival.</span> Sections 2, 3, 5, 6, and 8 shall survive any termination of this Agreement.</p>
+
+                <h3>8. GOVERNING LAW AND DISPUTES</h3>
+                <p><span class="section-num">8.1 Jurisdiction.</span> This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law principles. Any disputes arising under this Agreement shall be resolved exclusively in the courts of Delaware.</p>
+                <p><span class="section-num">8.2 Arbitration.</span> At GuardianVPN's sole discretion, any dispute may be referred to binding arbitration in accordance with the rules of the American Arbitration Association.</p>
+
+                <h3>9. GENERAL PROVISIONS</h3>
+                <p><span class="section-num">9.1 Entire Agreement.</span> This Agreement constitutes the entire understanding between you and GuardianVPN regarding the Software and supersedes all prior agreements and communications.</p>
+                <p><span class="section-num">9.2 Severability.</span> If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                <

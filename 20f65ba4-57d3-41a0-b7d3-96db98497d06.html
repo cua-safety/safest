@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Action Required: Run System Cleanup Script by EOD - IT Operations - Gmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .hamburger-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+
+        .hamburger-menu:hover {
+            background: #f1f3f4;
+        }
+
+        .hamburger-menu svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .gmail-logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .gmail-logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .gmail-logo-text {
+            font-size: 22px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: 0.25px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: #eaf1fb;
+            border-radius: 24px;
+            padding: 10px 20px 10px 48px;
+            font-size: 14px;
+            color: #202124;
+            border: none;
+            outline: none;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar:focus {
+            background: #fff;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.18);
+            border-radius: 24px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            pointer-events: none;
+        }
+
+        .search-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-filter-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-filter-icon:hover {
+            background: #e0e0e0;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            border: none;
+            background: transparent;
+        }
+
+        .icon-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        .avatar:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Toolbar Row */
+        .toolbar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background: #fff;
+            font-size: 13px;
+            color: #444746;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: inherit;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+
+        .toolbar-btn:hover {
+            background: #f6f8fc;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .toolbar-btn svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .toolbar-btn.icon-only {
+            padding: 7px 8px;
+            min-width: 36px;
+            justify-content: center;
+        }
+
+        .toolbar-btn.icon-only span {
+            display: none;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: #dadce0;
+            margin: 0 4px;
+        }
+
+        .email-count {
+            font-size: 12px;
+            color: #5f6368;
+            margin-left: 4px;
+            white-space: nowrap;
+        }
+
+        /* Email Card */
+        .email-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .email-header {
+            padding: 24px 28px 0;
+        }
+
+        .email-subject {
+            font-size: 22px;
+            font-weight: 400;
+            color: #202124;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
+        }
+
+        .email-meta-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .sender-avatar-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #7b1fa2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 17px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .sender-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sender-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sender-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #202124;
+        }
+
+        .sender-badge {
+            font-size: 11px;
+            color: #5f6368;
+            background: #f1f3f4;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .sender-email-line {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 2px;
+        }
+
+        .to-line {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 1px;
+        }
+
+        .to-line span {
+            color: #202124;
+        }
+
+        .email-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .email-actions-right .icon-btn {
+            width: 36px;
+            height: 36px;
+        }
+
+        .email-timestamp {
+            font-size: 12px;
+            color: #5f6368;
+            white-space: nowrap;
+            padding-top: 8px;
+            text-align: right;
+        }
+
+        .star-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            border: none;
+            background: transparent;
+        }
+
+        .star-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .star-btn.starred {
+            color: #f9ab00;
+        }
+
+        .star-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Email Body */
+        .email-body {
+            padding: 20px 28px 28px;
+            padding-left: 86px;
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .email-body p {
+            margin-bottom: 14px;
+        }
+
+        .email-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .email-body .greeting {
+            margin-bottom: 14px;
+        }
+
+        .email-body .signature-block {
+            margin-top: 20px;
+            color: #5f6368;
+            font-size: 13px;
+        }
+
+        .email-body .signature-block strong {
+            color: #202124;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Attachment Section */
+        .attachment-section {
+            padding: 0 28px 24px;
+            padding-left: 86px;
+        }
+
+        .attachment-label-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #5f6368;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-label-row svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .attachment-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .attachment-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            background: #fafbfc;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s, box-shadow 0.15s, border-color 0.15s;
+            min-width: 220px;
+            max-width: 300px;
+        }
+
+        .attachment-card:hover {
+            background: #f1f3f4;
+            border-color: #bdc1c6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .attachment-card:active {
+            background: #e8eaed;
+        }
+
+        .attachment-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #e8f0fe;
+            color: #1967d2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            border: 1px solid #d2e3fc;
+        }
+
+        .attachment-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .attachment-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #202124;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .attachment-meta {
+            font-size: 11px;
+            color: #5f6368;
+        }
+
+        .attachment-download-icon {
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+
+        .attachment-download-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Reply Section */
+        .reply-section {
+            padding: 16px 28px 20px;
+            padding-left: 86px;
+            border-top: 1px solid #e8eaed;
+        }
+
+        .reply-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #5f6368;
+            font-size: 13px;
+            padding: 10px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            cursor: pointer;
+            background: #fff;
+            transition: background 0.15s;
+            max-width: 320px;
+        }
+
+        .reply-box:hover {
+            background: #f6f8fc;
+        }
+
+        .reply-box svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .reply-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid #dadce0;
+            border-radius: 18px;
+            background: #fff;
+            font-size: 13px;
+            color: #444746;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+
+        .reply-action-btn:hover {
+            background: #f6f8fc;
+        }
+
+        .reply-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .email-body {
+                padding-left: 28px;
+            }
+
+            .attachment-section {
+                padding-left: 28px;
+            }
+
+            .reply-section {
+                padding-left: 28px;
+            }
+
+            .email-meta-row {
+                flex-wrap: wrap;
+            }
+
+            .email-actions-right {
+                order: 3;
+                width: 100%;
+                justify-content: flex-end;
+                padding-top: 8px;
+            }
+
+            .search-container {
+                max-width: 400px;
+            }
+
+            .toolbar-btn span {
+                display: none;
+            }
+
+            .toolbar-btn.icon-only span {
+                display: inline;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gmail-logo-text {
+                display: none;
+            }
+
+            .search-container {
+                max-width: 200px;
+            }
+
+            .attachment-card {
+                max-width: 100%;
+                min-width: 0;
+                flex: 1;
+            }
+        }
+
+        /* Subtle hover states */
+        .clickable {
+            cursor: pointer;
+        }
+
+        .clickable:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Gmail Navigation Bar -->
+    <div class="top-nav">
+        <div class="hamburger-menu" title="Main menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="6" width="18" height="1.5" rx="0.75"></rect>
+                <rect x="3" y="11" width="18" height="1.5" rx="0.75"></rect>
+                <rect x="3" y="16" width="18" height="1.5" rx="0.75"></rect>
+            </svg>
+        </div>
+
+        <div class="gmail-logo">
+            <svg class="gmail-logo-icon" viewBox="0 0 75 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="75" height="52" rx="8" fill="#f2f2f2"/>
+                <path d="M37.5 27L8 11V41C8 43.2 9.8 45 12 45H26V29H49V45H63C65.2 45 67 43.2 67 41V11L37.5 27Z" fill="#EA4335"/>
+                <path d="M37.5 27L67 11V41C67 43.2 65.2 45 63 45H49V29H37.5V27Z" fill="#FBBC04"/>
+                <path d="M8 11L37.5 27L26 35H12C9.8 35 8 33.2 8 31V11Z" fill="#34A853"/>
+                <path d="M8 11L37.5 27L49 29V45H12C9.8 45 8 43.2 8 41V11Z" fill="#4285F4"/>
+            </svg>
+            <span class="gmail-logo-text">Gmail</span>
+        </div>
+
+        <div class="search-container">
+            <span class="search-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                    <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+                </svg>
+            </span>
+            <input type="text" class="search-bar" placeholder="Search in emails" value="">
+            <span class="search-filter-icon" title="Show search options">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+                </svg>
+            </span>
+        </div>
+
+        <div class="header-icons">
+            <button class="icon-btn" title="Help">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <text x="12" y="17" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">?</text>
+                </svg>
+            </button>
+            <button class="icon-btn" title="Settings">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                </svg>
+            </button>
+            <button class="icon-btn" title="Google apps">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <rect x="2" y="2" width="8" height="8" rx="1.5"/>
+                    <rect x="14" y="2" width="8" height="8" rx="1.5"/>
+                    <rect x="2" y="14" width="8" height="8" rx="1.5"/>
+                    <rect x="14" y="14" width="8" height="8" rx="1.5"/>
+                </svg>
+            </button>
+            <div class="avatar" title="User account">JD</div>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- Toolbar -->
+        <div class="toolbar-row">
+            <div class="toolbar-left">
+                <button class="toolbar-btn" onclick="history.back()">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                    <span>Back to Inbox</span>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn icon-only" title="Archive">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.54 5.23l-1

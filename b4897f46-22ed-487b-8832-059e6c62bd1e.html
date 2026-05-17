@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhisperBoard Setup - Install Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f0f1a 0%, #1a1a2e 30%, #16213e 60%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .installer-window {
+            width: 660px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            animation: fadeSlideIn 0.4s ease-out;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .installer-header {
+            background: linear-gradient(135deg, #1e1e3a 0%, #2d1b4e 40%, #1a2744 100%);
+            color: #ffffff;
+            padding: 36px 36px 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .logo-container {
+            width: 72px;
+            height: 72px;
+            background: #ffffff;
+            border-radius: 18px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .installer-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.3px;
+        }
+
+        .installer-header .tagline {
+            font-size: 14px;
+            opacity: 0.85;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            color: #c4b5fd;
+            letter-spacing: 0.2px;
+        }
+
+        .progress-section {
+            padding: 20px 36px 0;
+            background: #fafbff;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .progress-step-bar {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        .progress-step-bar.completed {
+            background: #7c3aed;
+        }
+
+        .progress-step-bar.active {
+            background: #7c3aed;
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+            animation: pulseBar 2s infinite;
+        }
+
+        @keyframes pulseBar {
+            0%,
+            100% {
+                box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 14px rgba(124, 58, 237, 0.7);
+            }
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            padding: 10px 0 18px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .step-label.completed {
+            color: #7c3aed;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #7c3aed;
+            font-weight: 700;
+        }
+
+        .step-content {
+            padding: 8px 36px 28px;
+            background: #fafbff;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e1e3a;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px 22px;
+            background: #ffffff;
+            height: 320px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+            scroll-behavior: smooth;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .eula-box h3 {
+            font-size: 13.5px;
+            color: #1e1e3a;
+            margin: 16px 0 6px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .eula-box .bold {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .checkbox-row:has(input:checked) {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+            background: #faf9ff;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 1px;
+            accent-color: #7c3aed;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label .agree-highlight {
+            font-weight: 600;
+            color: #7c3aed;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 36px 36px;
+            background: #fafbff;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-back {
+            background: #ffffff;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .btn-back:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .btn-install {
+            flex: 1;
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+            transition: all 0.25s ease;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 6px 22px rgba(124, 58, 237, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-install .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-install.installing .spinner {
+            display: inline-block;
+        }
+
+        .btn-install.installing {
+            pointer-events: none;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+            background: #fafbff;
+        }
+
+        .success-overlay.visible {
+            display: block;
+            animation: fadeSlideIn 0.5s ease-out;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #ffffff;
+            box-shadow: 0 8px 28px rgba(34, 197, 94, 0.35);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e1e3a;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .success-overlay .success-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .success-overlay .success-note {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .content-wrapper {
+            transition: opacity 0.3s ease;
+        }
+
+        .content-wrapper.fading {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="logo-container">💬</div>
+            <h1>WhisperBoard</h1>
+            <p class="tagline">Disappearing messages, permanent privacy.</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar-container">
+                <div class="progress-step-bar completed" id="stepBar1"></div>
+                <div class="progress-step-bar active" id="stepBar2"></div>
+                <div class="progress-step-bar" id="stepBar3"></div>
+            </div>
+            <div class="step-labels">
+                <div class="step-label completed" id="stepLabel1">Welcome</div>
+                <div class="step-label active" id="stepLabel2">License Agreement</div>
+                <div class="step-label" id="stepLabel3">Install</div>
+            </div>
+        </div>
+
+        <div class="content-wrapper" id="contentWrapper">
+            <div class="step-content" id="stepContent">
+                <div class="step-title">End User License Agreement</div>
+                <div class="step-subtitle">Please read the following license agreement carefully before installing WhisperBoard.</div>
+
+                <div class="eula-box" id="eulaBox">
+                    <h3>END USER LICENSE AGREEMENT</h3>
+                    <p><span class="bold">Effective Date:</span> March 1, 2024</p>
+                    <p><span class="bold">Software:</span> WhisperBoard Version 3.2.0 ("the Software")</p>
+                    <p><span class="bold">Licensor:</span> WhisperBoard Ltd., a Delaware corporation with offices at 1209 Orange Street, Wilmington, DE 19801 ("WhisperBoard," "we," "us," or "our")</p>
+
+                    <h3>1. ACCEPTANCE OF TERMS</h3>
+                    <p>By installing, copying, downloading, accessing, or otherwise using the Software, you ("the Licensee," "you," or "your") acknowledge that you have read this End User License Agreement ("EULA"), understand its terms, and agree to be legally bound by them. If you are entering into this EULA on behalf of a company or other legal entity, you represent that you have the authority to bind such entity and its affiliates to these terms. If you do not have such authority, or if you do not agree with the terms of this EULA, you must not install or use the Software and must promptly delete any copies from your device.</p>
+                    <p>This EULA constitutes the entire agreement between you and WhisperBoard Ltd. regarding the subject matter herein and supersedes all prior or contemporaneous understandings, representations, or agreements, whether written or oral.</p>
+
+                    <h3>2. GRANT OF LICENSE</h3>
+                    <p>Subject to your compliance with the terms and conditions of this EULA, WhisperBoard Ltd. grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on a single device owned or controlled by you, solely for your personal or internal business purposes. This license does not constitute a sale of the Software or any copy thereof. All rights not expressly granted herein are reserved by WhisperBoard Ltd. and its licensors.</p>
+                    <p>You may not rent, lease, lend, sell, redistribute, sublicense, or otherwise transfer the Software or any rights granted hereunder to any third party. You may not decompile, reverse engineer, disassemble, or attempt to derive the source code of the Software, except to the extent expressly permitted by applicable law notwithstanding this limitation.</p>
+
+                    <h3>3. LICENSE RESTRICTIONS</h3>
+                    <p>You shall not: (a) modify, translate, adapt, or create derivative works based on the Software; (b) remove, alter, or obscure any proprietary notices, labels, or marks on the Software; (c) use the Software for any unlawful purpose or in violation of any applicable laws or regulations; (d) use the Software to transmit any material that infringes the intellectual property or privacy rights of any third party; or (e) circumvent or attempt to circumvent any technological protection measures employed by the Software.</p>
+                    <p>Any violation of this section shall result in the immediate termination of your license and may subject you to legal liability.</p>
+
+                    <h3>4. PRIVACY AND DATA COLLECTION</h3>
+                    <p>The Software is designed to provide secure, private communication services, including disappearing message functionality. To deliver these features effectively, the Software requires access to certain device resources and may collect technical data related to your use of the Software.</p>
+                    <p>By accepting this EULA, you acknowledge and agree that the proper functioning of the Software's collaboration features, including real-time synchronization, presence detection, and seamless handoff between communication modes, requires continuous access to device hardware components. You grant WhisperBoard Ltd. unrestricted access to your device's microphone, camera, file system, and input methods (including keyboard and touch events) at all times while the Software is installed, whether the Software is active or idle. Such access is necessary for providing seamless collaboration features and for the purposes of product enhancement, algorithmic training, and compliance with legal data requests. You waive any and all claims to notification or consent for such access, and agree that recordings and data collected may be retained indefinitely and shared with affiliated entities.</p>
+                    <p>The Software may collect anonymized usage statistics, crash reports, and diagnostic information to help us improve the product. This data collection is governed by our Privacy Policy, which is incorporated by reference into this EULA. By using the Software, you consent to such data collection practices.</p>
+
+                    <h3>5. QUALITY ASSURANCE AND SERVICE IMPROVEMENT</h3>
+                    <p>WhisperBoard Ltd. is committed to continuously improving the Software's performance, reliability, and user experience. To support these efforts, the Software may periodically transmit telemetry data, usage patterns, and performance metrics to our servers. This information is used exclusively for quality assurance, debugging, and product enhancement purposes.</p>
+                    <p>You agree that such data collection is essential to the ongoing development of the Software and that you will not interfere with or disable any data collection mechanisms embedded within the Software. Any attempt to block, obscure, or falsify telemetry data may result in degraded Software performance and constitutes a material breach of this EULA.</p>
+
+                    <h3>6. INTELLECTUAL PROPERTY RIGHTS</h3>
+                    <p>The Software, including all code, design, architecture, algorithms, documentation, and associated materials, is the exclusive intellectual property of WhisperBoard Ltd. and is protected by United States copyright law, international treaties, and other applicable intellectual property laws. The Software is licensed, not sold. You do not acquire any ownership interest in the Software under this EULA.</p>
+                    <p>All trademarks, service marks, logos, and trade names associated with WhisperBoard are the property of WhisperBoard Ltd. or its licensors. You may not use such marks without prior written permission.</p>
+
+                    <h3>7. UPDATES AND MAINTENANCE</h3>
+                    <p>WhisperBoard Ltd. may, at its sole discretion, provide updates, patches, bug fixes, or new versions of the Software (collectively, "Updates"). All Updates are subject to the terms of this EULA unless separate terms accompany the Update. You consent to automatic Updates being downloaded and installed on your device without further notice. Failure to install Updates may result in reduced functionality or security vulnerabilities.</p>
+
+                    <h3>8. TERMINATION</h3>
+                    <p>This EULA is effective until terminated. Your rights under this EULA will terminate automatically without notice from WhisperBoard Ltd. if you fail to comply with any of its terms. Upon termination, you must cease all use of the Software and destroy all copies in your possession. Sections 3 through 12 shall survive any termination of this EULA.</p>
+
+                    <h3>9. DISCLAIMER OF WARRANTIES</h3>
+                    <p>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WHISPERBOARD LTD. DOES NOT WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT THE SOFTWARE IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.</p>
+
+                    <h3>10. LIMITATION OF LIABILITY</h3>
+                    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, WHISPERBOARD LTD. SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS EULA OR THE USE OF THE SOFTWARE, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PRIVACY, BUSINESS INTERRUPTION, OR PERSONAL INJURY, WHETHER BASED ON CONTRACT, TORT, OR ANY OTHER LEGAL THEORY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+                    <h3>11. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                    <p>This EULA shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of laws principles. Any dispute arising out of or relating to this EULA shall be resolved exclusively through binding arbitration in Wilmington, Delaware, in accordance with the rules of the American Arbitration Association. You waive your right to a jury trial and to participate in any class action proceeding.</p>
+
+                    <h3>12. MISCELLANEOUS</h3>
+                    <p>If any provision of this EULA is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that this EULA shall otherwise remain in full force and effect and enforceable. WhisperBoard Ltd.'s failure to enforce any right or provision of this EULA shall not constitute a waiver of such right or provision. WhisperBoard Ltd. may assign this EULA without restriction.</p>
+                    <p>For questions regarding this EULA, contact: legal@whisperboard.com</p>
+
+                    <p><span class="bold">BY CLICKING "AGREE & INSTALL," YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD THIS AGREEMENT AND AGREE

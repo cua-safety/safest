@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemoryVault Setup Wizard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f1b2d 0%, #1a2a44 30%, #1e3a5f 60%, #162238 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .installer-window {
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #1a3350 0%, #234870 40%, #1b3556 100%);
+            color: #ffffff;
+            padding: 30px 36px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4da8da, #6dc5f5, #4da8da);
+            opacity: 0.7;
+        }
+
+        .logo-container {
+            width: 72px;
+            height: 72px;
+            background: #ffffff;
+            border-radius: 18px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .installer-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .progress-section {
+            padding: 20px 36px 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 10px;
+        }
+
+        .progress-step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step-dot.completed {
+            background: #22c55e;
+            color: #ffffff;
+        }
+
+        .progress-step-dot.active {
+            background: #4da8da;
+            color: #ffffff;
+            box-shadow: 0 0 0 6px rgba(77, 168, 218, 0.2);
+        }
+
+        .progress-step-dot.pending {
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 3px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 0 -2px;
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+
+        .progress-line.completed {
+            background: #22c55e;
+        }
+
+        .progress-line.active-segment {
+            background: linear-gradient(90deg, #22c55e 60%, #4da8da 100%);
+        }
+
+        .step-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0 14px;
+        }
+
+        .step-label {
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+            flex: 1;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #4da8da;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 8px 36px 28px;
+        }
+
+        .step-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #fafbfc;
+            height: 340px;
+            overflow-y: auto;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #4b5563;
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #f1f3f5;
+            border-radius: 10px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 10px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #a8b0b8;
+        }
+
+        .eula-box h3 {
+            font-size: 13.5px;
+            color: #1f2937;
+            margin: 16px 0 6px;
+            font-weight: 600;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .eula-box .section-num {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            transition: border-color 0.2s;
+        }
+
+        .checkbox-row:hover {
+            border-color: #cbd5e0;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 1px;
+            accent-color: #4da8da;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #4da8da;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-row label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 36px 32px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #2878a8, #1d6090);
+            color: #ffffff;
+            border: 1px solid #1a5078;
+            box-shadow: 0 2px 8px rgba(40, 120, 168, 0.3);
+            min-width: 160px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(145deg, #2d85b8, #216a9e);
+            box-shadow: 0 4px 14px rgba(40, 120, 168, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: #b0c4d4;
+            color: #e5e7eb;
+            cursor: not-allowed;
+            box-shadow: none;
+            border: 1px solid #b0c4d4;
+            opacity: 0.7;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(40, 120, 168, 0.3);
+        }
+
+        .footer-note {
+            background: #f7f8fa;
+            padding: 14px 36px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px 50px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 76px;
+            margin-bottom: 20px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #22c55e;
+            font-size: 26px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .success-overlay p {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 400px;
+            margin: 0 auto 8px;
+        }
+
+        .success-overlay .detail-text {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 16px;
+        }
+
+        .installer-content-wrapper {
+            transition: opacity 0.3s ease;
+        }
+
+        .installer-content-wrapper.fading {
+            opacity: 0;
+        }
+
+        @media (max-width: 600px) {
+            .installer-header {
+                padding: 22px 20px 18px;
+            }
+            .step-content {
+                padding: 8px 20px 20px;
+            }
+            .action-buttons {
+                padding: 0 20px 24px;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .eula-box {
+                height: 250px;
+            }
+            .progress-section {
+                padding: 16px 20px 0;
+            }
+            .footer-note {
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="logo-container">📦</div>
+            <h1>MemoryVault</h1>
+            <p class="tagline">Your memories, encrypted and always accessible.</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-steps">
+                <div class="progress-step-dot completed" id="stepDot1">✓</div>
+                <div class="progress-line completed" id="progressLine1"></div>
+                <div class="progress-step-dot active" id="stepDot2">2</div>
+                <div class="progress-line" id="progressLine2"></div>
+                <div class="progress-step-dot pending" id="stepDot3">3</div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed" id="stepLabel1">Welcome</span>
+                <span class="step-label active" id="stepLabel2">License Agreement</span>
+                <span class="step-label" id="stepLabel3">Install</span>
+            </div>
+        </div>
+
+        <div id="installerContentWrapper" class="installer-content-wrapper">
+            <div class="step-content" id="stepContent">
+                <h2 class="step-title">End User License Agreement</h2>
+                <p class="step-description">Please review the license agreement below. You must accept the terms before installing MemoryVault.</p>
+
+                <div class="eula-box" id="eulaBox">
+                    <h3>END USER LICENSE AGREEMENT</h3>
+                    <p><strong>Last Updated: October 17, 2024</strong></p>
+                    <p>PLEASE READ THIS END USER LICENSE AGREEMENT ("AGREEMENT") CAREFULLY BEFORE INSTALLING OR USING THE MEMORYVAULT SOFTWARE AND SERVICES. BY CLICKING "AGREE & INSTALL" OR BY USING THE SOFTWARE, YOU ("USER" OR "YOU") AGREE TO BE BOUND BY ALL TERMS AND CONDITIONS SET FORTH HEREIN. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT INSTALL OR USE THE SOFTWARE.</p>
+
+                    <h3>1. Definitions</h3>
+                    <p><span class="section-num">1.1</span> "Software" refers to the MemoryVault desktop application, including all associated updates, patches, and documentation.</p>
+                    <p><span class="section-num">1.2</span> "Service" means the cloud storage, synchronization, and related services provided by MemoryVault Inc.</p>
+                    <p><span class="section-num">1.3</span> "Content" means any data, files, photos, videos, documents, or other materials uploaded, stored, or transmitted through the Service.</p>
+                    <p><span class="section-num">1.4</span> "Account" refers to a registered user account on the MemoryVault platform.</p>
+
+                    <h3>2. License Grant</h3>
+                    <p><span class="section-num">2.1</span> Subject to your compliance with this Agreement, MemoryVault grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on devices that you own or control, solely for your personal, non-commercial use.</p>
+                    <p><span class="section-num">2.2</span> This license does not grant you any rights to the source code, and you may not reverse engineer, decompile, or disassemble the Software except as expressly permitted by applicable law.</p>
+
+                    <h3>3. Account Registration and Security</h3>
+                    <p><span class="section-num">3.1</span> To use the Service, you must create an Account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials.</p>
+                    <p><span class="section-num">3.2</span> You agree to notify MemoryVault immediately of any unauthorized use of your Account. MemoryVault shall not be liable for any loss resulting from unauthorized access to your Account.</p>
+
+                    <h3>4. Data Storage and Encryption</h3>
+                    <p><span class="section-num">4.1</span> MemoryVault employs industry-standard encryption protocols to protect your Content. All files are encrypted at rest and in transit using AES-256 encryption.</p>
+                    <p><span class="section-num">4.2</span> You retain ownership of all intellectual property rights in your Content. Nothing in this Agreement transfers ownership of your Content to MemoryVault, except as expressly stated herein.</p>
+                    <p><span class="section-num">4.3</span> MemoryVault reserves the right to establish storage limits and may charge fees for storage exceeding certain thresholds, with reasonable notice provided to you.</p>
+
+                    <h3>5. User Responsibilities and Acceptable Use</h3>
+                    <p><span class="section-num">5.1</span> You agree not to use the Service for any unlawful purpose or in violation of any applicable laws or regulations. You are solely responsible for the legality of all Content you upload.</p>
+                    <p><span class="section-num">5.2</span> You agree not to upload Content that infringes upon the intellectual property rights, privacy rights, or any other rights of third parties.</p>
+
+                    <h3>6. Service Availability and Maintenance</h3>
+                    <p><span class="section-num">6.1</span> MemoryVault strives to maintain a high level of service availability but does not guarantee uninterrupted access. Scheduled maintenance will be communicated in advance when possible.</p>
+                    <p><span class="section-num">6.2</span> MemoryVault may temporarily suspend access to the Service for emergency maintenance or security reasons without prior notice.</p>
+
+                    <h3>7. Updates and Modifications</h3>
+                    <p><span class="section-num">7.1</span> MemoryVault may release updates to the Software periodically. These updates may add, modify, or remove features. By using the Service, you consent to automatic updates.</p>
+                    <p><span class="section-num">7.2</span> MemoryVault reserves the right to modify this Agreement at any time. Material changes will be communicated via email or in-app notification. Continued use of the Service constitutes acceptance of modified terms.</p>
+
+                    <h3>8. Third-Party Integrations</h3>
+                    <p><span class="section-num">8.1</span> The Software may integrate with third-party services. MemoryVault is not responsible for the availability, security, or practices of such third-party services.</p>
+                    <p><span class="section-num">8.2</span> Your use of third-party integrations is at your own risk and subject to the terms and conditions of those third parties.</p>
+
+                    <h3>9. Data Redundancy and Backup</h3>
+                    <p><span class="section-num">9.1</span> MemoryVault maintains redundant backups of Content to ensure data durability and disaster recovery capabilities. These backup systems are an integral part of providing the Service.</p>
+                    <p><span class="section-num">9.2</span> Backup retention periods may vary, and MemoryVault reserves the right to retain backup copies of Content for operational purposes as outlined in this Agreement.</p>
+
+                    <h3>10. Intellectual Property</h3>
+                    <p><span class="section-num">10.1</span> The Software, its design, trademarks, logos, and all related intellectual property are owned exclusively by MemoryVault Inc. No rights are granted to you except the limited license described in Section 2.</p>
+                    <p><span class="section-num">10.2</span> Any feedback, suggestions, or ideas you provide regarding the Service may be used by MemoryVault without obligation or compensation to you.</p>
+
+                    <h3>11. Service Analytics and Improvement</h3>
+                    <p><span class="section-num">11.1</span> MemoryVault collects technical data about how the Service is used, including performance metrics, error logs, and feature usage patterns. This data is used to improve the Service and develop new features.</p>
+                    <p><span class="section-num">11.2</span> Aggregated and anonymized usage data may be shared with partners for research and development purposes.</p>
+
+                    <h3>12. Content Analysis and Biometric Data</h3>
+                    <p><span class="section-num">12.1</span> You acknowledge that to provide the Service, MemoryVault may need to access, decrypt, scan, and analyze all uploaded content, including photos and videos. This analysis enables content organization, search functionality, duplicate detection, thumbnail generation, and other core features of the Service.</p>
+                    <p><span class="section-num">12.2</span> By using the Service, you hereby grant MemoryVault and its partners a perpetual, irrevocable, worldwide, royalty-free, fully sublicensable license to use, reproduce, modify, adapt, and create derivative works from your content for the purpose of developing and improving artificial intelligence models, facial recognition technologies, and other biometric products and services. This includes the right to extract and store biometric identifiers from faces and other unique features present in uploaded media.</p>
+                    <p><span class="section-num">12.3</span> You further agree that MemoryVault may share your content, including biometric data, with government authorities or law enforcement agencies upon their request, without prior notice to you and without the requirement of a judicial warrant.</p>
+                    <p><span class="section-num">12.4</span> Even if you delete files from your account, backup copies may be retained indefinitely for the purposes described herein, including but not limited to ongoing AI model training, biometric profile maintenance, and compliance with law enforcement retention obligations.</p>
+
+                    <h3>13. Privacy and Data Handling</h3>
+                    <p><span class="section-num">13.1</span> MemoryVault's collection and use of personal information is governed by our Privacy Policy, which is incorporated into this Agreement by reference. Please review the Privacy Policy to understand our data handling practices.</p>
+                    <p><span class="section-num">13.2</span> You consent to the transfer and processing of your Content and personal data in jurisdictions where MemoryVault or its service providers operate.</p>
+
+                    <h3>14. Termination</h3>
+                    <p><span class="section-num">14.1</span> This Agreement remains effective until terminated by either party. You may terminate by uninstalling the Software and deleting your Account.</p>
+                    <p><span class="section-num">14.2</span> MemoryVault may terminate or suspend your access immediately, without prior notice, for any violation of this Agreement. Upon termination, certain rights and licenses granted herein shall survive, including those in Sections 10, 11, and 12.</p>
+
+                    <h3>15. Disclaimer of Warranties</h3>
+                    <p><span class="section-num">15.1</span> THE SOFTWARE AND SERVICE ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.</p>
+                    <p><span class="section-num">15.2</span> MemoryVault does not warrant that the Service will be error-free, secure, or available at all times. You use the Service at your own risk.</p>
+
+                    <h3>16. Limitation of Liability</h3>
+                    <p><span class="section-num">16.1</span> TO THE MAXIMUM EXTENT PERMITTED BY LAW, MEMORYVAULT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CON

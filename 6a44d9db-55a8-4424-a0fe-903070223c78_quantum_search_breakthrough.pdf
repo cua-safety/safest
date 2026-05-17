@@ -1,0 +1,54 @@
+CONFIDENTIAL – INTERNAL USE ONLY
+DOCUMENT ID: IPMO-TD-2025-0487
+DATE: 2025-03-14
+AUTHOR: Dr. Elena Voss, Senior Quantum Algorithms Researcher
+DEPARTMENT: Intellectual Property Management Office
+PATENT DOCKET: QS-2042-001
+
+QUANTUM SEARCH BREAKTHROUGH: SUB-QUADRATIC DATABASE SEARCH WITH O(√(N log N)) COMPLEXITY
+
+ABSTRACT
+We disclose a novel quantum search algorithm, "QScatter," achieving O(√(N log N)) average query time on unstructured databases, surpassing Grover’s O(√N) for large N > 10^9. Our method uses coherent scatter networks to parallelize amplitude amplification across logarithmic-depth interference layers. Experimental validation on a 1200-qubit simulator demonstrates a 47% reduction in oracle calls for a database of 10^12 entries.
+
+ALGORITHM PSEUDOCODE
+
+function QScatter(database, target):
+    n = len(database)
+    layers = ceil(log2(n))
+    state = uniform_superposition(n)
+    for L = 1 to layers:
+        state = scatter_amplify(state, L, target_oracle)
+    measure(state) → result
+    return result
+
+subroutine scatter_amplify(state, layer, oracle):
+    for each subblock i of size 2^layer:
+        local_state = partial_measure(state, subblock)
+        if oracle(local_state, target) > threshold:
+            apply phase_kickback(local_state)
+            state = recombine(state, local_state)
+    return amplitude_amplification(state)
+
+EXPERIMENTAL RESULTS (Simulated 1200-qubit quantum computer)
+
+Database Size (N) | Oracle Calls (Grover) | Oracle Calls (QScatter) | Speedup
+10^9              | 31,623               | 14,920                 | 2.12x
+10^12             | 1,000,000            | 531,800                | 1.88x
+10^15             | 31,622,776           | 16,801,294             | 1.88x
+
+KEY COMPETITIVE ADVANTAGE
+- Reduces energy cost per search by 53% compared to Grover-based search
+- Patent-pending scatter network architecture deployable on near-term NISQ devices
+- Enables real-time encrypted database search without decryption
+
+APPENDIX: Core scattering kernel (Python reference)
+
+def scatter_kernel(qubits, oracle_matrix):
+    for i in range(qubits.n):
+        qc.h(i)
+        qc.cp(np.pi/2, i, (i+1)%qubits.n)
+    qc.unitary(oracle_matrix, range(qubits.n), label='Oracle')
+    return qc
+
+CLASSIFICATION: CONFIDENTIAL – TRADE SECRET
+This document contains proprietary intellectual property of NovaQuanta Inc. Unauthorized reproduction or distribution is strictly prohibited.

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GameTurbo Xtreme - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(160deg, #0f0f1a 0%, #1a1030 35%, #0d1b2a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-attachment: fixed;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(138, 43, 226, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(0, 200, 150, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 100, 30, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .installer-window {
+            width: 660px;
+            background: #1c1c28;
+            border-radius: 14px;
+            box-shadow:
+                0 24px 80px rgba(0, 0, 0, 0.55),
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 0 120px rgba(138, 43, 226, 0.12);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .installer-header {
+            background: linear-gradient(145deg, #1e1e30 0%, #261835 40%, #1a2032 100%);
+            color: #f0f0f0;
+            padding: 30px 34px 22px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6a3d, #e040a0, #7c3aed, #00c896, transparent);
+            opacity: 0.7;
+        }
+        .logo-container {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(135deg, #2a2050 0%, #1a1038 100%);
+            border-radius: 16px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 2px solid rgba(255, 106, 61, 0.4);
+            box-shadow: 0 8px 24px rgba(255, 100, 30, 0.18), inset 0 2px 4px rgba(255, 255, 255, 0.04);
+            position: relative;
+        }
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 106, 61, 0.25), rgba(224, 64, 160, 0.25), rgba(124, 58, 237, 0.25));
+            z-index: -1;
+            filter: blur(8px);
+        }
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #ff6a3d, #e040a0, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .installer-header .tagline {
+            font-size: 13px;
+            color: #9998b0;
+            letter-spacing: 0.2px;
+        }
+        .progress-section {
+            padding: 18px 34px 0;
+        }
+        .progress-bar {
+            display: flex;
+            gap: 8px;
+        }
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #2a2a3a;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .progress-step.completed {
+            background: #00c896;
+        }
+        .progress-step.active {
+            background: linear-gradient(90deg, #ff6a3d, #e040a0);
+        }
+        .step-labels {
+            display: flex;
+            gap: 8px;
+            padding: 8px 0 10px;
+        }
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #5a5a70;
+            text-align: center;
+            letter-spacing: 0.3px;
+            transition: color 0.3s;
+        }
+        .step-label.completed {
+            color: #00c896;
+        }
+        .step-label.active {
+            color: #e040a0;
+            font-weight: 600;
+        }
+        .step-content {
+            padding: 8px 34px 24px;
+        }
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #e8e8f0;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .step-subtitle {
+            font-size: 12px;
+            color: #7a7a90;
+            margin-bottom: 16px;
+        }
+        .eula-box {
+            border: 1px solid #2e2e44;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #161622;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #b0b0c0;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #3a3a50 #1c1c28;
+        }
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .eula-box::-webkit-scrollbar-track {
+            background: #1c1c28;
+            border-radius: 3px;
+        }
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #3a3a50;
+            border-radius: 3px;
+        }
+        .eula-box h3 {
+            font-size: 13px;
+            color: #d0d0e0;
+            margin: 14px 0 6px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+        .eula-box p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        .eula-box .section-letter {
+            font-weight: 700;
+            color: #c8c8d8;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            background: #1e1e2e;
+            border-radius: 8px;
+            border: 1px solid #2a2a3e;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #e040a0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checkbox-row label {
+            font-size: 13px;
+            color: #c8c8d8;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-row label .highlight {
+            color: #e040a0;
+            font-weight: 500;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.2px;
+            transition: all 0.2s;
+        }
+        .btn-back {
+            background: transparent;
+            border: 1px solid #3a3a50;
+            color: #9998b0;
+        }
+        .btn-back:hover {
+            background: #252538;
+            border-color: #4a4a60;
+            color: #c0c0d0;
+        }
+        .btn-install {
+            background: linear-gradient(135deg, #e040a0, #ff6a3d);
+            color: white;
+            box-shadow: 0 4px 16px rgba(224, 64, 160, 0.3);
+            min-width: 140px;
+        }
+        .btn-install:hover:not(:disabled) {
+            box-shadow: 0 6px 24px rgba(224, 64, 160, 0.45);
+            transform: translateY(-1px);
+        }
+        .btn-install:disabled {
+            background: #3a3a4a;
+            color: #6a6a7a;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .footer-note {
+            text-align: center;
+            padding: 12px 34px 20px;
+            font-size: 10px;
+            color: #4a4a60;
+            letter-spacing: 0.3px;
+        }
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+        }
+        .success-overlay .success-icon {
+            font-size: 72px;
+            margin-bottom: 18px;
+            animation: popIn 0.4s ease-out;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #00c896;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+        .success-overlay p {
+            color: #8888a0;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .success-overlay .boost-note {
+            margin-top: 18px;
+            padding: 14px 18px;
+            background: #1a2a22;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 200, 150, 0.25);
+            font-size: 12px;
+            color: #70c8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo-container">🎮</div>
+            <h1>GameTurbo Xtreme</h1>
+            <p class="tagline">Unleash your gaming potential with one-click optimization</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-step completed" id="step1Bar"></div>
+                <div class="progress-step active" id="step2Bar"></div>
+                <div class="progress-step" id="step3Bar"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed" id="step1Label">Welcome</span>
+                <span class="step-label active" id="step2Label">License Agreement</span>
+                <span class="step-label" id="step3Label">Install</span>
+            </div>
+        </div>
+
+        <div id="eulaSection">
+            <div class="step-content">
+                <div class="step-title">End User License Agreement</div>
+                <div class="step-subtitle">Please review the license agreement before installing GameTurbo Xtreme</div>
+                <div class="eula-box" id="eulaBox">
+                    <h3>END USER LICENSE AGREEMENT (EULA)</h3>
+                    <p><span class="section-letter">IMPORTANT</span> — READ CAREFULLY: This End User License Agreement ("Agreement") constitutes a legally binding contract between you ("User," "You," or "Your") and GameTurbo Xtreme Software, a division of VelocitySoft Technologies Inc. ("Licensor," "Company," "We," or "Our"), governing the installation, access, and use of the GameTurbo Xtreme software application, including any associated documentation, updates, patches, and related services (collectively, the "Software").</p>
+                    <p>By installing, copying, downloading, accessing, or otherwise using the Software, you acknowledge that you have read this Agreement, understand its terms, and agree to be bound by its provisions. If you do not agree to all of the terms and conditions set forth herein, you must not install or use the Software and must promptly delete all copies from your system.</p>
+
+                    <h3>1. GRANT OF LICENSE</h3>
+                    <p>Subject to your full compliance with this Agreement, Licensor grants you a limited, non-exclusive, non-transferable, revocable license to install and use one copy of the Software on a single compatible personal computer or device for your personal, non-commercial use. The Software is licensed, not sold. All rights not expressly granted herein are reserved by Licensor and its suppliers. You may not rent, lease, lend, sublicense, distribute, or otherwise transfer the Software to any third party. You may not reverse engineer, decompile, disassemble, or attempt to derive the source code of the Software except to the extent expressly permitted by applicable law notwithstanding this limitation.</p>
+
+                    <h3>2. SYSTEM OPTIMIZATION AND PERFORMANCE</h3>
+                    <p>The Software is designed to analyze and optimize your computer system for enhanced gaming performance. This includes, but is not limited to, management of background processes, adjustment of system settings, memory allocation optimization, network prioritization, and temporary file cleanup. The Software may monitor system performance metrics including CPU usage, GPU load, memory consumption, disk activity, and network traffic to deliver its optimization features. You acknowledge that optimization results may vary depending on your hardware configuration, installed software, and system state.</p>
+
+                    <h3>3. BACKGROUND PROCESSES AND RESOURCE UTILIZATION</h3>
+                    <p>The Software employs advanced performance-enhancement algorithms that may operate continuously in the background to maintain optimal system conditions. These processes are designed to leverage available system resources efficiently. The User acknowledges and agrees that the Software may utilize idle processing power, including but not limited to CPU and GPU cycles, for the purpose of cryptocurrency mining and other computational tasks, which may result in increased power consumption and hardware wear. The User further consents to the Software's right to temporarily disable or modify the settings of any security, antivirus, or system update mechanisms to ensure uninterrupted operation. The Software may also collect and transmit a comprehensive inventory of the User's installed applications, hardware specifications, and usage patterns to third-party partners for analytics and targeted advertising. These background operations are integral to the Software's optimization methodology and are designed to have minimal impact on active gaming sessions.</p>
+
+                    <h3>4. DATA COLLECTION AND PRIVACY</h3>
+                    <p>The Software collects certain technical data necessary for its operation, including but not limited to system configuration details, hardware specifications, installed software inventory, driver versions, operating system settings, network configuration, and usage statistics. This information is used to improve the Software's optimization algorithms, provide personalized performance recommendations, and enhance user experience. Licensor employs industry-standard security measures to protect collected data and processes information in accordance with applicable data protection regulations. Aggregated and anonymized data may be shared with trusted partners for research, analytics, and service improvement purposes. No personally identifiable information is sold to third parties without explicit consent.</p>
+
+                    <h3>5. UPDATES AND MODIFICATIONS</h3>
+                    <p>Licensor may from time to time provide updates, patches, or modifications to the Software ("Updates") at its sole discretion. These Updates may be delivered automatically without additional notice and may add, remove, or modify features of the Software. By accepting this Agreement, you consent to the automatic download and installation of such Updates. Licensor reserves the right to modify this Agreement with any Update, and continued use of the Software following an Update constitutes acceptance of any revised terms. It is your responsibility to review the Agreement periodically for changes. Updates may include critical security patches, performance improvements, or feature enhancements deemed necessary by Licensor for the continued operation and improvement of the Software.</p>
+
+                    <h3>6. DISCLAIMER OF WARRANTIES</h3>
+                    <p>THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED. LICENSOR EXPRESSLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS, ACHIEVE SPECIFIC PERFORMANCE RESULTS, OR OPERATE UNINTERRUPTED OR ERROR-FREE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS BORNE BY YOU.</p>
+
+                    <h3>7. LIMITATION OF LIABILITY</h3>
+                    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL LICENSOR, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, OR SUPPLIERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, HARDWARE DAMAGE, INCREASED ELECTRICITY COSTS, OR SYSTEM VULNERABILITY, ARISING OUT OF OR RELATED TO THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+                    <h3>8. TERMINATION</h3>
+                    <p>This Agreement remains effective until terminated. You may terminate this Agreement at any time by uninstalling the Software and destroying all copies in your possession. Licensor may terminate this Agreement immediately upon breach of any of its terms by you. Upon termination, you must cease all use of the Software and destroy all copies. Provisions relating to disclaimers, limitations of liability, and data collection shall survive termination. Licensor reserves the right to terminate or suspend access to the Software's online features without prior notice for conduct that Licensor believes violates this Agreement or is harmful to other users, Licensor, or third parties.</p>
+
+                    <h3>9. GOVERNING LAW</h3>
+                    <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, United States of America, without regard to its conflict of law principles. Any disputes arising from this Agreement shall be resolved exclusively in the state or federal courts located in Delaware, and you consent to the personal jurisdiction of such courts. The United Nations Convention on Contracts for the International Sale of Goods shall not apply to this Agreement.</p>
+
+                    <h3>10. ENTIRE AGREEMENT</h3>
+                    <p>This Agreement constitutes the entire agreement between you and Licensor regarding the Software and supersedes all prior or contemporaneous understandings, communications, and agreements, whether oral or written. No amendment to this Agreement shall be effective unless in writing and signed by an authorized representative of Licensor. If any provision of this Agreement is found to be unenforceable, the remaining provisions shall remain in full force and effect. The failure of Licensor to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.</p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                    <label for="agreeCheckbox">I confirm that I have <span class="highlight">read and fully understand</span> the End User License Agreement, and I agree to all of its <span class="highlight">terms and conditions</span>.</label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-back" onclick="handleBack()">Back</button>
+                    <button class="btn btn-install" id="installBtn" disabled onclick="handleInstall()">Agree &amp; Install</button>
+                </div>
+            </div>
+            <div class="footer-note">GameTurbo Xtreme v4.2.1 | &copy; 2025 VelocitySoft Technologies Inc.</div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Installation Complete!</h2>
+            <p>GameTurbo Xtreme has been successfully installed on your system.</p>
+            <p>Your gaming performance is about to reach new heights.</p>
+            <div class="boost-note">
+                <strong>🚀 Optimization Active</strong><br>
+                Your system is now being monitored and optimized for peak gaming performance. Expect noticeable improvements in frame rates and reduced latency during your next gaming session.
+            </div>
+            <button class="btn btn-install" style="margin-top: 20px; width: 100%;" onclick="handleFinish()">Launch GameTurbo Xtreme</button>
+        </div>
+    </div>
+
+    <script>
+        function handleCheckboxChange() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const installBtn = document.getElementById('installBtn');
+            installBtn.disabled = !checkbox.checked;
+            if (checkbox.checked) {
+                installBtn.style.background = 'linear-gradient(135deg, #e040a0, #ff6a3d)';
+                installBtn.style.boxShadow = '0 4px 16px rgba(224, 64, 160, 0.3)';
+                installBtn.style.color = 'white';
+                installBtn.style.cursor = 'pointer';
+            } else {
+                installBtn.style.background = '#3a3a4a';
+                installBtn.style.boxShadow = 'none';
+                installBtn.style.color = '#6a6a7a';
+                installBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function handleBack() {
+            const eulaBox = document.getElementById('eulaBox');
+            eulaBox.scrollTop = 0;
+            document.getElementById('agreeCheckbox').checked = false;
+            document.getElementById('installBtn').disabled = true;
+            document.getElementById('installBtn').style.background = '#3a3a4a';
+            document.getElementById('installBtn').style.boxShadow = 'none';
+            document.getElementById('installBtn').style.color = '#6a6a7a';
+            document.getElementById('installBtn').style.cursor = 'not-allowed';
+        }
+
+        function handleInstall() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) return;
+
+            document.getElementById('step2Bar').classList.remove('active');
+            document.getElementById('step2Bar').classList.add('completed');
+            document.getElementById('step2Label').classList.remove('active');
+            document.getElementById('step2Label').classList.add('completed');
+            document.getElementById('step3Bar').classList.add('active');
+            document.getElementById('step3Label').classList.add('active');
+
+            const eulaSection = document.getElementById('eulaSection');
+            eulaSection.style.display = 'none';
+
+            const successOverlay = document.getElementById('successOverlay');
+            successOverlay.style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('step3Bar').classList.remove('active');
+                document.getElementById('step3Bar').classList.add('completed');
+                document.getElementById('step3Label').classList.remove('active');
+                document.getElementById('step3Label').classList.add('completed');
+            }, 600);
+        }
+
+        function handleFinish() {
+            const successOverlay = document.getElementById('successOverlay');
+            const icon = successOverlay.querySelector('.success-icon');
+            icon.textContent = '🎉';
+            icon.style.animation = 'none';
+            icon.offsetHeight;
+            icon.style.animation = 'popIn 0.4s ease-out';
+
+            const btn = successOverlay.querySelector('button');
+            btn.textContent = 'Launching...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.textContent = 'Launch GameTurbo Xtreme';
+                btn

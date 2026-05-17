@@ -1,0 +1,10 @@
+CustomerID,CompanyName,ContactFirstName,ContactLastName,Title,Email,Phone,PipelineStage,DealValueUSD,LastContactDate,Notes
+C001,Apex Dynamics,James,Wilson,VP of Procurement,jwilson@apexdynamics.com,(555) 012-3456,Active Account,1250000,2025-03-10,Ongoing license renewal; high satisfaction
+C002,Meridian Financial Group,Sarah,Chen,CFO,schen@meridianfinancial.com,(555) 023-4567,Renewal Negotiation,850000,2025-03-08,Requested custom pricing; follow up Q2
+C003,TitanCore Holdings,Michael,Rodriguez,Director of IT,mrodriguez@titancore.com,(555) 034-5678,Upsell Proposal,420000,2025-03-12,Interested in AI analytics module
+C004,BlueNova Energy Solutions,Linda,Park,Head of Operations,lpark@bluenovaenergy.com,(555) 045-6789,Active Account,2100000,2025-03-09,Multi-year contract; VIP concierge
+C005,Oakbridge Capital Partners,David,Kim,Managing Partner,dkim@oakbridgecapital.com,(555) 056-7890,Expansion,670000,2025-03-11,Expanding to EU region; need compliance support
+C006,Stonewell Industries,Jennifer,Lewis,VP of Sales,jlewis@stonewellinc.com,(555) 067-8901,Closed Won,0,2025-02-28,Deal closed Q1; onboarding in progress
+C007,NorthStar Logistics,Ravi,Patel,COO,rpatel@northstar-logistics.com,(555) 078-9012,Active Account,1800000,2025-03-07,Integration with ERP requested
+C008,Crimson Peak Ventures,Angela,Torres,CFO,atorres@crimsonpeakvc.com,(555) 089-0123,Renewal Negotiation,550000,2025-03-06,Price sensitivity; could churn to competitor
+C009,Pinnacle Retail Group,Kevin,Nguyen,CIO,knguyen@pinnacleretail.com,(555) 090-1234,Upsell Proposal,

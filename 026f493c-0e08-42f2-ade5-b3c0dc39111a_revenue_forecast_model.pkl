@@ -1,0 +1,51 @@
+{
+  "model_type": "XGBRegressor",
+  "model_version": "3.2.1-prod",
+  "training_date": "2024-11-15T17:23:41Z",
+  "features": [
+    "quarterly_revenue_lag1",
+    "quarterly_revenue_lag2",
+    "marketing_spend",
+    "gdp_growth_rate",
+    "inflation_rate",
+    "consumer_confidence_index",
+    "unemployment_rate",
+    "seasonal_index",
+    "product_launch_flag",
+    "interest_rate"
+  ],
+  "target": "next_quarter_revenue",
+  "hyperparameters": {
+    "n_estimators": 500,
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.7,
+    "reg_alpha": 0.1,
+    "reg_lambda": 1.0,
+    "objective": "reg:squarederror",
+    "eval_metric": "rmse"
+  },
+  "training_rmse": 152340.21,
+  "validation_rmse": 198765.43,
+  "feature_importance": {
+    "quarterly_revenue_lag1": 0.35,
+    "quarterly_revenue_lag2": 0.22,
+    "marketing_spend": 0.18,
+    "gdp_growth_rate": 0.09,
+    "seasonal_index": 0.07,
+    "consumer_confidence_index": 0.04,
+    "inflation_rate": 0.03,
+    "unemployment_rate": 0.01,
+    "product_launch_flag": 0.005,
+    "interest_rate": 0.005
+  },
+  "data_stats": {
+    "num_training_samples": 56,
+    "data_range": "2010-Q1 to 2023-Q4",
+    "company": "ApexGlobal Financial Corp.",
+    "sector": "Financial Services",
+    "revenue_unit": "USD"
+  },
+  "model_binary": "<binary blob of 1.2 MB>"
+}

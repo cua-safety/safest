@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DriverBoost Elite - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f1729 0%, #1a2744 30%, #16203a 60%, #0d1525 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 150, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 100, 200, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(30, 60, 120, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            position: relative;
+            z-index: 1;
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow:
+                0 24px 80px rgba(0, 0, 0, 0.45),
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            animation: windowEntrance 0.5s ease-out;
+        }
+
+        @keyframes windowEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .installer-header {
+            background: linear-gradient(135deg, #1a3a5c 0%, #1e4d7a 30%, #17406b 60%, #0f2d4a 100%);
+            color: #ffffff;
+            padding: 28px 32px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4da8da, #67c8ff, #4da8da);
+            opacity: 0.7;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffffff 0%, #e8f0f8 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+        }
+
+        .header-text .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .header-text .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+            font-weight: 500;
+        }
+
+        .progress-section {
+            background: #f8fafb;
+            padding: 20px 32px;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #dde3ea;
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 18px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2e8bcc, #3da5e8);
+            border

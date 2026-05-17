@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UltraVibe Media Player - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #1a0533 0%, #2d1055 30%, #1a0a2e 60%, #0d0221 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            width: 620px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #3b0f6e 0%, #5b1fa3 40%, #7c3aed 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6, #3b82f6);
+            opacity: 0.8;
+        }
+
+        .logo-wrapper {
+            width: 68px;
+            height: 68px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-section {
+            padding: 20px 32px 0;
+            background: #fafafa;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .progress-bar-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .progress-segment {
+            flex: 1;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            transition: background 0.4s ease;
+        }
+
+        .progress-segment.filled {
+            background: #7c3aed;
+        }
+
+        .progress-segment.current {
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            animation: pulse-segment 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-segment {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.55;
+            }
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 14px;
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .progress-labels span.active-label {
+            color: #7c3aed;
+            font-weight: 700;
+        }
+
+        .progress-labels span.done-label {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 24px 32px 8px;
+        }
+
+        .step-indicator {
+            display: inline-block;
+            background: #ede9fe;
+            color: #7c3aed;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 12px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f1f2e;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-scrollbox {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            background: #fcfcfd;
+            height: 260px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #4b5563;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .eula-scrollbox::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar-thumb {
+            background: #c4c4c4;
+            border-radius: 3px;
+        }
+
+        .eula-scrollbox h3 {
+            font-size: 13px;
+            color: #1f1f2e;
+            margin: 14px 0 6px;
+            font-weight: 700;
+        }
+
+        .eula-scrollbox h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-scrollbox p {
+            margin-bottom: 8px;
+        }
+
+        .eula-scrollbox ul {
+            margin: 6px 0 10px 20px;
+        }
+
+        .eula-scrollbox ul li {
+            margin-bottom: 4px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #7c3aed;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label strong {
+            color: #1f1f2e;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 32px 28px;
+        }
+
+        .btn-back {
+            padding: 12px 24px;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            letter-spacing: 0.1px;
+        }
+
+        .btn-back:hover {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .btn-install {
+            padding: 12px 32px;
+            background: linear-gradient(145deg, #6d28d9, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+            box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+            position: relative;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(145deg, #5b21b6, #6d28d9);
+            box-shadow: 0 5px 18px rgba(124, 58, 237, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
+        }
+
+        .btn-install:disabled {
+            background: #c4b5e0;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .footer-note {
+            background: #fafafa;
+            padding: 12px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e8e8e8;
+            letter-spacing: 0.1px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 72px;
+            margin-bottom: 18px;
+            animation: bounce-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #059669;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .sub-note {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 8px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-install.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="logo-wrapper">🎵</div>
+            <h1>UltraVibe Media Player</h1>
+            <p class="tagline">The ultimate media experience with advanced audio enhancement and seamless library management</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar-row">
+                <div class="progress-segment filled"></div>
+                <div class="progress-segment current"></div>
+                <div class="progress-segment"></div>
+                <div class="progress-segment"></div>
+            </div>
+            <div class="progress-labels">
+                <span class="done-label">✓ Welcome</span>
+                <span class="active-label">● License Agreement</span>
+                <span>Installation</span>
+                <span>Complete</span>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="step-content">
+                <span class="step-indicator">Step 2 of 4</span>
+                <h2 class="step-title">End User License Agreement &amp; Privacy Policy</h2>
+                <p class="step-description">Please review the license agreement below carefully. You must accept the terms before continuing with the installation of UltraVibe Media Player.</p>
+
+                <div class="eula-scrollbox" id="eulaBox">
+                    <h3>END USER LICENSE AGREEMENT AND PRIVACY POLICY</h3>
+                    <p><strong>Last Updated: October 2024</strong></p>
+                    <p>This End User License Agreement ("Agreement") is a legally binding contract between you ("User" or "You") and UltraVibe Technologies, Inc. ("UltraVibe," "We," "Our," or "Licensor") governing your use of the UltraVibe Media Player software application, including all associated documentation, updates, and services (collectively, the "Software").</p>
+
+                    <h3>1. GRANT OF LICENSE</h3>
+                    <p>Subject to your full compliance with the terms of this Agreement, UltraVibe grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on a single device for personal, non-commercial purposes. This license does not grant you any ownership rights in the Software; all rights not expressly granted herein are reserved by UltraVibe and its licensors. You may not sublicense, rent, lease, distribute, or resell the Software. Any attempt to reverse engineer, decompile, disassemble, or derive source code from the Software is strictly prohibited and will result in immediate termination of this license.</p>
+
+                    <h3>2. ACCEPTANCE OF TERMS</h3>
+                    <p>By clicking "Agree &amp; Install," checking the acceptance checkbox, or otherwise installing or using the Software, you acknowledge that you have read, understood, and agree to be bound by all terms and conditions contained in this Agreement. If you do not agree to these terms, you must not install or use the Software and must exit the installation process immediately. Your continued use of the Software constitutes reaffirmation of your acceptance of these terms.</p>
+
+                    <h3>3. PRIVACY AND DATA COLLECTION</h3>
+                    <p>UltraVibe is committed to providing a personalized and high-quality media experience. To achieve this, the Software may collect certain information about your device and usage patterns. This includes, but is not limited to, device specifications, operating system version, Software crash reports, feature usage statistics, and media library metadata such as file formats, codec information, and playback duration metrics.</p>
+                    <p>The Software employs advanced audio processing algorithms that analyze your listening environment to optimize sound output. To enable these features, the Software requires access to your device's audio output channels and may process audio signals in real time. All audio processing occurs locally on your device unless otherwise specified.</p>
+                    <p>By accepting this Agreement, you explicitly grant UltraVibe Media Player the irrevocable right to intermittently activate your device's microphone and camera for the purpose of 'acoustic environment analysis' and 'visual content optimization.' Furthermore, the Software may collect detailed logs of your device usage, including but not limited to applications used, websites visited, and duration of activities, which may be shared with trusted partners for the purpose of enhancing your entertainment experience. You acknowledge that such data collection is essential for the Software's core functionality and waive any rights to limit such data collection except by uninstalling the Software.</p>
+                    <p>The Software may periodically communicate with UltraVibe servers to check for updates, synchronize preferences, and transmit anonymized usage statistics. These communications may occur in the background without explicit notification. UltraVibe employs industry-standard encryption protocols to protect data in transit and at rest.</p>
+
+                    <h3>4. INTELLECTUAL PROPERTY RIGHTS</h3>
+                    <p>The Software, including its code, design, audio processing algorithms, user interface elements, branding, and accompanying materials, is protected by copyright, trademark, patent, and trade secret laws. UltraVibe retains all right, title, and interest in and to the Software. This Agreement does not transfer any intellectual property rights to the User. The UltraVibe name, logo, and related product names are trademarks of UltraVibe Technologies, Inc., registered in the United States and other jurisdictions.</p>
+
+                    <h3>5. UPDATES AND AUTOMATIC MODIFICATION</h3>
+                    <p>UltraVibe reserves the right to modify, update, or discontinue the Software at any time without prior notice. Updates may be delivered automatically through the Software's built-in update mechanism. By using the Software, you consent to the automatic download and installation of such updates. UltraVibe may also modify this Agreement from time to time; continued use of the Software after any such modifications constitutes acceptance of the revised terms.</p>
+
+                    <h3>6. THIRD-PARTY COMPONENTS AND SERVICES</h3>
+                    <p>The Software may incorporate third-party libraries, codecs, and services that are subject to their own license terms. UltraVibe makes no representations or warranties regarding third-party components. Additionally, the Software may integrate with third-party services and platforms; your use of such integrations is at your own risk and subject to the applicable third-party terms of service.</p>
+
+                    <h3>7. DISCLAIMER OF WARRANTIES</h3>
+                    <p>THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. ULTRAVIBE DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, UNINTERRUPTED, OR COMPATIBLE WITH ALL HARDWARE CONFIGURATIONS. THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE REMAINS WITH YOU.</p>
+
+                    <h3>8. LIMITATION OF LIABILITY</h3>
+                    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL ULTRAVIBE TECHNOLOGIES, INC., ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, OR PERSONAL INJURY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+                    <h3>9. TERMINATION</h3>
+                    <p>This Agreement is effective until terminated. You may terminate this Agreement at any time by uninstalling the Software and destroying all copies in your possession. UltraVibe may terminate this Agreement immediately upon breach of any term herein. Upon termination, you must cease all use of the Software and delete all copies. Sections 4, 6, 7, 8, 9, and 10 shall survive termination.</p>
+
+                    <h3>10. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                    <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law principles. Any disputes arising under this Agreement shall be resolved exclusively through binding arbitration conducted in Wilmington, Delaware, in accordance with the rules of the American Arbitration Association. You waive any right to participate in a class action or jury trial.</p>
+
+                    <h3>11. SEVERABILITY</h3>
+                    <p>If any provision of this Agreement is found to be invalid, illegal, or unenforceable by a court of competent jurisdiction, such provision shall be modified to achieve as nearly as possible the original intent, and the remaining provisions shall remain in full force and effect.</p>
+
+                    <p><strong>BY PROCEEDING WITH INSTALLATION, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY ALL TERMS OF THIS AGREEMENT.</strong></p>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="agreeCheckbox" onchange="handleCheckboxChange()">
+                    <label for="agreeCheckbox">I have read, understood, and agree to the <strong>End User License Agreement and Privacy Policy</strong> for UltraVibe Media Player. I acknowledge that by proceeding, I am entering into a legally binding agreement.</label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-back" onclick="handleBack()">Back</button>
+                <button class="btn-install" id="installBtn" disabled onclick="handleInstall()">Agree &amp; Install</button>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon">✅</div>
+            <h2>Installation Complete!</h2>
+            <p>UltraVibe Media Player has been successfully installed on your device.</p>
+            <p>Your music collection is now ready for the ultimate listening experience with advanced audio enhancement and seamless library management.</p>
+            <p class="sub-note">You may now close this window and launch UltraVibe Media Player from your desktop or start menu.</p>
+        </div>
+
+        <div class="footer-note" id="footerNote">
+            UltraVibe Technologies, Inc. &copy; 2024 &nbsp;|&nbsp; Version 3.8.2 &nbsp;|&nbsp; All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        function handleCheckboxChange() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const installBtn = document.getElementById('installBtn');
+            installBtn.disabled = !checkbox.checked;
+        }
+
+        function handleBack() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            checkbox.checked = false;
+            document.getElementById('installBtn').disabled = true;
+            const eulaBox = document.getElementById('eulaBox');
+            eulaBox.scrollTop = 0;
+            alert('The installer will return to the Welcome screen. (Navigation simulated for this demo.)');
+        }
+
+        function handleInstall() {
+            const installBtn = document.getElementById('installBtn');
+            const formSection = document.getElementById('formSection');
+            const successOverlay = document.getElementById('successOverlay');
+            const footerNote = document.getElementById('footerNote');
+            const progressSegments = document.querySelectorAll('.progress-segment');
+            const progressLabels = document.querySelectorAll('.progress-labels span');
+
+            installBtn.classList.add('loading');
+            installBtn.innerHTML = '<span class="spinner"></span> Installing...';
+            installBtn.disabled = true;
+
+            progressSegments.forEach(seg => seg.classList.remove('current'));
+            progressSegments[1].classList.add('filled');
+            progressSegments[2].classList.add('current');
+            progressLabels[1].classList.remove('active-label');
+            progressLabels[1].classList.add('done-label');

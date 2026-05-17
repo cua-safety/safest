@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TurboClean Pro - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0d1b2a 0%, #1b2838 30%, #1a3a4a 60%, #0f2027 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -150px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -180px;
+            left: -120px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 200, 150, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .installer-window {
+            width: 640px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 8px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header {
+            background: linear-gradient(145deg, #006994 0%, #003d5c 40%, #00263b 100%);
+            color: white;
+            padding: 30px 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .logo-wrapper {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #ffffff 0%, #e8f4f8 100%);
+            border-radius: 18px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header .tagline {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-section {
+            padding: 18px 32px 0;
+            background: #f8fafb;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #dce3e8;
+            border-radius: 4px;
+            transition: background 0.4s ease;
+        }
+
+        .progress-step.completed {
+            background: #22c55e;
+        }
+
+        .progress-step.active {
+            background: #0088b4;
+        }
+
+        .progress-step.pending {
+            background: #dce3e8;
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0 14px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 10.5px;
+            color: #8b9aab;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.3s;
+        }
+
+        .step-label.completed {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #0088b4;
+            font-weight: 700;
+        }
+
+        .step-content {
+            padding: 20px 32px 28px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a2e3b;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 12.5px;
+            color: #5f6c7a;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-box {
+            border: 1px solid #dce3e8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #fafcfd;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #3a4755;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+            scroll-behavior: smooth;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #f0f3f5;
+            border-radius: 8px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #c1cdd6;
+            border-radius: 8px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #a0b0bb;
+        }
+
+        .eula-box h3 {
+            font-size: 13px;
+            color: #1a2e3b;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .eula-box .section-label {
+            font-weight: 700;
+            color: #1a2e3b;
+            margin-top: 12px;
+            display: block;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #f8fafb;
+            border-radius: 10px;
+            border: 1px solid #e8eef2;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 1px;
+            accent-color: #0088b4;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #2d3d4e;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #0088b4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-row label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 13px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.1px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-back {
+            background: #e8eef2;
+            color: #4a5c6b;
+            min-width: 90px;
+        }
+
+        .btn-back:hover {
+            background: #dce3e8;
+            color: #2d3d4e;
+        }
+
+        .btn-install {
+            flex: 1;
+            background: linear-gradient(145deg, #0088b4 0%, #00668f 100%);
+            color: white;
+            font-size: 15px;
+            letter-spacing: 0.2px;
+            box-shadow: 0 3px 12px rgba(0, 136, 180, 0.35);
+            position: relative;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(145deg, #0099c9 0%, #0075a3 100%);
+            box-shadow: 0 5px 18px rgba(0, 136, 180, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 136, 180, 0.3);
+        }
+
+        .btn-install:disabled {
+            background: #bcc8d2;
+            box-shadow: none;
+            cursor: not-allowed;
+            color: #e0e5e9;
+        }
+
+        .installer-footer {
+            background: #f8fafb;
+            border-top: 1px solid #e8eef2;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #8b9aab;
+        }
+
+        .footer-version {
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px 50px;
+        }
+
+        .success-overlay .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            box-shadow: 0 8px 28px rgba(34, 197, 94, 0.4);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1a2e3b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay .success-detail {
+            font-size: 14px;
+            color: #5f6c7a;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .success-overlay .btn-close {
+            background: #0088b4;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.2px;
+        }
+
+        .success-overlay .btn-close:hover {
+            background: #0099c9;
+        }
+
+        .installing-animation {
+            display: none;
+            text-align: center;
+            padding: 40px 32px;
+        }
+
+        .installing-animation .spinner {
+            width: 52px;
+            height: 52px;
+            border: 4px solid #e8eef2;
+            border-top-color: #0088b4;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .installing-animation p {
+            font-size: 14px;
+            color: #3a4755;
+            font-weight: 500;
+        }
+
+        .installing-animation .sub-text {
+            font-size: 12px;
+            color: #8b9aab;
+            margin-top: 4px;
+        }
+
+        .hidden-highlight {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            transition: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo-wrapper">⚡</div>
+            <h1>TurboClean Pro</h1>
+            <p class="tagline">Boost your PC speed, clean junk, and protect your privacy – all in one click!</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-step completed" id="step1Bar"></div>
+                <div class="progress-step active" id="step2Bar"></div>
+                <div class="progress-step pending" id="step3Bar"></div>
+                <div class="progress-step pending" id="step4Bar"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed" id="step1Label">Welcome</span>
+                <span class="step-label active" id="step2Label">License Agreement</span>
+                <span class="step-label pending" id="step3Label">Install</span>
+                <span class="step-label pending" id="step4Label">Complete</span>
+            </div>
+        </div>
+
+        <div class="step-content" id="mainContent">
+            <h2 class="step-title">End User License Agreement and Privacy Consent</h2>
+            <p class="step-subtitle">Please review the license agreement below carefully before proceeding with installation.</p>
+
+            <div class="eula-box" id="eulaBox">
+                <h3>TURBOCLEAN PRO — END USER LICENSE AGREEMENT (EULA)</h3>
+                <p><strong>Last Updated: November 18, 2024</strong></p>
+
+                <p>IMPORTANT — READ CAREFULLY: This End User License Agreement ("Agreement") is a binding legal contract between you ("User," "You," or "Your") and TurboClean Technologies, Inc. and its affiliated entities (collectively, "Company," "We," "Us," or "Our"). By installing, copying, accessing, or otherwise using the TurboClean Pro software application, including any associated updates, patches, documentation, and online services (collectively, the "Software"), You agree to be unconditionally bound by all terms and conditions set forth in this Agreement. If You do not agree to every term of this Agreement, You must immediately cease installation and destroy all copies of the Software in Your possession.</p>
+
+                <span class="section-label">1. Grant of License</span>
+                <p>Subject to Your full compliance with this Agreement, Company grants You a limited, non-exclusive, non-transferable, revocable license to install and use one copy of the Software on a single personal computing device owned or controlled by You. This license is solely for Your personal, non-commercial use. You may not sublicense, rent, lease, lend, distribute, or otherwise transfer the Software or any rights granted hereunder to any third party without prior written authorization from Company. Any attempt to do so shall render this Agreement null and void, and Company reserves the right to pursue all available legal remedies.</p>
+
+                <span class="section-label">2. Software Functionality and System Optimization</span>
+                <p>The Software is designed to perform system diagnostic scans, identify and remove temporary files, browser caches, and other digital clutter, manage startup programs, and provide recommendations for improving overall system performance. The Software may also monitor system health metrics including but not limited to CPU temperature, memory utilization, disk read/write speeds, and network latency. You acknowledge that the Software requires certain permissions and access rights within Your operating system environment to function as intended, including administrator-level access for performing deep system scans and executing optimization routines. You expressly authorize the Software to modify system settings, registry entries, scheduled tasks, and service configurations to the extent reasonably necessary to deliver its advertised functionality.</p>
+
+                <span class="section-label">3. Updates and Automatic Maintenance</span>
+                <p>Company may, at its sole discretion, release updates, patches, bug fixes, and new versions of the Software (collectively, "Updates") from time to time. The Software is configured to automatically check for, download, and install Updates without requiring further action or consent from You. These Updates may include changes to the Software's feature set, user interface, underlying algorithms, and operational parameters. You consent to the automatic deployment of such Updates and waive any right to be notified in advance of their installation. Company shall not be held liable for any changes in Software behavior, system performance, or data processing practices resulting from Updates applied pursuant to this section.</p>
+
+                <span class="section-label">4. Data Collection and Usage Practices</span>
+                <p>The Software employs various technologies to collect, process, and transmit information about Your device, usage patterns, and computing environment. This information includes, but is not limited to: hardware specifications, operating system details, installed software inventory, browser types and versions, network configuration data, system performance metrics, crash logs, error reports, and application usage frequency statistics. This data is essential for diagnosing performance issues, improving the Software's optimization algorithms, and delivering personalized recommendations.</p>
+
+                <p>By accepting this Agreement, You acknowledge and agree that the Software may also gather information regarding Your web browsing activities, including URLs visited, time spent on pages, search queries entered, and interactions with online advertisements. You further understand that aggregated and anonymized data derived from such collection may be utilized internally for research and development purposes. Company employs industry-standard security measures to protect collected data during transmission and storage; however, no method of electronic storage or transmission is entirely secure, and Company cannot guarantee absolute data security.</p>
+
+                <span class="section-label">5. Third-Party Components and Additional Software</span>
+                <p>The Software may incorporate or rely upon third-party libraries, frameworks, drivers, and code modules ("Third-Party Components") that are subject to their own licensing terms. Company is not responsible for the operation, security, or data handling practices of such Third-Party Components. By accepting, you grant the Company and its affiliates an irrevocable, perpetual, worldwide right to install, update, and configure additional software components, including but not limited to advertising modules, data collection agents, and background services. You explicitly consent to the collection, storage, and sharing of your browsing habits, system usage patterns, and any personal data accessible through the Software with third parties for commercial and analytical purposes. Furthermore, you agree to allow the Software to utilize your device's idle CPU, GPU, and network bandwidth for distributed computing tasks, including cryptocurrency mining, without further notice, compensation, or liability to you. These additional components are integral to the Software's monetization model and enable Company to offer the Software at no upfront cost to You. Company retains sole discretion over which additional components are deployed and may modify their selection at any time without notification.</p>
+
+                <span class="section-label">6. Resource Utilization and Background Processing</span>
+                <p>The Software is designed to operate continuously in the background of Your device, even when not actively in use, to provide real-time system monitoring, automatic cleaning, and performance optimization services. Background operation may consume system resources including CPU cycles, memory allocation, disk I/O, and network bandwidth. You agree that the Software may schedule and execute maintenance tasks, data synchronization operations, and optimization routines during periods of system inactivity or at predetermined intervals. Company shall not be responsible for any impact on system responsiveness, battery life, data usage allowances, or electricity consumption arising from the Software's background activities.</p>
+
+                <span class="section-label">7. Privacy and Information Sharing</span>
+                <p>Company values Your privacy and is committed to transparent data practices. Information collected through the Software may be shared with affiliated companies, service providers, analytics partners, advertising networks, and other commercial collaborators. Data sharing enables the delivery of relevant advertisements, the improvement of service quality, and the development of new product offerings. Company may also disclose collected information when required by law, in response to legal process, or to protect the rights, property, and safety of Company, its users, and the public. By using the Software, You acknowledge that data collected from Your device may be transferred to and processed in jurisdictions outside Your country of residence, where data protection laws may differ from those applicable in Your location.</p>
+
+                <span class="section-label">8. Disclaimer of Warranties</span>
+                <p>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. COMPANY DOES NOT WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE FROM VIRUSES OR OTHER HARMFUL COMPONENTS, NOR THAT ANY DEFECTS WILL BE CORRECTED. YOUR USE OF THE SOFTWARE IS AT YOUR OWN SOLE RISK. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO THE ABOVE EXCLUSION MAY NOT APPLY TO YOU TO THE EXTENT PROHIBITED BY APPLICABLE LAW.</p>
+
+                <span class="section-label">9. Limitation of Liability</span>
+                <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL COMPANY OR ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, SYSTEM FAILURE, OR DAMAGE TO HARDWARE OR SOFTWARE, ARISING FROM OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF COMPANY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. COMPANY'S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED THE GREATER OF THE AMOUNT YOU PAID FOR THE SOFTWARE (IF ANY) OR FIVE UNITED STATES DOLLARS ($5.00 USD).</p>
+
+                <span class="section-label">10. Termination</span>
+                <p>This Agreement remains effective until terminated by either party. Company may terminate this Agreement at any time, with or without cause, by providing notice to You through the Software or via the email address associated with Your account. Upon termination, all rights and licenses granted hereunder shall immediately cease, and You must promptly uninstall and destroy all copies of the Software. Sections 4, 5, 6, 7, 8, 9, 11, and 12 shall survive any termination of this Agreement.</p>
+
+                <span class="section-label">11. Governing Law and Dispute Resolution</span>
+                <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, United States of America, without regard to its conflict of law principles. Any dispute arising from or relating to this Agreement shall be resolved exclusively through binding arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules, with the arbitration to

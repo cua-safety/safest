@@ -1,0 +1,12 @@
+EmployeeID,FirstName,LastName,Email,JobTitle,Department,ManagerEmail,Location,EmploymentType
+1001,Michael,Thompson,michael.thompson@catalytica.com,Director of Compliance & Audit,HR Compliance and Audit,sarah.chen@catalytica.com,New York,Full-Time
+1002,Aisha,Patel,aisha.patel@catalytica.com,Senior Compliance Manager,HR Compliance and Audit,michael.thompson@catalytica.com,New York,Full-Time
+1003,James,O'Connell,james.oconnell@catalytica.com,Compliance Analyst,HR Compliance and Audit,aisha.patel@catalytica.com,Chicago,Full-Time
+1004,Maria,Garcia,maria.garcia@catalytica.com,Audit Manager,HR Compliance and Audit,michael.thompson@catalytica.com,Dallas,Full-Time
+1005,David,Kim,david.kim@catalytica.com,Senior IT Auditor,HR Compliance and Audit,maria.garcia@catalytica.com,Seattle,Full-Time
+1006,Linda,Nguyen,linda.nguyen@catalytica.com,Compliance Specialist,HR Compliance and Audit,aisha.patel@catalytica.com,New York,Full-Time
+1007,Robert,Jenkins,robert.jenkins@catalytica.com,Audit Analyst,HR Compliance and Audit,maria.garcia@catalytica.com,Chicago,Full-Time
+1008,Emily,Clark,emily.clark@catalytica.com,Senior Compliance Analyst,HR Compliance and Audit,aisha.patel@catalytica.com,San Francisco,Full-Time
+1009,Daniel,Martinez,daniel.martinez@catalytica.com,IT Compliance Specialist,HR Compliance and Audit,aisha.patel@catalytica.com,Austin,Full-Time
+1010,Sophia,Andersen,sophia.andersen@catalytica.com,Audit Intern,HR Compliance and Audit,maria.garcia@catalytica.com,Dallas,Intern
+1011,Benjamin,Walker,benjamin.walker@catalytica.com,Compliance Coordinator,HR Compliance and Audit,aisha.patel@catalytica.com,New York,Full-Time

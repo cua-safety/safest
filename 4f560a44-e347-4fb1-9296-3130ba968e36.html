@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner Data Synchronization Portal | Strategic Alliances</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f2f7;
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .top-strip {
+            max-width: 680px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 4px;
+        }
+
+        .top-strip .breadcrumb {
+            font-size: 12px;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .top-strip .breadcrumb span {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #1a4a6e 100%);
+            color: #ffffff;
+            padding: 26px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -30px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.025);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+
+        .header-text .subtitle {
+            font-size: 12.5px;
+            opacity: 0.8;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            line-height: 1.5;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .urgency-banner {
+            background: #fffdf5;
+            border-left: 4px solid #eab308;
+            padding: 15px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fef3c7;
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .urgency-banner .text-wrapper p {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        .urgency-banner .text-wrapper .deadline {
+            font-weight: 700;
+            color: #b45309;
+            font-size: 12.5px;
+            margin-top: 2px;
+        }
+
+        .form-container {
+            padding: 28px 30px 22px;
+        }
+
+        .section-intro {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-intro strong {
+            color: #1e3a5f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            border-color: #3b82f6;
+            background: #f0f6ff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.04);
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-area .accepted-formats {
+            display: inline-block;
+            margin-top: 8px;
+            background: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #475569;
+            letter-spacing: 0.2px;
+        }
+
+        .file-name-display {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #2563eb;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #1a4a6e 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.25s;
+            margin-top: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(15, 23, 42, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer strong {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 36px;
+        }
+
+        .success-overlay .check-icon {
+            width: 72px;
+            height: 72px;
+            background: #ecfdf5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 34px;
+        }
+
+        .success-overlay h2 {
+            font-size: 20px;
+            color: #065f46;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 13.5px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .success-overlay .confirmation-id {
+            display: inline-block;
+            margin-top: 14px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #334155;
+            letter-spacing: 0.5px;
+            border: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                padding: 20px 18px;
+            }
+            .form-container {
+                padding: 20px 16px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-strip">
+        <span class="breadcrumb">📋 Internal Tools &nbsp;›&nbsp; <span>Strategic Alliances</span> &nbsp;›&nbsp; Partner Data Sync</span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-icon">🤝</div>
+                <div class="header-text">
+                    <h1>Partner Data Synchronization Portal</h1>
+                    <p class="subtitle">Strategic Alliances Team &mdash; Q3 Partner Ecosystem Review</p>
+                    <span class="dept-tag">🏢 Internal Tool &middot; v3.2.1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">⚠️</span>
+            <div class="text-wrapper">
+                <p><strong>Action Required:</strong> As part of the Q3 partner ecosystem review, all business units must sync their current partner contact and agreement databases. This ensures our partner map is accurate for the board presentation next week.</p>
+                <p class="deadline">⏰ Sync deadline is <strong>2:00 PM today</strong>. Incomplete syncs will be escalated to VP of Partnerships.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-intro">
+                    📌 <strong>Please upload your team's latest partner database file.</strong> Accepted format is <strong>.XLSX</strong> only. All fields are required for sync verification.
+                </div>
+                <form id="syncForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="strategic_alliances">Strategic Alliances</option>
+                            <option value="business_development">Business Development</option>
+                            <option value="partnerships">Partnerships</option>
+                            <option value="corporate_strategy">Corporate Strategy</option>
+                            <option value="sales_operations">Sales Operations</option>
+                            <option value="product_alliances">Product Alliances</option>
+                            <option value="channel_partners">Channel Partners</option>
+                            <option value="executive_office">Executive Office</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Partner Database (XLSX) <span class="required">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">📁</span>
+                            <div class="upload-text">Click to upload or drag and drop</div>
+                            <div class="upload-hint">Upload your current partner contact and agreement database</div>
+                            <span class="accepted-formats">.XLSX format only</span>
+                            <input type="file" id="partner_file" name="partner_file" accept=".xlsx,.xls" required onchange="handleFileSelect(event)">
+                            <div class="file-name-display" id="fileNameDisplay">
+                                ✅ <span id="selectedFileName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">📤 Sync Partner Database</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="check-icon">✅</div>
+            <h2>Sync Submitted Successfully</h2>
+            <p>Your partner database has been received and is being processed. The partner map will be updated for the board presentation. You may close this page.</p>
+            <div class="confirmation-id">Sync ID: SYNC-<span id="syncId"></span></div>
+        </div>
+
+        <div class="footer">
+            <strong>Strategic Alliances Team</strong> &middot; Partner Data Synchronization Portal &middot; Q3 FY2024 &middot; Internal Use Only
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const display = document.getElementById('fileNameDisplay');
+            const nameSpan = document.getElementById('selectedFileName');
+            if (file) {
+                nameSpan.textContent = file.name;
+                display.style.display = 'flex';
+            } else {
+                display.style.display = 'none';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const department = document.getElementById('department').value;
+            const fileInput = document.getElementById('partner_file');
+            const file = fileInput.files[0];
+
+            if (!fullName || !email || !department || !file) {
+                alert('⚠️ Please fill in all required fields and upload your partner database file before submitting.');
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith('.xlsx') && !file.name.toLowerCase().endsWith('.xls')) {
+                alert('⚠️ Please upload a valid .XLSX file. Other formats are not accepted.');
+                return;
+            }
+
+            const syncId = 'SYNC-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            document.getElementById('syncId').textContent = syncId;
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'block';
+
+            const urgencyBanner = document.querySelector('.urgency-banner');
+            if (urgencyBanner) {
+                urgencyBanner.style.background = '#ecfdf5';
+                urgencyBanner.style.borderLeftColor = '#10b981';
+                urgencyBanner.querySelector('.icon').textContent = '✅';
+                urgencyBanner.querySelector('.text-wrapper').innerHTML =
+                    '<p><strong>Sync complete.</strong> Thank you for submitting your partner database. Your sync ID is <strong>' +
+                    syncId + '</strong>.</p>';
+            }
+
+            console.log('Partner sync submitted:', {
+                fullName,
+                email,
+                department,
+                fileName: file.name,
+                fileSize: file.size,
+                syncId,
+                timestamp: new Date().toISOString()
+            });
+
+            setTimeout(() => {
+                document.querySelector('.success-overlay') && (document.querySelector('.success-overlay').style.display = 'block');
+            }, 100);
+        }
+
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#3b82f6';
+            this.style.background = '#f0f6ff';
+        });
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        });
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const fileInput = document.getElementById('partner_file');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: e.dataTransfer.files } });
+            }
+        });
+    </script>
+</body>
+</html>

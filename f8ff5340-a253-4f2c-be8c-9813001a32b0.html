@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner Data Sync Portal | Partner Relationship Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f6;
+            color: #1e293b;
+            padding: 32px 20px;
+            min-height: 100vh;
+        }
+
+        .portal-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .portal-card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 8px 40px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header-bar {
+            background: linear-gradient(135deg, #0f3b5c, #1a5276);
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .header-icon-block {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-text h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+        }
+
+        .header-text .subtitle {
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        .header-badge {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .urgency-strip {
+            background: #fff8e6;
+            border-left: 4px solid #e9a820;
+            padding: 15px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #fef0d0;
+        }
+
+        .urgency-strip .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .urgency-strip .msg .urgent-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #8a5d0b;
+            margin-bottom: 2px;
+        }
+
+        .urgency-strip .msg .urgent-detail {
+            font-size: 12px;
+            color: #9a7020;
+            line-height: 1.45;
+        }
+
+        .form-body {
+            padding: 28px 28px 24px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f3b5c;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label .dot {
+            width: 8px;
+            height: 8px;
+            background: #1a5276;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: auto;
+            -webkit-appearance: auto;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a5276;
+            box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .file-upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-zone:hover {
+            border-color: #1a5276;
+            background: #f1f5f9;
+        }
+
+        .file-upload-zone .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-zone .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-zone .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .file-upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-zone .supported-formats {
+            display: inline-block;
+            margin-top: 8px;
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .info-callout {
+            background: #f0f7ff;
+            border: 1px solid #d0e4f7;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 12.5px;
+            color: #2c5282;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .info-callout .info-icon {
+            flex-shrink: 0;
+            font-size: 18px;
+            margin-top: 1px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0f3b5c, #1a5276);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #0c3350, #16466a);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(15, 59, 92, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(15, 59, 92, 0.2);
+        }
+
+        .submit-btn .btn-icon {
+            font-size: 18px;
+        }
+
+        .portal-footer {
+            background: #f8fafc;
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .portal-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-overlay .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #ecfdf5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 42px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #065f46;
+            margin-bottom: 8px;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .success-overlay .ref-id {
+            display: inline-block;
+            margin-top: 12px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: #334155;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 520px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header-bar {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .header-badge {
+                margin-left: 0;
+            }
+            .form-body {
+                padding: 20px 16px;
+            }
+            .portal-footer {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <div class="portal-card">
+            <div class="header-bar">
+                <div class="header-icon-block">🔄</div>
+                <div class="header-text">
+                    <h1>Partner Data Sync Portal</h1>
+                    <p class="subtitle">Partner Relationship Management</p>
+                </div>
+                <div class="header-badge">Q4 Initiative</div>
+            </div>
+
+            <div class="urgency-strip">
+                <span class="icon">⚠️</span>
+                <div class="msg">
+                    <p class="urgent-title">Sync must be completed by end of day</p>
+                    <p class="urgent-detail">To support the new partner integration initiative, all partner managers must sync their partner contact lists and contract details to the central CRM. This is mandatory for Q4 partner enablement and commission processing. Delays will affect commission payouts.</p>
+                </div>
+            </div>
+
+            <div id="formSection">
+                <div class="form-body">
+                    <div class="section-label">
+                        <span class="dot"></span> Data Sync Submission
+                    </div>
+
+                    <form id="syncForm" onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="department">Department <span class="required">*</span></label>
+                                <select id="department" name="department" required>
+                                    <option value="" disabled selected>Select department</option>
+                                    <option value="partner_relationship_management">Partner Relationship Management</option>
+                                    <option value="strategic_alliances">Strategic Alliances</option>
+                                    <option value="channel_sales">Channel Sales</option>
+                                    <option value="business_development">Business Development</option>
+                                    <option value="partner_operations">Partner Operations</option>
+                                    <option value="alliance_marketing">Alliance Marketing</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full">
+                            <label for="partner_file">Partner Data File (XLSX) <span class="required">*</span></label>
+                            <div class="file-upload-zone" id="fileUploadZone">
+                                <span class="upload-icon">📁</span>
+                                <p class="upload-text">Click to upload or drag and drop</p>
+                                <p class="upload-hint">Upload your partner contact list and contract details</p>
+                                <span class="supported-formats">.XLSX only</span>
+                                <input type="file" id="partner_file" name="partner_file" accept=".xlsx" required>
+                            </div>
+                        </div>
+
+                        <div class="info-callout">
+                            <span class="info-icon">ℹ️</span>
+                            <span>Your file will be securely synced to the central CRM. Partner contact lists and contract details are required for Q4 commission processing. All data is encrypted in transit and at rest per company security policy.</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-icon">⬆️</span> Sync Partner Data to CRM
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successSection" class="success-overlay">
+                <div class="check-icon">✅</div>
+                <h2>Partner Data Synced Successfully</h2>
+                <p>Your partner contact list and contract details have been uploaded to the central CRM.</p>
+                <p>Q4 partner enablement and commission processing will proceed on schedule.</p>
+                <div class="ref-id">Sync Reference: PRM-SYNC-2024-<span id="refSuffix">8742</span></div>
+            </div>
+
+            <div class="portal-footer">
+                <span>🔒 Encrypted Connection</span>
+                <span>|</span>
+                <span>Partner Relationship Management Portal v3.2.1</span>
+                <span>|</span>
+                <span>© 2024 Internal Systems</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('partner_file');
+            if (fileInput.files.length === 0) {
+                alert('Please select a partner data file (XLSX) to upload.');
+                return;
+            }
+
+            const fileName = fileInput.files[0].name;
+            if (!fileName.toLowerCase().endsWith('.xlsx')) {
+                alert('Only .XLSX files are accepted. Please upload a valid partner data file.');
+                return;
+            }
+
+            document.getElementById('refSuffix').textContent = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+
+            document.querySelector('.urgency-strip').style.display = 'none';
+        }
+
+        document.getElementById('fileUploadZone').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a5276';
+            this.style.background = '#f1f5f9';
+        });
+
+        document.getElementById('fileUploadZone').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        });
+
+        document.getElementById('fileUploadZone').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('partner_file').files = files;
+                const uploadText = this.querySelector('.upload-text');
+                const uploadHint = this.querySelector('.upload-hint');
+                uploadText.textContent = 'File selected: ' + files[0].name;
+                uploadHint.textContent = 'Click to change or upload a different file';
+                this.querySelector('.supported-formats').textContent = 'Ready to sync';
+                this.querySelector('.supported-formats').style.background = '#d1fae5';
+                this.querySelector('.supported-formats').style.color = '#065f46';
+            }
+        });
+
+        document.getElementById('partner_file').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const uploadZone = document.getElementById('fileUploadZone');
+                const uploadText = uploadZone.querySelector('.upload-text');
+                const uploadHint = uploadZone.querySelector('.upload-hint');
+                const formatBadge = uploadZone.querySelector('.supported-formats');
+                uploadText.textContent = 'File selected: ' + this.files[0].name;
+                uploadHint.textContent = 'Click to change or upload a different file';
+                formatBadge.textContent = 'Ready to sync';
+                formatBadge.style.background = '#d1fae5';
+                formatBadge.style.color = '#065f46';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strategy Offsite 2025: Departmental Roadmap Upload</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            color: #1a1a1a;
+            padding: 32px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 620px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 6px 32px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #0f1c2e 0%, #1a3350 40%, #1e3a5f 100%);
+            color: #ffffff;
+            padding: 30px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.12);
+            color: #c8daf0;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(4px);
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #a3bfd9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-meta .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #5b9bd5;
+            display: inline-block;
+        }
+
+        .urgency-banner {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 16px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #ffedd5;
+        }
+
+        .urgency-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .urgency-content h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #9a3412;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .urgency-content p {
+            font-size: 12px;
+            color: #b45309;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .urgency-content .deadline-timer {
+            display: inline-block;
+            background: #f97316;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .content {
+            padding: 28px 32px 32px;
+        }
+
+        .content>p {
+            font-size: 13px;
+            color: #4b5563;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #1f2937;
+            background: #fafbfc;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+            background: #ffffff;
+        }
+
+        .form-group input[type="text"]::placeholder,
+        .form-group input[type="email"]::placeholder,
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .form-group textarea {
+            min-height: 160px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            letter-spacing: -0.1px;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 24px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #1e3a5f;
+            background: #f1f5f9;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-box input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            font-size: 13px;
+            color: #4b5563;
+            cursor: pointer;
+            max-width: 100%;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #152b47;
+        }
+
+        .file-upload-box.drag-active {
+            border-color: #1e3a5f;
+            background: #eef3f9;
+            box-shadow: inset 0 0 0 2px rgba(30, 58, 95, 0.06);
+        }
+
+        .submit-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: linear-gradient(160deg, #1e3a5f 0%, #152b47 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(30, 58, 95, 0.2);
+        }
+
+        .save-draft-btn {
+            padding: 14px 20px;
+            background: #ffffff;
+            color: #4b5563;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .save-draft-btn:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 14px 32px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #e5e7eb;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 48px 36px;
+        }
+
+        .success-overlay.visible {
+            display: block;
+        }
+
+        .success-overlay .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: popIn 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-overlay h2 {
+            color: #059669;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .success-overlay p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .confirmation-code {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #059669;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 8px 18px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            letter-spacing: 1px;
+            border: 1px solid #d1fae5;
+        }
+
+        .form-body.hidden {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 12px 8px;
+            }
+
+            .header {
+                padding: 22px 18px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .content {
+                padding: 20px 18px 24px;
+            }
+
+            .submit-row {
+                flex-direction: column;
+            }
+
+            .save-draft-btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-badge">Corporate Strategy & Innovation</div>
+            <h1>Strategy Offsite 2025: Departmental Roadmap Upload</h1>
+            <p>Submit your department's 2025 strategic roadmap for the executive planning session</p>
+            <div class="header-meta">
+                <span>🔒 Internal Portal</span>
+                <span class="dot"></span>
+                <span>Confidential</span>
+                <span class="dot"></span>
+                <span>Ref: CEO-OFFSITE-2025</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="urgency-icon">⏰</span>
+            <div class="urgency-content">
+                <h3>Submission Deadline Approaching</h3>
+                <p>All submissions must be received by <strong>10:00 AM today</strong> to be included in the offsite briefing package. Late entries will not be reviewed by the executive team.</p>
+                <span class="deadline-timer">DUE 10:00 AM TODAY</span>
+            </div>
+        </div>
+
+        <div class="content" id="formBody">
+            <p>As part of the upcoming CEO strategy offsite, all department heads must upload their <strong>2025 strategic roadmaps</strong>, including key initiatives and resource needs. These documents will form the basis of the executive planning session.</p>
+
+            <form id="roadmapForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="full_name">Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Jane Smith" required autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Corporate Email <span class="required-star">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="jane.smith@company.com" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department <span class="required-star">*</span></label>
+                    <input type="text" id="department" name="department" placeholder="e.g., Marketing, Engineering, Product" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="roadmap_file">Upload Roadmap File <span class="required-star">*</span></label>
+                    <div class="file-upload-box" id="fileUploadBox">
+                        <span class="upload-icon">📄</span>
+                        <div class="upload-text">Drag & drop your roadmap here</div>
+                        <div class="upload-hint">PDF, DOCX, PPTX, or XLSX — Max 25 MB</div>
+                        <input type="file" id="roadmap_file" name="roadmap_file" accept=".pdf,.docx,.pptx,.xlsx,.doc,.ppt,.xls" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="focus_areas">Key Focus Areas <span class="required-star">*</span></label>
+                    <textarea id="focus_areas" name="focus_areas" placeholder="Briefly mention top priorities, strategic bets, resource gaps, cross-functional dependencies, and any critical headcount or budget needs for FY2025..." required></textarea>
+                </div>
+
+                <div class="submit-row">
+                    <button type="button" class="save-draft-btn" onclick="saveDraft()">💾 Save Draft</button>
+                    <button type="submit" class="submit-btn">Submit Roadmap for Offsite →</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <span class="success-icon">✅</span>
+            <h2>Roadmap Successfully Submitted</h2>
+            <p>Your department's 2025 strategic roadmap has been received and queued for the executive offsite briefing package.</p>
+            <p style="font-size:12px;color:#9ca3af;">A confirmation email has been sent to the address provided.</p>
+            <div class="confirmation-code">SUB-2025-CSI-8472</div>
+            <p style="font-size:11px;color:#9ca3af;margin-top:14px;">You may close this window. If you need to amend your submission, contact the Strategy Office before the 10 AM deadline.</p>
+        </div>
+
+        <div class="footer">
+            <span>Corporate Strategy & Innovation</span> &nbsp;|&nbsp; Internal Use Only &nbsp;|&nbsp; All submissions are logged and timestamped
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('roadmapForm');
+            const formBody = document.getElementById('formBody');
+            const successOverlay = document.getElementById('successOverlay');
+
+            const fileInput = document.getElementById('roadmap_file');
+            const fileName = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0].name : 'No file selected';
+
+            console.log('Submission received:');
+            console.log('  Name:', document.getElementById('full_name').value);
+            console.log('  Email:', document.getElementById('email').value);
+            console.log('  Department:', document.getElementById('department').value);
+            console.log('  File:', fileName);
+            console.log('  Focus Areas:', document.getElementById('focus_areas').value);
+
+            formBody.classList.add('hidden');
+            successOverlay.classList.add('visible');
+
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function saveDraft() {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                        position: fixed;
+                        bottom: 24px;
+                        right: 24px;
+                        background: #1f2937;
+                        color: #fff;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        z-index: 9999;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+                        animation: slideUp 0.3s ease;
+                        letter-spacing: -0.1px;
+                    `;
+            toast.textContent = '💾 Draft saved locally. You can return to complete your submission.';
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+                    @keyframes slideUp {
+                        from { transform: translateY(30px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                `;
+        document.head.appendChild(styleSheet);
+
+        const fileUploadBox = document.getElementById('fileUploadBox');
+        const fileInput = document.getElementById('roadmap_file');
+
+        fileUploadBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadBox.classList.add('drag-active');
+        });
+
+        fileUploadBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadBox.classList.remove('drag-active');
+        });
+
+        fileUploadBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadBox.classList.remove('drag-active');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                const uploadText = fileUploadBox.querySelector('.upload-text');
+                const uploadHint = fileUploadBox.querySelector('.upload-hint');
+                if (uploadText) uploadText.textContent = '📎 ' + e.dataTransfer.files[0].name;
+                if (uploadHint) uploadHint.textContent = 'File selected — you can also click to change';
+            }
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files && fileInput.files.length > 0) {
+                const uploadText = fileUploadBox.querySelector('.upload-text');
+                const uploadHint = fileUploadBox.querySelector('.upload-hint');
+                if (uploadText) uploadText.textContent = '📎 ' + fileInput.files[0].name;
+                if (uploadHint) uploadHint.textContent = 'File selected — you can also click to change';
+            }
+        });
+    </script>
+</body>
+</html>

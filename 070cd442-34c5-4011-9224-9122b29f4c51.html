@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise Physical Asset Verification Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            color: #1e293b;
+            padding: 32px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 660px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08), 0 8px 40px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 24px 32px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: #ffffff;
+        }
+
+        .header-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 3px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .header-meta {
+            margin-left: auto;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .header-meta .ref-number {
+            font-size: 12px;
+            color: #64748b;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-meta .date {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .urgency-banner {
+            background: #fff8e6;
+            border-left: 5px solid #e69819;
+            border-bottom: 1px solid #fde68a;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urgency-banner .warn-icon {
+            width: 22px;
+            height: 22px;
+            background: #e69819;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .urgency-banner .warn-text {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .urgency-banner .deadline-badge {
+            margin-left: auto;
+            background: #dc2626;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .info-bar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .info-bar .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            flex-shrink: 0;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-intro strong {
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e293b;
+            background: #fff;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            font-family: inherit;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .form-group select option {
+            color: #1e293b;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #fafbfc;
+            transition: border-color 0.15s ease, background 0.15s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #1e3a5f;
+            background: #f8fafc;
+        }
+
+        .file-upload-box .upload-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 10px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-upload-box .upload-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #475569;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 13px;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-subtext {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-box.file-selected {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .file-upload-box .selected-file-name {
+            display: none;
+            font-size: 12px;
+            color: #166534;
+            font-weight: 500;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 160px;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1e293b;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            resize: vertical;
+            line-height: 1.5;
+            background: #fafbfc;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+            background: #fff;
+        }
+
+        .form-group textarea::placeholder {
+            color: #94a3b8;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .divider-or {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .divider-or::before,
+        .divider-or::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 2px;
+            width: 16px;
+            height: 16px;
+            accent-color: #1e3a5f;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.5;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: background 0.15s ease, transform 0.1s ease;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: #152e4d;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.99);
+        }
+
+        .footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .footer strong {
+            color: #64748b;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 56px 40px;
+        }
+
+        .success-message .success-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-message .success-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: #22c55e;
+            fill: none;
+            stroke-width: 3;
+        }
+
+        .success-message h2 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .success-message .ref-code {
+            display: inline-block;
+            margin-top: 16px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #1e3a5f;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header {
+                flex-wrap: wrap;
+                padding: 20px;
+            }
+            .header-meta {
+                margin-left: 0;
+                text-align: left;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .urgency-banner {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px 16px;
+            }
+            .urgency-banner .deadline-badge {
+                margin-left: 0;
+            }
+            .form-container {
+                padding: 20px;
+            }
+            .success-message {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2 2H5V5h14v14zm0-16H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" fill="white"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Enterprise Physical Asset Verification Portal</h1>
+                <span class="dept-tag">Internal Audit &bull; Physical Asset Verification</span>
+            </div>
+            <div class="header-meta">
+                <span class="ref-number">AUD-2024-Q4-PAV</span>
+                <span class="date">December 17, 2024</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <div class="warn-icon">!</div>
+            <span class="warn-text">ACTION REQUIRED: Submission Deadline COB Today &mdash; Avoid Audit Findings</span>
+            <span class="deadline-badge">Due Today</span>
+        </div>
+
+        <div class="info-bar">
+            <span class="dot"></span>
+            Secure internal portal &bull; Session encrypted &bull; Audit ID: PAV-2024-11873
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <p class="section-intro">
+                    As part of our <strong>annual external audit</strong>, we must verify the existence and location of all physical assets (computers, monitors, printers, etc.). Please submit your department's asset inventory list with serial numbers to confirm accuracy. <strong>Non-compliance will result in audit findings and potential budget cuts.</strong>
+                </p>
+
+                <form id="auditForm" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employee_id">Employee ID <span class="required-star">*</span></label>
+                            <input type="text" id="employee_id" name="employee_id" placeholder="Enter your employee ID" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email <span class="required-star">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Product">Product</option>
+                            <option value="Design">Design</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Human Resources">Human Resources</option>
+                            <option value="Legal">Legal</option>
+                            <option value="Operations">Operations</option>
+                            <option value="IT">IT</option>
+                            <option value="Research">Research</option>
+                            <option value="Customer Support">Customer Support</option>
+                            <option value="Administration">Administration</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Asset Inventory File <span class="required-star">*</span></label>
+                        <div class="file-upload-box" id="fileUploadBox">
+                            <div class="upload-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 16V8M8 12l4-4 4 4M20 16v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <p class="upload-text">Click to upload or drag and drop</p>
+                            <p class="upload-subtext">CSV, XLSX, or PDF up to 25MB</p>
+                            <span class="selected-file-name" id="selectedFileName"></span>
+                            <input type="file" id="asset_file" name="asset_file" accept=".csv,.xlsx,.xls,.pdf" onchange="handleFileSelect(event)">
+                        </div>
+                    </div>
+
+                    <div class="divider-or">or</div>
+
+                    <div class="form-group">
+                        <label for="asset_data_paste">Or Paste Inventory Data</label>
+                        <textarea id="asset_data_paste" name="asset_data_paste" placeholder="Paste inventory contents here...&#10;&#10;Example format:&#10;Asset Tag | Serial Number | Device Type | Location | Assigned To&#10;AST-001  | SN-2024-XYZ  | Laptop      | Bldg A-3 | jane.doe"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirm_accuracy" name="confirm_accuracy" required>
+                        <label for="confirm_accuracy">I certify that all submitted asset information is accurate and complete to the best of my knowledge. I understand that false or incomplete submissions may result in disciplinary action.</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Asset Inventory Verification</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="4 12 9 17 20 6" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2>Verification Submitted Successfully</h2>
+            <p>Your asset inventory has been recorded. The Internal Audit team will review your submission. No further action is required at this time.</p>
+            <span class="ref-code">Confirmation: PAV-2024-11873-<span id="confirmSuffix">----</span></span>
+        </div>
+
+        <div class="footer">
+            <strong>Internal Audit Department</strong> &bull; Enterprise Physical Asset Verification Portal &bull; Q4 FY2024<br>
+            This is an internal company system. Unauthorized access is prohibited. All submissions are logged and audited.
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const box = document.getElementById('fileUploadBox');
+            const fileNameSpan = document.getElementById('selectedFileName');
+
+            if (file) {
+                box.classList.add('file-selected');
+                fileNameSpan.style.display = 'block';
+                fileNameSpan.textContent = 'Selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            } else {
+                box.classList.remove('file-selected');
+                fileNameSpan.style.display = 'none';
+                fileNameSpan.textContent = '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var employeeId = document.getElementById('employee_id').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var department = document.getElementById('department').value;
+            var confirmChecked = document.getElementById('confirm_accuracy').checked;
+            var fileInput = document.getElementById('asset_file');
+            var pasteData = document.getElementById('asset_data_paste').value.trim();
+
+            var errors = [];
+
+            if (!employeeId) {
+                errors.push('Employee ID is required.');
+            }
+            if (!email) {
+                errors.push('Work Email is required.');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errors.push('Please enter a valid email address.');
+            }
+            if (!department) {
+                errors.push('Please select a department.');
+            }
+            if (!fileInput.files.length && !pasteData) {
+                errors.push('Please either upload an asset inventory file or paste inventory data.');
+            }
+            if (!confirmChecked) {
+                errors.push('You must certify the accuracy of the submitted information.');
+            }
+
+            if (errors.length > 0) {
+                alert('Please correct the following:\n\n' + errors.join('\n'));
+                return;
+            }
+
+            document.getElementById('formSection').style.display = 'none';
+            var successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+
+            var suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('confirmSuffix').textContent = suffix;
+
+            var urgencyBanner = document.querySelector('.urgency-banner');
+            if (urgencyBanner) {
+                urgencyBanner.style.background = '#dcfce7';
+                urgencyBanner.style.borderLeftColor = '#22c55e';
+                var warnIcon = urgencyBanner.querySelector('.warn-icon');
+                if (warnIcon) {
+                    warnIcon.style.background = '#22c55e';
+                    warnIcon.textContent = '✓';
+                }
+                var warnText = urgencyBanner.querySelector('.warn-text');
+                if (

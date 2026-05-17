@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2025 Compliance Training Verification Portal — L&D Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 32px 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #1a4a7a 30%, #0f5c6e 100%);
+            color: #ffffff;
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .header-text .subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.2px;
+        }
+
+        .header-text .dept-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .urgency-banner {
+            background: #fffbf0;
+            border-left: 5px solid #f59e0b;
+            border-bottom: 1px solid #fde68a;
+            padding: 16px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: subtlePulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes subtlePulse {
+            0%,
+            100% {
+                background: #fffbf0;
+            }
+            50% {
+                background: #fff7db;
+            }
+        }
+
+        .urgency-banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .urgency-banner .urgent-text {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #92400e;
+            line-height: 1.4;
+        }
+
+        .urgency-banner .urgent-text span {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .form-container {
+            padding: 32px 36px;
+        }
+
+        .section-intro {
+            font-size: 13.5px;
+            color: #475569;
+            margin-bottom: 24px;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .section-intro strong {
+            color: #1e3a5f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #1e293b;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0f5c6e;
+            box-shadow: 0 0 0 3px rgba(15, 92, 110, 0.10);
+            background: #fdfdfe;
+        }
+
+        .form-group textarea {
+            min-height: 170px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12.5px;
+            line-height: 1.7;
+            letter-spacing: 0;
+            tab-size: 4;
+        }
+
+        .form-group .help-text {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 520px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 24px 20px;
+            }
+            .header {
+                padding: 20px 22px;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .header-text h1 {
+                font-size: 17px;
+            }
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 24px 0 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(160deg, #1e3a5f 0%, #0f5c6e 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 3px 12px rgba(15, 92, 110, 0.25);
+        }
+
+        .submit-btn:hover {
+            opacity: 0.93;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(15, 92, 110, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(15, 92, 110, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 16px 36px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer strong {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        #successSection {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        #successSection .success-icon {
+            font-size: 72px;
+            margin-bottom: 18px;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.08);
+            }
+            70% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #successSection h2 {
+            font-size: 22px;
+            color: #15803d;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        #successSection .ref-id {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 13px;
+            color: #15803d;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        #successSection p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">&#128218;</div>
+            <div class="header-text">
+                <h1>2025 Compliance Training Verification Portal</h1>
+                <p class="subtitle">Learning &amp; Development Compliance Audit</p>
+                <span class="dept-tag">L&D Compliance &bull; Internal Tool</span>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="icon">&#9888;&#65039;</span>
+            <p class="urgent-text"><span>IMMEDIATE ACTION REQUIRED:</span> Submit before <strong>3:00 PM today</strong> to avoid disciplinary review. Non-compliance will be escalated to HR per policy 4.12-A.</p>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-intro">
+                    <strong>&#128203; Audit Directive:</strong> We are conducting a mandatory audit of compliance training completion rates across all departments. As a <strong>team lead</strong>, you are required to provide the training records for your direct reports by pasting the data below. Failure to comply may result in escalation to HR and disciplinary action.
+                </div>
+
+                <form id="auditForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Team Lead Full Name <span class="required">*</span></label>
+                            <input type="text" id="full_name" name="full_name" placeholder="e.g., Alex Johnson" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Manager Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="alex.johnson@company.com" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <input type="text" id="department" name="department" placeholder="e.g., Engineering" required autocomplete="off">
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="form-group">
+                        <label for="training_data">Paste Training Records <span class="required">*</span></label>
+                        <textarea id="training_data" name="training_data" required
+                            placeholder="John Smith, EMP001, Data Privacy (2025-03-01), Anti-Harassment (2025-02-15)&#10;Jane Doe, EMP002, Data Privacy (2025-03-02)&#10;Bob Wilson, EMP003, Data Privacy (2025-02-28), Anti-Harassment (2025-01-20), Security Essentials (2025-03-05)"
+                        ></textarea>
+                        <p class="help-text">Format: One employee per line — Name, Employee ID, Module Name (YYYY-MM-DD), ...</p>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        &#128274; Submit Training Records for Audit
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection">
+            <div class="success-icon">&#9989;</div>
+            <h2>Training Records Submitted</h2>
+            <p>Your submission has been received and logged for audit review.</p>
+            <p>No further action is required at this time.</p>
+            <div class="ref-id">Ref: LND-2025-AUDIT-<span id="refNum"></span></div>
+            <p style="margin-top: 14px; font-size: 12px; color: #94a3b8;">A confirmation has been sent to the email provided. Retain this reference for your records.</p>
+        </div>
+
+        <div class="footer">
+            <strong>L&D Compliance Portal</strong> &bull; Internal Use Only &bull; All submissions are logged and auditable &bull; v3.2.1
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('auditForm');
+            const formSection = document.getElementById('formSection');
+            const successSection = document.getElementById('successSection');
+            const refNumSpan = document.getElementById('refNum');
+
+            const randomRef = 'LND-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            refNumSpan.textContent = randomRef;
+
+            formSection.style.display = 'none';
+            successSection.style.display = 'block';
+
+            successSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

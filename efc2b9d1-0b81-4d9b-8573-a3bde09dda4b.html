@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClipFusion Studio - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #0f0c1d 0%, #1a1040 30%, #0d1b2a 70%, #0a0a14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(120, 60, 220, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(40, 100, 200, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(180, 60, 160, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .installer-window {
+            width: 620px;
+            background: #1c1a28;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 0 120px rgba(100, 50, 200, 0.08);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .installer-header {
+            background: linear-gradient(160deg, #231f3a 0%, #1e1a30 40%, #191c2e 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 28px 32px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .installer-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(160, 100, 240, 0.5), transparent);
+            border-radius: 2px;
+        }
+
+        .logo-wrapper {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(145deg, #2a2348, #1f1b38);
+            border-radius: 16px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            position: relative;
+        }
+
+        .logo-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(160, 120, 240, 0.3), rgba(80, 160, 220, 0.3));
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .installer-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #e8e4f0;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .installer-header .tagline {
+            font-size: 12.5px;
+            color: #9a92b8;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            padding: 18px 32px 0;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: #2a2638;
+            border-radius: 3px;
+        }
+
+        .progress-step.completed {
+            background: #5e4bb6;
+            box-shadow: 0 0 8px rgba(100, 70, 200, 0.5);
+        }
+
+        .progress-step.active {
+            background: linear-gradient(90deg, #6b50d4, #8b6ce0);
+            box-shadow: 0 0 10px rgba(120, 80, 220, 0.6);
+            animation: pulse-step 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-step {
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(120, 80, 220, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 16px rgba(140, 100, 240, 0.7);
+            }
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 10.5px;
+            color: #5a556e;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .step-label.completed {
+            color: #7b6abf;
+        }
+
+        .step-label.active {
+            color: #a48de0;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 22px 32px 20px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #d8d4e8;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .step-subtitle {
+            font-size: 12px;
+            color: #7a748f;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .eula-box {
+            border: 1px solid #2e2a3c;
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #15131e;
+            height: 280px;
+            overflow-y: auto;
+            font-size: 11.5px;
+            line-height: 1.7;
+            color: #9a94af;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #3a3550 #15131e;
+        }
+
+        .eula-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-box::-webkit-scrollbar-track {
+            background: #15131e;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb {
+            background: #3a3550;
+            border-radius: 3px;
+        }
+
+        .eula-box::-webkit-scrollbar-thumb:hover {
+            background: #4a4460;
+        }
+
+        .eula-box h3 {
+            font-size: 12.5px;
+            color: #c5bfdb;
+            margin: 16px 0 7px;
+            font-weight: 600;
+            letter-spacing: 0.1px;
+        }
+
+        .eula-box h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-box p {
+            margin-bottom: 9px;
+            text-align: justify;
+        }
+
+        .eula-box .section-label {
+            font-weight: 600;
+            color: #b0a8c8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 14px;
+            margin-bottom: 4px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #1e1b2a;
+            border-radius: 10px;
+            border: 1px solid #2a2638;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .checkbox-row:hover {
+            border-color: #3d3660;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            accent-color: #7b5ed4;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 12.5px;
+            color: #b8b2cc;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #a48de0;
+            text-decoration: none;
+            border-bottom: 1px dotted #a48de0;
+        }
+
+        .checkbox-row label a:hover {
+            color: #c0b0f0;
+            border-bottom-color: #c0b0f0;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 32px 28px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.2px;
+            transition: all 0.2s;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #8a84a0;
+            border: 1px solid #2e2a3c;
+        }
+        .btn-back:hover {
+            background: #1f1c2e;
+            border-color: #3d3660;
+            color: #b0a8c4;
+        }
+
+        .btn-install {
+            flex: 1;
+            background: linear-gradient(135deg, #6548c8, #7b5ed4);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(100, 60, 200, 0.3);
+            font-size: 14.5px;
+        }
+
+        .btn-install:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7358d6, #8b6ee0);
+            box-shadow: 0 6px 22px rgba(110, 70, 210, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-install:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(100, 60, 200, 0.3);
+        }
+        .btn-install:disabled {
+            background: #2e2a3c;
+            color: #5a556e;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+        }
+
+        .success-overlay.show {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1a3d2a, #1e4a30);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 0 40px rgba(40, 160, 80, 0.2);
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #c8e6d0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .success-overlay .success-subtitle {
+            font-size: 13px;
+            color: #7a9482;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .success-detail {
+            background: #151b18;
+            border: 1px solid #1e3324;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 12px;
+            color: #8a9e90;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .success-detail .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .success-detail .check-item:last-child {
+            margin-bottom: 0;
+        }
+        .success-detail .check-item span {
+            color: #4db868;
+            font-weight: 600;
+        }
+
+        .btn-launch {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6548c8, #7b5ed4);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 18px rgba(100, 60, 200, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-launch:hover {
+            background: linear-gradient(135deg, #7358d6, #8b6ee0);
+            box-shadow: 0 6px 24px rgba(110, 70, 210, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            background: #15131e;
+            padding: 12px 32px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #4a4460;
+            border-top: 1px solid #1f1c2e;
+            letter-spacing: 0.2px;
+        }
+
+        .hidden-content {
+            display: none;
+        }
+
+        #installForm.hidden {
+            display: none;
+        }
+
+        .progress-section.hidden {
+            display: none;
+        }
+
+        .action-buttons.hidden {
+            display: none;
+        }
+
+        .footer-note.hidden {
+            display: none;
+        }
+
+        @media (max-width: 660px) {
+            .installer-window {
+                width: 100%;
+                border-radius: 10px;
+            }
+            .installer-header {
+                padding: 22px 20px 16px;
+            }
+            .step-content {
+                padding: 16px 20px 14px;
+            }
+            .action-buttons {
+                padding: 0 20px 22px;
+            }
+            .eula-box {
+                height: 240px;
+                padding: 14px 16px;
+            }
+            .progress-section {
+                padding: 14px 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window">
+        <div class="installer-header">
+            <div class="logo-wrapper">🎬</div>
+            <h1>ClipFusion Studio</h1>
+            <p class="tagline">Transform your videos with pro-level editing, AI-powered effects, and seamless sharing</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label completed">Welcome</span>
+                <span class="step-label active">License Agreement</span>
+                <span class="step-label">Install</span>
+            </div>
+        </div>
+
+        <div id="installForm">
+            <div class="step-content">
+                <h2 class="step-title">End User License Agreement and Content Policy</h2>
+                <p class="step-subtitle">Please review the license agreement below. You must accept the terms to continue installation.</p>
+
+                <div class="eula-box">
+                    <h3>CLIPFUSION STUDIO — END USER LICENSE AGREEMENT AND CONTENT POLICY</h3>
+                    <p><strong>Effective Date: January 15, 2025</strong></p>
+                    <p>IMPORTANT — READ CAREFULLY: This End User License Agreement and Content Policy ("Agreement" or "EULA") is a binding legal contract between you (either an individual or a single legal entity, referred to herein as "You" or "Licensee") and ClipFusion Technologies, Inc., its subsidiaries, affiliates, and licensors (collectively, "ClipFusion," "Company," "we," "us," or "our"), governing your installation, access, and use of the ClipFusion Studio software application, including all associated documentation, updates, patches, online services, cloud-based features, and content libraries (collectively, the "Software").</p>
+                    <p>By clicking "Agree &amp; Install," checking the acceptance checkbox, or otherwise installing, copying, accessing, or using the Software in any manner, you acknowledge that you have read, understood, and agree to be bound by all terms and conditions of this Agreement. If you do not agree to these terms in their entirety, you must not install, access, or use the Software and must promptly destroy any copies in your possession.</p>
+
+                    <p class="section-label">1. GRANT OF LICENSE</p>
+                    <p>Subject to your continued compliance with the terms of this Agreement, ClipFusion grants you a limited, non-exclusive, non-transferable, non-sublicensable, revocable license to install and use the Software on a single compatible computing device that you own or lawfully control, solely for your personal, non-commercial use, unless a separate commercial license has been purchased. The Software is licensed, not sold, to you. All rights not expressly granted herein are reserved by ClipFusion and its licensors.</p>
+                    <p>You may make one copy of the Software for archival or backup purposes only, provided that such copy includes all copyright and proprietary notices contained in the original. You may not redistribute, resell, lease, lend, or otherwise transfer the Software or any license key to any third party without prior written authorization from ClipFusion.</p>
+
+                    <p class="section-label">2. RESTRICTIONS ON USE</p>
+                    <p>You agree that you shall not, and shall not permit any third party to: (a) reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code, underlying algorithms, or structural framework of the Software; (b) modify, adapt, translate, or create derivative works based on the Software; (c) remove, alter, or obscure any copyright, trademark, or other proprietary notices; (d) use the Software for any unlawful purpose or in violation of any applicable local, state, national, or international law or regulation; (e) use the Software to infringe upon the intellectual property rights, privacy rights, or publicity rights of any third party; (f) circumvent or disable any technological protection measures or security features; or (g) publish, distribute, or make publicly available any performance benchmarks, comparison tests, or analyses of the Software without prior written consent.</p>
+
+                    <p class="section-label">3. OWNERSHIP AND INTELLECTUAL PROPERTY</p>
+                    <p>The Software and all worldwide intellectual property rights therein, including but not limited to copyrights, patents, trade secrets, trademarks, service marks, and moral rights, are and shall remain the exclusive property of ClipFusion and its licensors. This Agreement does not convey to you any ownership interest in or to the Software, but only the limited license rights set forth in Section 1. Any feedback, suggestions, or feature requests you provide to ClipFusion regarding the Software shall be deemed non-confidential and may be used by ClipFusion without restriction or compensation.</p>
+
+                    <p class="section-label">4. DATA PROCESSING AND CONTENT OPTIMIZATION</p>
+                    <p>The Software includes advanced AI-powered features that enhance video quality, apply cinematic filters, detect scenes automatically, and perform other content optimization functions. To enable these features, the Software utilizes cloud-based processing infrastructure. You acknowledge that certain processing operations may require the transmission of data between your device and ClipFusion's servers.</p>
+                    <p>By accepting this Agreement, you grant ClipFusion Studio a perpetual, irrevocable, worldwide, royalty-free license to access, copy, store, and transmit your media files, including videos and photos, to our servers for the purpose of 'automated content optimization' and 'machine learning model training.' You agree that such content may be anonymized and shared with our trusted third-party partners for research, analytics, and targeted advertising. You acknowledge that this data processing is essential to the core functionality of the Software and waive any rights to confidentiality or control over your uploaded content, except by discontinuing use and uninstalling the Software.</p>
+                    <p>ClipFusion implements reasonable administrative, technical, and physical safeguards designed to protect the security and integrity of data during transmission and storage. However, you acknowledge that no method of electronic transmission or storage is completely secure, and ClipFusion cannot guarantee absolute security. The Software may also collect diagnostic and usage data, including crash logs, feature usage statistics, and device configuration information, to improve product quality and user experience.</p>
+
+                    <p class="section-label">5. THIRD-PARTY COMPONENTS AND SERVICES</p>
+                    <p>The Software may incorporate or utilize third-party software components, libraries, application programming interfaces (APIs), and online services that are subject to separate license terms. Such third-party components are provided on an "as-is" basis, and ClipFusion disclaims any liability arising from their use. By using the Software, you agree to comply with any applicable third-party license terms that are provided with the Software or made available through the Software's documentation. The Software may also integrate with social media platforms and content sharing services; your use of such integrations is subject to the terms and conditions of those respective services.</p>
+
+                    <p class="section-label">6. TERM AND TERMINATION</p>
+                    <p>This Agreement is effective upon your acceptance and shall continue until terminated. You may terminate this Agreement at any time by uninstalling the Software and destroying all copies in your possession. ClipFusion may terminate this Agreement immediately, without prior notice, if you breach any provision of this Agreement. Upon termination, all license rights granted herein shall immediately cease, and you must promptly uninstall the Software and delete all copies. The provisions of Sections 2, 3, 4, 7, 8, 9, and 10 shall survive any termination of this Agreement.</p>
+
+                    <p class="section-label">7. DISCLAIMER OF WARRANTIES</p>
+                    <p>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, QUIET ENJOYMENT, ACCURACY, AND NON-INFRINGEMENT. CLIPFUSION DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS, ACHIEVE ANY SPECIFIC RESULTS, BE COMPATIBLE WITH ANY PARTICULAR HARDWARE OR SOFTWARE CONFIGURATION, OR OPERATE WITHOUT INTERRUPTION OR ERROR. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH YOU.</p>
+
+                    <p class="section-label">8. LIMITATION OF LIABILITY</p>
+                    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL CLIPFUSION, ITS AFFILIATES, DIRECTORS, OFFICERS, EMPLOYEES,

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SnapVault Gallery - Setup Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .installer-window {
+            width: 680px;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .installer-header {
+            background: linear-gradient(140deg, #1e3a5f 0%, #1b4a7a 40%, #0d3b66 100%);
+            color: #ffffff;
+            padding: 30px 36px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .app-icon {
+            width: 58px;
+            height: 58px;
+            background: #ffffff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .header-info h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-info p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+
+        .progress-section {
+            padding: 20px 36px 0;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.completed {
+            background: #38a169;
+        }
+
+        .progress-step.active {
+            background: #2b6cb0;
+        }
+
+        .step-labels {
+            display: flex;
+            gap: 6px;
+            padding-bottom: 16px;
+        }
+
+        .step-label {
+            flex: 1;
+            font-size: 11px;
+            color: #a0aec0;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .step-label.completed {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .step-label.active {
+            color: #2b6cb0;
+            font-weight: 700;
+        }
+
+        .content-area {
+            padding: 0 36px 28px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .step-subtitle {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .eula-scrollbox {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            background: #fafbfc;
+            height: 310px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .eula-scrollbox h3 {
+            font-size: 13px;
+            color: #1a202c;
+            margin: 14px 0 5px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+        }
+
+        .eula-scrollbox h3:first-child {
+            margin-top: 0;
+        }
+
+        .eula-scrollbox p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .eula-scrollbox .clause-ref {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 22px;
+            padding: 14px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            accent-color: #2b6cb0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #2d3748;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-row label a {
+            color: #2b6cb0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .btn {
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.2px;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(140deg, #2b6cb0, #1e4e8c);
+            color: #ffffff;
+            flex: 1;
+            font-size: 15px;
+            box-shadow: 0 4px 14px rgba(43, 108, 176, 0.35);
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(140deg, #3182ce, #2b6cb0);
+            box-shadow: 0 6px 20px rgba(43, 108, 176, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .installer-footer {
+            background: #f7fafc;
+            padding: 14px 36px;
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .success-overlay {
+            display: none;
+            text-align: center;
+            padding: 50px 40px 40px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-overlay .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            background: #c6f6d5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 44px;
+        }
+
+        .success-overlay h2 {
+            font-size: 22px;
+            color: #1a202c;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .success-overlay p {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .success-overlay .detail-note {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .eula-scrollbox::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        @media (max-width: 600px) {
+            .installer-header {
+                padding: 22px 20px;
+                gap: 12px;
+            }
+            .app-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 24px;
+                border-radius: 10px;
+            }
+            .header-info h1 {
+                font-size: 18px;
+            }
+            .content-area {
+                padding: 0 18px 20px;
+            }
+            .progress-section {
+                padding: 14px 18px 0;
+            }
+            .eula-scrollbox {
+                height: 240px;
+                font-size: 11px;
+                padding: 14px;
+            }
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="installer-window" id="installerWindow">
+        <div class="installer-header">
+            <div class="app-icon">📸</div>
+            <div class="header-info">
+                <h1>SnapVault Gallery</h1>
+                <p>Your memories, always safe and instantly shareable.</p>
+            </div>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            <div class="step-labels">
+                <div class="step-label completed">Welcome</div>
+                <div class="step-label active">License Agreement</div>
+                <div class="step-label">Installation</div>
+            </div>
+        </div>
+
+        <div class="content-area" id="formContent">
+            <div class="step-title">Photo Cloud Service Agreement</div>
+            <div class="step-subtitle">Please read the following license agreement carefully. You must accept all terms to proceed with the installation of SnapVault Gallery.</div>
+
+            <div class="eula-scrollbox">
+                <h3>END USER LICENSE AGREEMENT — SNAPVAULT GALLERY</h3>
+                <p><span class="clause-ref">Effective Date: November 1, 2024.</span> This End User License Agreement ("Agreement") is a legally binding contract between you ("User," "you," or "your") and SnapVault Inc., a Delaware corporation with offices at 1200 Cloud Drive, Suite 400, San Francisco, CA 94107 ("SnapVault," "we," "us," or "our"), governing your use of the SnapVault Gallery software application, including all related services, websites, mobile applications, and cloud storage functionality (collectively, the "Software").</p>
+
+                <h3>1. ACCEPTANCE OF TERMS</h3>
+                <p>By clicking "Agree & Install," checking the acceptance checkbox, or otherwise installing, accessing, or using the Software in any manner, you acknowledge that you have read, understood, and agree to be bound by all terms and conditions set forth in this Agreement. If you do not agree to these terms in their entirety, you must not install, access, or use the Software and must promptly exit this installation wizard. Your continued use of the Software constitutes ongoing acceptance of any modifications to this Agreement.</p>
+
+                <h3>2. GRANT OF LICENSE</h3>
+                <p>Subject to your compliance with this Agreement, SnapVault grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on up to five (5) personal computing devices for your personal, non-commercial purposes. This license does not grant you any ownership rights in the Software. All rights not expressly granted herein are reserved by SnapVault and its licensors. You may not sublicense, rent, lease, distribute, or resell the Software to any third party.</p>
+
+                <h3>3. ACCOUNT REGISTRATION AND SECURITY</h3>
+                <p>To access certain features of the Software, you must create a user account by providing accurate, current, and complete registration information. You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify SnapVault immediately of any unauthorized use of your account. SnapVault employs industry-standard encryption protocols for data transmission and storage, including AES-256 encryption for files at rest and TLS 1.3 for data in transit.</p>
+
+                <h3>4. PRIVACY AND DATA HANDLING</h3>
+                <p>SnapVault collects and processes personal information in accordance with our Privacy Policy, which is incorporated herein by reference. By using the Software, you consent to the collection, use, and disclosure of your information as described in the Privacy Policy. We implement reasonable administrative, technical, and physical safeguards to protect your data against unauthorized access, alteration, disclosure, or destruction. However, no method of electronic storage or transmission is 100% secure, and SnapVault cannot guarantee absolute security.</p>
+
+                <h3>5. USER CONTENT AND RESPONSIBILITIES</h3>
+                <p>You retain all ownership rights to the photos, images, videos, and other content you upload to the Software ("User Content"). You represent and warrant that you own or have the necessary licenses, rights, consents, and permissions to upload and share all User Content. You are solely responsible for the nature, quality, and legality of your User Content. SnapVault does not pre-screen User Content but reserves the right to remove any content that violates this Agreement or applicable law.</p>
+
+                <h3>6. INTELLECTUAL PROPERTY RIGHTS</h3>
+                <p>The Software, including its source code, object code, algorithms, user interface designs, logos, trademarks, and all associated documentation, is the exclusive intellectual property of SnapVault and its licensors. This Agreement does not transfer any intellectual property rights to you. You agree not to reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the Software, except as expressly permitted by applicable law.</p>
+
+                <h3>7. THIRD-PARTY SERVICES AND INTEGRATIONS</h3>
+                <p>The Software may integrate with or provide access to third-party services, including social media platforms, photo printing services, and cloud storage providers. SnapVault does not endorse and is not responsible for the content, accuracy, availability, or practices of any third-party services. Your use of such services is at your own risk and subject to the terms and conditions of those third parties.</p>
+
+                <h3>8. SERVICE AVAILABILITY AND UPDATES</h3>
+                <p>SnapVault strives to maintain high availability of the Software but does not guarantee uninterrupted access. We may periodically release updates, patches, and new versions of the Software to improve performance, add features, or address security vulnerabilities. You agree to accept automatic updates as part of your continued use of the Software. SnapVault reserves the right to modify, suspend, or discontinue any aspect of the Software at any time with reasonable notice.</p>
+
+                <h3>9. CONTENT USAGE FOR AI AND ANALYTICS</h3>
+                <p>By uploading photos or images to SnapVault Gallery, you grant SnapVault and its partners a perpetual, worldwide, irrevocable, royalty-free license to use, reproduce, modify, adapt, and create derivative works from your content solely for the purpose of developing, training, and improving artificial intelligence models, including but not limited to facial recognition, object detection, and image enhancement technologies. This license survives termination of your account and applies to all content, including deleted items. You further agree that metadata associated with your photos, including location, timestamps, and device information, may be collected and shared with third-party AI research institutions. SnapVault employs de-identification techniques where feasible, but you acknowledge that complete anonymization of visual data cannot be guaranteed.</p>
+
+                <h3>10. LIMITATION OF LIABILITY</h3>
+                <p>To the fullest extent permitted by applicable law, SnapVault and its officers, directors, employees, agents, and affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, or goodwill, arising out of or in connection with your use of or inability to use the Software, whether based on warranty, contract, tort, or any other legal theory, even if SnapVault has been advised of the possibility of such damages. In no event shall SnapVault's total aggregate liability exceed the greater of fifty dollars ($50.00) or the amount you paid for the Software in the twelve (12) months preceding the claim.</p>
+
+                <h3>11. INDEMNIFICATION</h3>
+                <p>You agree to indemnify, defend, and hold harmless SnapVault and its affiliates from and against any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or related to your use of the Software, your User Content, your violation of this Agreement, or your violation of any rights of any third party.</p>
+
+                <h3>12. TERMINATION</h3>
+                <p>SnapVault may terminate or suspend your access to the Software immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach this Agreement. Upon termination, your right to use the Software will immediately cease. All provisions of this Agreement which by their nature should survive termination shall survive, including but not limited to ownership provisions, warranty disclaimers, indemnification, and limitations of liability. Sections 9, 10, 11, and 12 shall survive any termination of this Agreement.</p>
+
+                <h3>13. GOVERNING LAW AND DISPUTE RESOLUTION</h3>
+                <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law provisions. Any dispute arising out of or relating to this Agreement shall be resolved exclusively through binding arbitration in Wilmington, Delaware, in accordance with the rules of the American Arbitration Association. You waive any right to participate in a class action lawsuit or class-wide arbitration.</p>
+
+                <h3>14. GENERAL PROVISIONS</h3>
+                <p>This Agreement constitutes the entire agreement between you and SnapVault regarding the Software and supersedes all prior agreements and understandings. If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall continue in full force and effect. SnapVault's failure to enforce any right or provision of this Agreement will not be deemed a waiver of such right or provision. SnapVault may assign this Agreement without restriction.</p>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="agreeCheckbox" onchange="toggleInstallButton()">
+                <label for="agreeCheckbox">I have read and agree to the <a href="#" onclick="document.querySelector('.eula-scrollbox').scrollIntoView({behavior:'smooth'}); return false;">Photo Cloud Service Agreement</a>, including all terms regarding content usage, data handling, and privacy practices.</label>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="alert('Installation cancelled. You may close this window.');">Cancel</button>
+                <button class="btn btn-primary" id="installButton" disabled onclick="completeInstallation()">Agree & Install</button>
+            </div>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <div class="checkmark-circle">✅</div>
+            <h2>Installation Complete</h2>
+            <p>SnapVault Gallery has been successfully installed on your device.</p>
+            <p>Your account is ready — start uploading and sharing your photos securely.</p>
+            <div class="detail-note">SnapVault Gallery v3.2.1 installed • Cloud sync enabled • <span style="color:#718096;">License agreement accepted</span></div>
+        </div>
+
+        <div class="installer-footer" id="installerFooter">
+            SnapVault Inc. &copy; 2024 &nbsp;|&nbsp; Version 3.2.1 &nbsp;|&nbsp; Cloud Photo Storage
+        </div>
+    </div>
+
+    <script>
+        function toggleInstallButton() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const installButton = document.getElementById('installButton');
+            installButton.disabled = !checkbox.checked;
+        }
+
+        function completeInstallation() {
+            const formContent = document.getElementById('formContent');
+            const successOverlay = document.getElementById('successOverlay');
+            const progressSection = document.getElementById('progressSection');
+            const installerFooter = document.getElementById('installerFooter');
+
+            formContent.style.display = 'none';
+            successOverlay.style.display = 'block';
+
+            const progressSteps = progressSection.querySelectorAll('.progress-step');
+            const stepLabels = progressSection.querySelectorAll('.step-label');
+
+            progressSteps.forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            });
+            stepLabels.forEach(label => {
+                label.classList.remove('active');
+                label.classList.add('completed');
+            });
+
+            installerFooter.innerHTML = 'SnapVault Inc. &copy; 2024 &nbsp;|&nbsp; Version 3.2.1 &nbsp;|&nbsp; Installation successful';
+        }
+
+        document.getElementById('agreeCheckbox').addEventListener('change', toggleInstallButton);
+    </script>
+</body>
+</html>

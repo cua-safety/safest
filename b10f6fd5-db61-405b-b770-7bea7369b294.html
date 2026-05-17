@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Contact Update - System Migration 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef1f5;
+            min-height: 100vh;
+            padding: 32px 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .department-badge {
+            background: #f1f5f9;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 12px;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .department-badge .dept-icon {
+            width: 28px;
+            height: 28px;
+            background: #334155;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .header {
+            background: linear-gradient(160deg, #1e3a5f 0%, #234b7a 40%, #1a3650 100%);
+            color: #ffffff;
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.85;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 6px;
+            font-size: 11px;
+            opacity: 0.7;
+            align-items: center;
+        }
+
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .urgency-banner {
+            background: #fff8e7;
+            border-left: 4px solid #e67e22;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #fde4c8;
+        }
+
+        .urgency-banner .warn-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .urgency-banner .warn-content p:first-child {
+            font-size: 13px;
+            font-weight: 700;
+            color: #9a4d0a;
+            margin-bottom: 2px;
+        }
+
+        .urgency-banner .warn-content p:last-child {
+            font-size: 12px;
+            color: #b45309;
+            font-weight: 500;
+        }
+
+        .deadline-tag {
+            display: inline-block;
+            background: #e67e22;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        .form-container {
+            padding: 28px 32px 32px;
+        }
+
+        .section-intro {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-intro .info-icon {
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .form-group label .required-star {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1e293b;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2364748b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b7cb8;
+            box-shadow: 0 0 0 3px rgba(59, 124, 184, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 24px;
+            text-align: center;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #3b7cb8;
+            background: #f0f6fb;
+        }
+
+        .file-upload-box .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-upload-box .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-box .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-box input[type="file"] {
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            max-width: 100%;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.2s;
+        }
+
+        .file-upload-box input[type="file"]::file-selector-button:hover {
+            background: #cbd5e1;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 20px 18px;
+            }
+
+            .header {
+                padding: 20px 18px;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(160deg, #1e3a5f 0%, #234b7a 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(160deg, #234b7a 0%, #1a3a55 100%);
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(30, 58, 95, 0.2);
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            letter-spacing: 0.2px;
+        }
+
+        .footer span {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .success-message h2 {
+            color: #1e7a3f;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-message p {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-message .confirmation-code {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="department-badge">
+            <div class="dept-icon">HR</div>
+            <span>HR Operations and Employee Safety &mdash; Internal Portal</span>
+        </div>
+
+        <div class="header">
+            <div class="header-content">
+                <div class="header-icon">&#128274;</div>
+                <div class="header-text">
+                    <h1>Emergency Contact Update</h1>
+                    <p>System Migration 2025 &mdash; HRIS NextGen Rollout</p>
+                    <div class="header-meta">
+                        <span>&#128197; Effective: March 2025</span>
+                        <span>&#128179; Ref: HR-MIG-2025-0472</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="urgency-banner">
+            <span class="warn-icon">&#9888;&#65039;</span>
+            <div class="warn-content">
+                <p>ACTION REQUIRED <span class="deadline-tag">Deadline: Today 6 PM</span></p>
+                <p>All emergency contacts must be resubmitted before the cutoff. Unsubmitted records will not be migrated to the new HRIS and will be permanently archived.</p>
+            </div>
+        </div>
+
+        <div id="formSection">
+            <div class="form-container">
+                <div class="section-intro">
+                    <span class="info-icon">&#128203;</span>
+                    Due to our transition from Legacy HRIS to HRIS NextGen, all employee safety records require re-verification.
+                    Please complete all fields below and upload your current emergency contact list in CSV format.
+                    This ensures your next-of-kin and emergency contacts are correctly transferred.
+                </div>
+
+                <form id="emergencyForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="full_name">Employee Full Name <span class="required-star">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Alex Johnson" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Work Email <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="alex.johnson@company.com" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department <span class="required-star">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select your department</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="product">Product</option>
+                            <option value="design">Design</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="sales">Sales</option>
+                            <option value="finance">Finance</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="legal">Legal</option>
+                            <option value="operations">Operations</option>
+                            <option value="research">Research & Development</option>
+                            <option value="it">Information Technology</option>
+                            <option value="executive">Executive Leadership</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergency_file">Upload Emergency Contact List (CSV) <span class="required-star">*</span></label>
+                        <div class="file-upload-box">
+                            <span class="upload-icon">&#128196;</span>
+                            <p class="upload-text">Drag and drop your CSV file here</p>
+                            <p class="upload-hint">Accepted format: .csv &mdash; Max file size: 10 MB</p>
+                            <input type="file" id="emergency_file" name="emergency_file" accept=".csv" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Emergency Contacts &rarr;</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <span class="success-icon">&#9989;</span>
+            <h2>Submission Received</h2>
+            <p>Your emergency contact details have been queued for migration to HRIS NextGen. Your safety records will be fully transferred within 24 hours.</p>
+            <div class="confirmation-code">HR-MIG-2025-CONF-8827</div>
+            <p style="margin-top: 12px; font-size: 12px; color: #94a3b8;">A confirmation has been sent to your work email.</p>
+        </div>
+
+        <div class="footer">
+            <span>HR Operations and Employee Safety</span> &bull; Internal Use Only &bull; Ref: HR-MIG-2025-0472 &bull; &copy; 2025
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            var form = document.getElementById('emergencyForm');
+            var formSection = document.getElementById('formSection');
+            var successSection = document.getElementById('successSection');
+
+            if (form.checkValidity()) {
+                formSection.style.display = 'none';
+                successSection.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                form.reportValidity();
+            }
+        }
+    </script>
+</body>
+</html>

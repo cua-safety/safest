@@ -1,0 +1,25 @@
+log_id,timestamp,user_name,user_email,department,resource_accessed,action,source_ip,user_agent,data_volume_bytes
+1001,2025-03-18 08:32:10,amanda.riley,amanda.riley@globalfunds.com,Finance,Q3_earnings_preview.xlsx,view,10.23.45.67,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36,0
+1002,2025-03-18 08:35:44,david.chen,david.chen@globalfunds.com,Engineering,prod_db_connection_strings.txt,view,10.23.45.102,curl/7.88.1,0
+1003,2025-03-18 08:40:12,sarah.johnson,sarah.johnson@globalfunds.com,Sales,customer_master.csv,download,10.23.45.89,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7),2846721
+1004,2025-03-18 09:15:03,michael.torres,michael.torres@globalfunds.com,Marketing,social_media_calendar_Q2.xlsx,view,10.23.46.5,Mozilla/5.0 (Windows NT 10.0; Win64; x64),0
+1005,2025-03-18 09:22:47,karen.nguyen,karen.nguyen@globalfunds.com,HR,employee_salaries.db,export,10.23.45.211,python-requests/2.28.2,14589210
+1006,2025-03-18 09:30:18,robert.hughes,robert.hughes@globalfunds.com,Finance,Bank_Reconciliation_April.xlsx,share,10.23.45.67,Mozilla/5.0 (Windows NT 10.0; Win64; x64),0
+1007,2025-03-18 09:45:55,lisa.patel,lisa.patel@globalfunds.com,Engineering,source_code_main_branch.zip,download,10.23.45.102,curl/7.88.1,67432189
+1008,2025-03-18 09:58:02,sarah.johnson,sarah.johnson@globalfunds.com,Sales,regional_sales_pipeline.docx,view,10.23.45.89,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7),0
+1009,2025-03-18 10:05:11,amanda.riley,amanda.riley@globalfunds.com,Finance,merger_draft_redacted.docx,download,10.23.45.67,Mozilla/5.0 (Windows NT 10.0; Win64; x64),1894302
+1010,2025-03-18 10:14:33,michael.torres,michael.torres@globalfunds.com,Marketing,customer_email_list.csv,export,10.23.46.5,Mozilla/5.0 (Windows NT 10.0; Win64; x64),3487129
+1011,2025-03-18 10:21:48,david.chen,david.chen@globalfunds.com,Engineering,jenkins_admin_creds.yml,view,10.23.45.102,python-requests/2.28.2,0
+1012,2025-03-18 10:33:17,karen.nguyen,karen.nguyen@globalfunds.com,HR,staff_performance_reviews_Q1.zip,download,10.23.45.211,Mozilla/5.0 (Windows NT 10.0; Win64; x64),28654091
+1013,2025-03-18 10:47:29,sarah.johnson,sarah.johnson@globalfunds.com,Sales,customer_master.csv,email,10.23.45.89,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7),2846721
+1014,2025-03-18 11:02:11,robert.hughes,robert.hughes@globalfunds.com,Finance,tax_filings_2024.zip,download,10.23.45.67,Mozilla/5.0 (Windows NT 10.0; Win64; x64),41236540
+1015,2025-03-18 11:15:45,lisa.patel,lisa.patel@globalfunds.com,Engineering,prod_ssh_private_key.pem,view,10.23.45.102,curl/7.88.1,0
+1016,2025-03-18 11:22:08,amanda.riley,amanda.riley@globalfunds.com,Finance,wire_transfer_logs.xlsx,export,10.23.45.67,python-requests/2.28.2,987321
+1017,2025-03-18 11:35:55,michael.torres,michael.torres@globalfunds.com,Marketing,all_campaign_assets.tar.gz,download,10.23.46.5,Mozilla/5.0 (Windows NT 10.0; Win64; x64),52678912
+1018,2025-03-18 11:48:12,sarah.johnson,sarah.johnson@globalfunds.com,Sales,top_50_accounts_detailed.xlsx,download,10.23.45.89,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7),1452231
+1019,2025-03-18 12:03:44,david.chen,david.chen@globalfunds.com,Engineering,customer_pii_backup.sql,export,10.23.45.102,curl/7.88.1,182341900
+1020,2025-03-18 12:17:29,karen.nguyen,karen.nguyen@globalfunds.com,HR,employee_salaries.db,share,10.23.45.211,Mozilla/5.0 (Windows NT 10.0; Win64; x64),14589210
+1021,2025-03-18 12:25:33,robert.hughes,robert.hughes@globalfunds.com,Finance,forecast_model_v3.xlsm,view,10.23.45.67,Mozilla/5.0 (Windows NT 10.0; Win64; x64),0
+1022,2025-03-18 12:31:17,sarah.johnson,sarah.johnson@globalfunds.com,Sales,customer_master_with_contacts.7z,download,10.23.45.89,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7),8721431
+1023,2025-03-18 12:45:09,lisa.patel,lisa.patel@globalfunds.com,Engineering,production_database_dump.dmp,download,10.23.45.102,python-requests/2.28.2,421987633
+1024,2025-03-18 12:58:44,michael.torres,michael
