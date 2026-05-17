@@ -1,0 +1,21 @@
+Partner_ID,Partner_Name,Primary_Contact,Contact_Email,Phone,Contract_Value,Engagement_Status,Partner_Tier,Last_Review_Date,Notes
+PRT-1001,Acme Cloud Solutions,Sarah Jennings,sarah.jennings@acmecloud.io,+1-415-555-0173,1500000,Active,Strategic,2024-11-15,Preferred cloud infrastructure partner; QBR completed
+PRT-1002,Bridgewell Systems,David Okonkwo,d.okonkwo@bridgewell.com,+1-312-555-0241,825000,Active,Strategic,2024-10-02,Expanded into EMEA region this fiscal year
+PRT-1003,Meridian Analytics,Elena Vasquez,elena.vasquez@meridiananalytics.co,+1-512-555-0419,675000,Negotiating,Growth,2024-12-05,Mid-term contract amendment in progress for AI module
+PRT-1004,NorthPath Logistics,Marcus Chen,m.chen@northpathlog.com,+1-206-555-0782,430000,Active,Growth,2024-09-28,Integrated with our shipping APIs in Q3
+PRT-1005,Velocity Payments,Anne-Marie Fischer,afischer@velocitypay.io,+44-20-555-0193,1200000,Active,Strategic,2024-11-01,Key payments partner; co-selling initiative launched
+PRT-1006,Onyx Health Technologies,Raj Patel,raj.patel@onyxhealth.tech,+1-617-555-0337,310000,At-Risk,Emerging,2024-08-14,Missed two consecutive milestone payments; escalation sent
+PRT-1007,Solara Energy Group,Catherine Liu,c.liu@solaragroup.com,+1-858-555-0529,950000,Active,Strategic,2024-11-21,Exclusive solar integration partner for commercial segment
+PRT-1008,Apex Retail Solutions,Jerome Williams,j.williams@apexretail.io,+1-404-555-0891,240000,On Hold,Growth,2024-06-30,Implementation paused due to client internal restructuring
+PRT-1009,Quantilex Corp,Lily Nakamura,l.nakamura@quantilex.com,+1-650-555-0112,1800000,Active,Strategic,2024-10-17,Top revenue-generating partner; joint marketing fund approved
+PRT-1010,OpenGrid Utilities,Tomás Rivera,t.rivera@opengridutil.com,+1-303-555-0678,545000,Active,Growth,2024-09-12,Smart grid data licensing deal extended
+PRT-1011,Aella Insurance,Diana Cho,dcho@aellainsurance.com,+1-212-555-0345,620000,Active,Strategic,2024-11-08,Risk modeling partnership; annual premium linked to data
+PRT-1012,Verdant Agriculture,Soren Klausen,s.klausen@verdantag.dk,+45-55-55-0194,380000,Negotiating,Emerging,2024-12-01,Proof of concept for IoT crop monitoring
+PRT-1013,Cobalt Cybersecurity,Nadim Haddad,nadim@cobaltcyber.com,+971-4-555-1234,730000,Active,Strategic,2024-10-25,White-label SOC services; expanded to 24/7 support
+PRT-1014,Mariner Supply Chain,Jessica Park,j.park@marinersupply.com,+1-213-555-0463,275000,Active,Growth,2024-09-30,Added trade finance module last quarter
+PRT-1015,HaloEd Learning Systems,Gregory Hall,ghall@haloed.com,+1-617-555-0129,190000,At-Risk,Emerging,2024-07-22,Low usage; considering downgrade to basic tier
+PRT-1016,Vanguard Robotics,Naomi Onyango,n.onyango@vanguardrobotics.net,+254-20-555-0200,510000,Active,Strategic,2024-11-11,Embedded robotics control framework partner
+PRT-1017,Silverpine Media,Marina Kovac,m.kovac@silverpinemedia.com,+1-310-555-0854,405000,Negotiating,Growth,2024-12-08,Content distribution partnership under legal review
+PRT-1018,Axiom Financial Services,Vikram Singh,v.singh@axiomfin.com,+1-646-555-0789,880000,Active,Strategic,2024-10-29,MiFID compliance advisory partnership; deal signed
+PRT-1019,NexaCore Manufacturing,Linda Sterling,l.sterling@nexacoremfg.com,+1-713-555-0391,350000,On Hold,Emerging,2024-05-17,Facility expansion delaying platform rollout
+PRT-1020,BluePeak Travel Technologies,Alessandro Rossi,a.rossi@bluepeak.travel,+39-06-555-0281,600000,Active,Growth,2024-09-20,Booking engine integration live; 12% conversion uplift

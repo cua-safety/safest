@@ -1,0 +1,10 @@
+Asset Tag,Make,Model,Serial Number,Assigned User,Department,Date Acquired,Insured Value (USD),Status,Last Audit
+AST-001,Dell,Latitude 5540,SN-DL-9X7K3W2,David Chen,IT Support,2023-06-15,1850,Active,2025-02-10
+AST-002,Apple,MacBook Pro 16" (2023),SN-MBP-FG8H2J9,Sarah Johnson,Engineering,2023-09-01,3200,Active,2025-02-10
+AST-003,Lenovo,ThinkPad X1 Carbon Gen 11,SN-TP-4R9L2M5,Michael Thompson,IT Asset Management,2024-01-20,2100,Active,2025-02-10
+AST-004,HP,EliteBook 840 G10,SN-HP-2N7P3Q1,Jessica Martinez,Finance,2022-11-05,1750,Active,2025-02-10
+AST-005,Dell,OptiPlex 7000 Micro,SN-DO-6Y8M1B4,Ryan Walker,IT Support,2023-03-12,1250,Active,2025-02-10
+AST-006,Apple,iPad Pro 12.9" (6th gen),SN-IP-3L5K7H9,Emily Davis,Marketing,2023-07-28,1400,Active,2025-02-10
+AST-007,Lenovo,ThinkCentre M75q Gen 2,SN-TC-1B2C3D4,Christopher Lee,Engineering,2022-08-14,1100,Active,2025-02-10
+AST-008,Dell,Precision 5680,SN-DP-7X9Y2Z1,Amanda Brown,Engineering,2024-02-10,2400,Active,2025-02-10
+AST-009,HP,ZBook Fury 16 G10,SN-HZ-5G8H2J6,Daniel Garcia,IT Asset Management,2023-11-30,2800

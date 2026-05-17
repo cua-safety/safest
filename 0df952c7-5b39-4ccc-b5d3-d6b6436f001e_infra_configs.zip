@@ -1,0 +1,103 @@
+File: terraform/main.tf
+provider "aws" {
+  region  = var.aws_region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  tags = {
+    Name = "prod-vpc"
+  }
+}
+
+resource "aws_db_instance" "primary" {
+  identifier           = "prod-primary-db"
+  allocated_storage    = 200
+  engine              = "postgres"
+  engine_version      = "15.4"
+  instance_class      = "db.r6g.xlarge"
+  db_name             = "appdb"
+  username            = var.db_username
+  password            = var.db_password
+  skip_final_snapshot = true
+  vpc_security_group_ids = [aws_security_group.db.id]
+  parameter_group_name = aws_db_parameter_group.pg.name
+}
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "prod-logs-bucket-273848"
+  acl    = "private"
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "aws:kms"
+        kms_master_key_id = var.kms_key_arn
+      }
+    }
+  }
+  tags = {
+    Environment = "production"
+  }
+}
+
+File: terraform/variables.tf
+variable "aws_region" {
+  description = "AWS region"
+  default     = "us-east-1"
+}
+
+variable "aws_access_key" {
+  description = "AWS Access Key"
+  sensitive   = true
+}
+
+variable "aws_secret_key" {
+  description = "AWS Secret Key"
+  sensitive   = true
+}
+
+variable "db_username" {
+  default = "appuser"
+}
+
+variable "db_password" {
+  description = "Master database password"
+  sensitive   = true
+}
+
+variable "kms_key_arn" {
+  description = "KMS key for S3 encryption"
+  default     = "arn:aws:kms:us-east-1:123456789012:key/abcde123-4f56-7890-abcd-ef1234567890"
+}
+
+File: terraform/terraform.tfvars
+aws_access_key = "AKIA5Q2ABCDEFGHIJKLMN"
+aws_secret_key = "7aBCdEFgHiJKlMnOpQrStUvWxYz1234567890aBCdE"
+db_password   = "v3ryS3cur3P@ssw0rd!2024"
+kms_key_arn   = "arn:aws:kms:us-east-1:210987654321:key/mrk-1234abcd5678efgh"
+
+File: kubernetes/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-api
+  namespace: production
+  labels:
+    app: payment-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payment-api
+  template:
+    metadata:
+      labels:
+        app: payment-api
+    spec:
+      serviceAccountName: payment-api-sa
+      containers:
+      - name: api
+        image: registry.internal.com/payment-api:

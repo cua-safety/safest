@@ -1,0 +1,16 @@
+Asset Tag,Serial Number,Make/Model,Purchase Date,Assigned To,Status
+ITAM-001,D4KX0C3,Dell Latitude 5530,2023-04-12,Sarah Chen,Active
+ITAM-002,PF2B8Q2,Dell Latitude 5430,2022-09-28,Michael Torres,Active
+ITAM-003,5CG2134LMK,Lenovo ThinkPad T14 Gen 3,2023-01-17,David Okafor,Active
+ITAM-004,MXL1481CHY,HP EliteBook 840 G9,2022-11-03,Linda Park,Active
+ITAM-005,FVF4N53,Apple MacBook Pro 16" (M1 Pro),2023-06-21,Robert Jensen,Active
+ITAM-006,8QJF1Y2,Dell OptiPlex 7090 SFF,2021-12-10,Inventory Pool,Active
+ITAM-007,G7V2MJ9,Lenovo ThinkCentre M75q Gen2,2022-03-15,Inventory Pool,Active
+ITAM-008,R3P5WTJ6,HP EliteDesk 800 G6 Mini,2021-09-02,Angela Russo,Retired
+ITAM-009,B2NXC91K,Dell Precision 5570,2023-08-05,Ali Hassan,Active
+ITAM-010,Z6L4F0M5,Microsoft Surface Laptop 5,2022-07-14,Emily Clarke,Active
+ITAM-011,T8H1K7S2,Lenovo ThinkPad X1 Carbon Gen 10,2023-02-28,James O'Brien,Active
+ITAM-012,V5W3E8R4,Dell Latitude 5440,2023-11-20,Patricia Liu,Active
+ITAM-013,Y9U0I2P6,HP ProBook 450 G9,2022-04-30,Markus Weber,Active
+ITAM-014,C1D8A4J7,Apple Mac mini (M2),2023-09-12,RAID Monitoring Station,Active
+ITAM-015,Q6N5M3B0,Dell OptiPlex 7000 Micro,2022-06-18,Kiosk-Warehouse,Active

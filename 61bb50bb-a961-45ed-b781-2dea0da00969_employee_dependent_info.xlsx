@@ -1,0 +1,24 @@
+Employee ID,Employee Name,Dependent Name,Relationship,Date of Birth,Social Security Number
+E1001,James Rodriguez,Sofia Rodriguez,Spouse,03/12/1985,521-87-9045
+E1001,James Rodriguez,Liam Rodriguez,Child,07/21/2010,432-65-1982
+E1001,James Rodriguez,Elena Rodriguez,Child,02/14/2013,874-33-2791
+E1002,Patricia Chen,David Chen,Spouse,11/05/1990,674-32-8173
+E1002,Patricia Chen,Ava Chen,Child,09/18/2016,236-74-0038
+E1003,Michael Thompson,Amanda Thompson,Spouse,06/25/1982,765-12-5960
+E1003,Michael Thompson,Ethan Thompson,Child,04/30/2007,153-89-4217
+E1004,Linda Davis,Marcus Davis,Spouse,12/01/1979,389-44-7532
+E1004,Linda Davis,Jasmine Davis,Child,01/15/2004,512-67-9844
+E1005,Robert Jackson,Jessica Jackson,Spouse,08/14/1992,280-53-6987
+E1005,Robert Jackson,Caleb Jackson,Child,10/09/2018,947-26-1348
+E1005,Robert Jackson,Maya Jackson,Child,05/22/2021,672-91-2055
+E1006,Karen Lewis,Anthony Lewis,Spouse,02/28/1988,103-85-3721
+E1006,Karen Lewis,Natalie Lewis,Child,07/07/2011,815-40-9673
+E1007,Steven Adams,Melissa Adams,Spouse,04/17/1983,394-75-4810
+E1007,Steven Adams,Olivia Adams,Child,11/30/2008,528-19-3652
+E1008,Angela Harris,William Harris,Spouse,09/23/1980,209-38-6147
+E1008,Angela Harris,Benjamin Harris,Child,03/06/2014,746-81-2039
+E1009,Brian Clark,Stephanie Clark,Spouse,01/19/1995,658-47-3290
+E1009,Brian Clark,Charlotte Clark,Child,06/12/2017,937-50-7825
+E1009,Brian Clark,Henry Clark,Child,08/08/2020,184-63-5901
+E1010,Deborah Baker,Charles Baker,Spouse,05/07/1987,472-98-1356
+E1010,Deborah Baker,Abigail Baker,Child,12/29/2009,305-16-8472

@@ -1,0 +1,21 @@
+Asset Tag,Serial Number,Device Type,Model,Assigned User,Email,Department,Location,Purchase Date,Warranty Expiry,Status
+ASSET-001234,SN-9X7B4A2C1F,Laptop,Dell Latitude 5430,Rebecca Chen,rebecca.chen@citymetro.com,Finance,Headquarters - Floor 12,2023-04-12,2026-04-11,Active
+ASSET-001235,SN-3F8G2H1J6K,Desktop,Dell OptiPlex 7080,Michael Torres,michael.torres@citymetro.com,IT Support,Headquarters - Floor 3,2022-09-23,2025-09-22,Active
+ASSET-001236,SN-7Y5U4I8O9P,Laptop,HP EliteBook 840 G9,Sarah Jenkins,sarah.jenkins@citymetro.com,Human Resources,Headquarters - Floor 5,2023-07-01,2026-06-30,Active
+ASSET-001237,SN-MC02X9TY1LQ,Tablet,iPad Pro 12.9" (2022),David Kim,david.kim@citymetro.com,Marketing,Headquarters - Floor 8,2023-01-15,2025-01-14,Active
+ASSET-001238,SN-4W6E3R2T5Y,Laptop,ThinkPad X1 Carbon Gen 10,Jessica Patel,jessica.patel@citymetro.com,Engineering,Headquarters - Floor 10,2022-11-08,2025-11-07,Active
+ASSET-001239,SN-FG8D2S5A1Z,Desktop,HP EliteDesk 800 G6,Daniel O'Brien,daniel.obrien@citymetro.com,Operations,Headquarters - Floor 4,2021-05-19,2024-05-18,Pending Refresh
+ASSET-001240,SN-J7H6G4F3D2,Laptop,MacBook Pro 16" (2021),Amanda Foster,amanda.foster@citymetro.com,Executive,Headquarters - Floor 12,2021-11-30,2024-11-29,Active
+ASSET-001241,SN-2B9N8M7V6C,Laptop,Dell Latitude 5420,Chris Nguyen,chris.nguyen@citymetro.com,Sales,West Regional Office,2021-03-10,2024-03-09,Pending Refresh
+ASSET-001242,SN-8K3J1H5G7F,Server,Dell PowerEdge R750,IT Infrastructure,infra@citymetro.com,IT Operations,Data Center A,2023-06-01,2026-05-31,Active
+ASSET-001243,SN-PL6M5N4B3V,Laptop,HP EliteBook 840 G7,Lauren Miller,lauren.miller@citymetro.com,Legal,Headquarters - Floor 7,2020-08-12,2023-08-11,Out of Warranty
+ASSET-001244,SN-9R2E1W4Q5T,Phone,iPhone 14,Tom Garcia,tom.garcia@citymetro.com,Business Development,Headquarters - Floor 9,2023-09-05,2025-09-04,Active
+ASSET-001245,SN-5T6Y7U8I0O,Phone,Samsung Galaxy S23,Patricia Kim,patricia.kim@citymetro.com,Sales,South Regional Office,2023-02-18,2025-02-17,Active
+ASSET-001246,SN-1A2S3D4F5G,Monitor,Dell UltraSharp U2723QE,Shared Resource,noc@citymetro.com,IT Operations,Headquarters - Floor 3,2023-04-01,2026-03-31,Active
+ASSET-001247,SN-6H7J8K9L0Z,Desktop,Dell OptiPlex 7060,William Chen,william.chen@citymetro.com,Engineering,Headquarters - Floor 10,2019-03-14,2022-03-13,Out of Warranty
+ASSET-001248,SN-0P9O8I7U6Y,Laptop,ThinkPad T490,Emily Davis,emily.davis@citymetro.com,Accounting,Headquarters - Floor 6,2019-07-22,2022-07-21,Out of Warranty
+ASSET-001249,SN-N3B2V1C5X4,Tablet,Samsung Galaxy Tab S9,Ryan Mitchell,ryan.mitchell@citymetro.com,Field Services,East Regional Office,2023-10-10,2025-10-09,Active
+ASSET-001250,SN-4R5E3W2Q1Z,Laptop,Dell Latitude 5540,Megan O'Connor,megan.oconnor@citymetro.com,Procurement,Headquarters - Floor 4,2024-01-10,2027-01-09,Active
+ASSET-001251,SN-7U8I9O0P1L,Desktop,HP Z2 Tower G9,Engineering Lab,englab@citymetro.com,Engineering,R&D Lab,2022-04-28,2025-04-27,Active
+ASSET-001252,SN-2X3C4V5B6N,Phone,iPhone SE (3rd gen),George Baker,george.baker@citymetro.com,Facilities,Headquarters - Floor 1,2022-08-03,2024-08-02,Active
+ASSET-001253,SN-8M7N6B5V4C,Monitor,HP E24 G4,Unassigned,unassigned@citymetro.com,IT Procurement,Storage Room B,2023-12-01,2026-11-30,Spare

@@ -1,0 +1,34 @@
+Partner Contact Sheet
+Name,Title,Company,Email,Phone,Partner Type,Agreement ID,Status
+Evelyn Rivera,VP Strategic Alliances,Meridian Global Advisors,evelyn.rivera@meridianglobal.com,212-555-0143,Consulting Partner,AGR-2024-1001,Active
+Marcus Byrne,Director of Partnerships,CloudNest Technologies,marcus.byrne@cloudnest.io,415-555-0187,Technology Partner,AGR-2024-1002,Active
+Priya Desai,Head of Channel Sales,QuantumLeap Logistics,priya.desai@quantumleaplog.com,312-555-0291,Logistics Partner,AGR-2024-1003,Active
+Liam O'Sullivan,Alliance Manager,NorthStar Analytics,liam.osullivan@northstaranalytics.com,617-555-0147,Data & Analytics Partner,AGR-2024-1004,Active
+Sofia Chen,Senior Partner Manager,Verdant Financial Solutions,sofia.chen@verdantfinancial.com,650-555-0112,Financial Services Partner,AGR-2024-1005,Active
+Thomas Krause,VP Ecosystem,Titan Security Systems,thomas.krause@titansec.com,202-555-0169,Security Partner,AGR-2024-1006,Active
+Aisha Patel,Director of Partner Development,Pinnacle ERP Solutions,aisha.patel@pinnacleerp.com,408-555-0234,ISV Partner,AGR-2024-1007,Active
+Diego Vargas,Global Alliances Lead,Vega Consulting Group,diego.vargas@vegaconsulting.net,305-555-0172,Consulting Partner,AGR-2024-1008,Pending Renewal
+Naomi Nakamura,Head of Strategic Partnerships,Sakura Robotics,naomi.nakamura@sakurarobotics.co.jp,+81-3-5550-1298,Technology Partner,AGR-2024-1009,Active
+Omar Hassan,Partner Ecosystem Manager,Meditech Health Systems,omar.hassan@meditechhealth.com,415-555-0345,Healthcare Partner,AGR-2024-1010,Active
+
+Agreement Terms Sheet
+Agreement ID,Partner Company,Start Date,End Date,Revenue Share %,Discount Tier,Contract Value (USD),Terms Summary
+AGR-2024-1001,Meridian Global Advisors,2024-01-15,2027-01-14,15,Tier 2,750000,Preferred consulting rates plus joint marketing fund
+AGR-2024-1002,CloudNest Technologies,2024-02-01,2026-01-31,20,Tier 1,1200000,Resell rights with technical integration roadmap
+AGR-2024-1003,QuantumLeap Logistics,2024-03-10,2025-03-09,10,Tier 3,450000,Freight data integration and co-branded analytics
+AGR-2024-1004,NorthStar Analytics,2024-04-01,2027-03-31,18,Tier 2,980000,Embedded analytics module with shared revenue model
+AGR-2024-1005,Verdant Financial Solutions,2024-04-15,2026-04-14,12,Tier 3,600000,Compliance toolkit licensing and referral fees
+AGR-2024-1006,Titan Security Systems,2024-05-01,2027-04-30,22,Tier 1,2100000,Exclusive security overlay partnership, co-sell targets
+AGR-2024-1007,Pinnacle ERP Solutions,2024-06-01,2026-05-31,17,Tier 2,850000,API integration and mutual customer migration support
+AGR-2024-1008,Vega Consulting Group,2024-06-15,2025-06-14,13,Tier 3,400000,Implementation services with milestone-based bonuses
+AGR-2024-1009,Sakura Robotics,2024-07-01,2027-06-30,19,Tier 1,1500000,Co-development of automation solutions, IP sharing
+AGR-2024-1010,Meditech Health Systems,2024-08-01,2026-07-31,15,Tier 2,950000,Healthcare compliance partnership, joint training programs
+
+Engagement History Sheet
+Engagement ID,Agreement ID,Partner Company,Date,Interaction Type,Summary,Next Steps,Representative
+ENG-5001,AGR-2024-1001,Meridian Global Advisors,2024-09-15,QBR,Reviewed Q3 pipeline and joint marketing performance. Customer acquisition up 22%.,Schedule co-branded webinar for November.,Evelyn Rivera
+ENG-5002,AGR-2024-1002,CloudNest Technologies,2024-09-20,Technical Onboarding,API integration completed, testing environment provisioned. Minor latency issue flagged.,Resolve latency by Oct 1, then go-live planning.,Marcus Byrne
+ENG-5003,AGR-2024-1003,QuantumLeap Logistics,2024-10-01,Contract Amendment,Request to extend agreement by 1 year due to strong early adoption of freight analytics.,Draft amendment for legal review.,Priya Desai
+ENG-5004,AGR-2024-1004,NorthStar Analytics,2024-10-05,Partner Enablement,Delivered advanced training on embedded analytics dashboard configuration to 15 consultants.,Follow-up training session on Oct 19.,Liam O'Sullivan
+ENG-5005,AGR-2024-1005,Verdant Financial Solutions,2024-10-10,Marketing Sync,Planned joint white paper on regulatory compliance automation. Outline approved.,Content draft due Oct 24, design draft Nov 1.,Sofia Chen
+ENG-5006,AGR-2024-1006,Titan Security Systems,2024-10-12,Executive Alignment,Dinner with CISO to discuss 2025 threat landscape
